@@ -1,0 +1,1016 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ArtBound — Infrastructure for private, gallery-led auctions</title>
+<meta name="description" content="ArtBound is the auction stack behind primary-market galleries. Private, invitation-only, conversational. New York · London · Dubai." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..900,0..100,0..1;1,9..144,300..900,0..100,0..1&family=JetBrains+Mono:ital,wght@0,300..700;1,300..700&display=swap" rel="stylesheet" />
+
+<style>
+  :root {
+    --paper:     #f2ebdb;
+    --paper-2:   #ece3cd;
+    --ink:       #14110d;
+    --ink-soft:  #3a332a;
+    --ink-mute:  #6a5f51;
+    --rule:      #b1a07a;
+    --rule-soft: #c8b994;
+    --brass:     #9a7b35;
+    --oxblood:   #6e1f1c;
+    --session:   #1f6b3a;
+
+    --serif: "Fraunces", "Times New Roman", serif;
+    --mono:  "JetBrains Mono", ui-monospace, monospace;
+
+    --gutter: clamp(20px, 4vw, 56px);
+    --max:    1440px;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+
+  html { background: var(--paper); color: var(--ink); }
+  body {
+    font-family: var(--serif);
+    font-variation-settings: "opsz" 14, "SOFT" 30, "WONK" 0;
+    font-weight: 380;
+    font-size: 17px;
+    line-height: 1.55;
+    letter-spacing: 0.005em;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    background:
+      radial-gradient(1200px 600px at 85% -10%, rgba(154,123,53,0.10), transparent 60%),
+      radial-gradient(900px 500px at 0% 110%, rgba(110,31,28,0.06), transparent 60%),
+      var(--paper);
+    overflow-x: hidden;
+  }
+
+  /* Paper grain — cheap but effective */
+  body::before {
+    content: "";
+    position: fixed; inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.5;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.08  0 0 0 0 0.07  0 0 0 0 0.05  0 0 0 0.055 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  }
+
+  ::selection { background: var(--oxblood); color: var(--paper); }
+
+  /* ---------- Layout primitives ---------- */
+
+  .wrap {
+    max-width: var(--max);
+    margin: 0 auto;
+    padding: 0 var(--gutter);
+    position: relative;
+    z-index: 2;
+  }
+
+  .rule {
+    height: 1px;
+    background: var(--rule);
+    transform-origin: left center;
+  }
+  .rule.brass { background: var(--brass); opacity: 0.65; }
+  .rule.soft  { background: var(--rule-soft); }
+
+  /* Page-load stagger */
+  .reveal { opacity: 0; transform: translateY(10px); animation: rise .9s cubic-bezier(.2,.7,.1,1) forwards; }
+  .reveal.r1 { animation-delay: .05s; }
+  .reveal.r2 { animation-delay: .20s; }
+  .reveal.r3 { animation-delay: .35s; }
+  .reveal.r4 { animation-delay: .50s; }
+  .reveal.r5 { animation-delay: .65s; }
+  .reveal.r6 { animation-delay: .80s; }
+  @keyframes rise { to { opacity: 1; transform: translateY(0); } }
+
+  .ruledraw { transform: scaleX(0); animation: draw 1.1s cubic-bezier(.7,.1,.2,1) forwards; animation-delay: .1s; }
+  @keyframes draw { to { transform: scaleX(1); } }
+
+  /* ---------- Top metadata bar ---------- */
+
+  .meta-bar {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    padding: 18px 0 12px;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 24px;
+  }
+  .meta-bar .left  { justify-self: start; }
+  .meta-bar .mid   { justify-self: center; display: flex; align-items: center; gap: 10px; }
+  .meta-bar .right { justify-self: end; display: flex; gap: 22px; }
+  .meta-bar .dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--session);
+    box-shadow: 0 0 0 0 rgba(31,107,58,0.5);
+    animation: pulse 2.2s infinite;
+    display: inline-block;
+  }
+  @keyframes pulse {
+    0%   { box-shadow: 0 0 0 0 rgba(31,107,58,0.45); }
+    70%  { box-shadow: 0 0 0 10px rgba(31,107,58,0); }
+    100% { box-shadow: 0 0 0 0 rgba(31,107,58,0); }
+  }
+  .clock { display: inline-flex; gap: 6px; }
+  .clock b { font-weight: 500; color: var(--ink); letter-spacing: 0.18em; }
+  .clock span { font-variant-numeric: tabular-nums; }
+
+  /* ---------- Header ---------- */
+
+  header.site {
+    padding: 18px 0 28px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 32px;
+  }
+  header.site .logo img {
+    display: block;
+    width: 280px;
+    height: auto;
+    user-select: none;
+    -webkit-user-drag: none;
+  }
+  header.site nav {
+    justify-self: end;
+    display: flex;
+    gap: 28px;
+    font-family: var(--mono);
+    font-size: 11.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+  header.site nav a {
+    color: var(--ink);
+    text-decoration: none;
+    position: relative;
+    padding-bottom: 2px;
+  }
+  header.site nav a::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 100%;
+    bottom: -2px;
+    height: 1px;
+    background: var(--ink);
+    transition: right .4s cubic-bezier(.2,.7,.1,1);
+  }
+  header.site nav a:hover::after { right: 0; }
+  header.site nav .enquire {
+    color: var(--oxblood);
+  }
+
+  /* ---------- Hero ---------- */
+
+  .hero {
+    padding: 44px 0 120px;
+    position: relative;
+  }
+
+  .hero .eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    display: flex;
+    gap: 14px;
+    align-items: center;
+  }
+  .hero .eyebrow .lot { color: var(--oxblood); }
+  .hero .eyebrow .sep { width: 28px; height: 1px; background: var(--rule); display: inline-block; }
+
+  .hero h1 {
+    font-family: var(--serif);
+    font-variation-settings: "opsz" 144, "SOFT" 30, "WONK" 0;
+    font-weight: 360;
+    font-size: clamp(44px, 7.6vw, 124px);
+    line-height: 0.94;
+    letter-spacing: -0.025em;
+    margin: 28px 0 0;
+    max-width: 18ch;
+    color: var(--ink);
+  }
+  .hero h1 em {
+    font-style: italic;
+    font-weight: 340;
+    font-variation-settings: "opsz" 144, "SOFT" 100, "WONK" 1;
+    color: var(--oxblood);
+    letter-spacing: -0.02em;
+  }
+  .hero h1 .amp {
+    font-style: italic;
+    font-weight: 300;
+    color: var(--brass);
+    padding: 0 0.08em;
+  }
+
+  .hero .lede {
+    margin-top: 32px;
+    max-width: 48ch;
+    font-size: clamp(17px, 1.35vw, 21px);
+    line-height: 1.5;
+    color: var(--ink-soft);
+  }
+  .hero .lede b {
+    font-weight: 500;
+    color: var(--ink);
+    font-style: italic;
+  }
+
+  .hero .callouts {
+    margin-top: 56px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 28px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  .hero .callouts span { display: inline-flex; align-items: center; gap: 10px; }
+  .hero .callouts span::before {
+    content: "";
+    width: 4px; height: 4px; border-radius: 50%;
+    background: var(--brass);
+    display: inline-block;
+  }
+
+  /* Diagonal hero ornament: a thin catalogue folio */
+  .folio {
+    position: absolute;
+    right: var(--gutter);
+    top: 60px;
+    width: 260px;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    border-left: 1px solid var(--rule);
+    padding: 8px 0 8px 16px;
+    line-height: 1.9;
+  }
+  .folio b { color: var(--ink); font-weight: 500; letter-spacing: 0.2em; }
+  .folio .sm { color: var(--ink-soft); }
+
+  /* ---------- Section titling ---------- */
+
+  .section-head {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 40px;
+    align-items: baseline;
+    padding: 28px 0 36px;
+  }
+  .section-head .no {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .section-head .no b { color: var(--oxblood); font-weight: 500; }
+  .section-head h2 {
+    font-family: var(--serif);
+    font-variation-settings: "opsz" 96, "SOFT" 30;
+    font-weight: 370;
+    font-size: clamp(28px, 3.6vw, 48px);
+    line-height: 1.05;
+    letter-spacing: -0.015em;
+    margin: 0;
+    color: var(--ink);
+  }
+  .section-head h2 em {
+    font-style: italic;
+    font-variation-settings: "opsz" 96, "SOFT" 100, "WONK" 1;
+    color: var(--oxblood);
+  }
+
+  /* ---------- Manifesto ---------- */
+
+  .manifesto {
+    padding: 40px 0 80px;
+  }
+  .manifesto ol {
+    list-style: none; padding: 0; margin: 0;
+    counter-reset: mf;
+  }
+  .manifesto li {
+    counter-increment: mf;
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 40px;
+    padding: 36px 0;
+    border-top: 1px solid var(--rule);
+    align-items: baseline;
+  }
+  .manifesto li:last-child { border-bottom: 1px solid var(--rule); }
+  .manifesto li::before {
+    content: "№ 0" counter(mf);
+    font-family: var(--mono);
+    font-size: 11.5px;
+    letter-spacing: 0.22em;
+    color: var(--brass);
+    text-transform: uppercase;
+    padding-top: 10px;
+  }
+  .manifesto li p {
+    margin: 0;
+    font-family: var(--serif);
+    font-size: clamp(22px, 2.3vw, 32px);
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    font-weight: 360;
+    color: var(--ink);
+  }
+  .manifesto li p em {
+    font-style: italic;
+    color: var(--oxblood);
+    font-variation-settings: "opsz" 72, "SOFT" 100, "WONK" 1;
+  }
+  .manifesto li .note {
+    margin-top: 14px;
+    display: block;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+
+  /* ---------- Ledger (Gallery holds / Artbound provides) ---------- */
+
+  .ledger {
+    padding: 40px 0 80px;
+    position: relative;
+  }
+  .ledger .cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+  }
+  .ledger .col {
+    padding: 28px 0 28px 0;
+  }
+  .ledger .col + .col {
+    border-left: 1px solid var(--rule);
+    padding-left: 36px;
+  }
+  .ledger .col:first-child { padding-right: 36px; }
+  .ledger .col h3 {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin: 0 0 22px;
+  }
+  .ledger .col h3 b { color: var(--ink); font-weight: 500; }
+  .ledger ul { list-style: none; padding: 0; margin: 0; }
+  .ledger li {
+    font-family: var(--serif);
+    font-size: clamp(18px, 1.55vw, 22px);
+    line-height: 1.45;
+    padding: 14px 0;
+    border-bottom: 1px dashed var(--rule-soft);
+    display: grid;
+    grid-template-columns: 32px 1fr;
+    align-items: baseline;
+  }
+  .ledger li:last-child { border-bottom: 0; }
+  .ledger li::before {
+    content: "—";
+    color: var(--brass);
+    font-family: var(--mono);
+    font-size: 12px;
+  }
+  .ledger li em {
+    font-style: italic;
+    color: var(--ink-soft);
+    font-variation-settings: "opsz" 24, "SOFT" 100, "WONK" 1;
+    display: block;
+    font-size: 13.5px;
+    letter-spacing: 0.005em;
+    margin-top: 2px;
+  }
+
+  /* ---------- Transcript (auction surface) ---------- */
+
+  .surface {
+    padding: 40px 0 96px;
+  }
+  .surface-layout {
+    display: grid;
+    grid-template-columns: 1fr 1.3fr;
+    gap: 56px;
+    align-items: start;
+  }
+  .surface .copy p {
+    font-size: clamp(16px, 1.1vw, 18px);
+    color: var(--ink-soft);
+    max-width: 44ch;
+    margin: 0 0 18px;
+  }
+  .surface .copy p b { font-style: italic; font-weight: 500; color: var(--ink); }
+
+  .transcript {
+    background: var(--paper-2);
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    padding: 22px 22px 18px;
+    font-family: var(--mono);
+    font-size: 12.5px;
+    line-height: 1.8;
+    color: var(--ink);
+    box-shadow:
+      0 1px 0 rgba(20,17,13,0.05) inset,
+      0 24px 40px -30px rgba(20,17,13,0.35);
+    position: relative;
+    overflow: hidden;
+  }
+  .transcript::before {
+    content: "SESSION 08 · LOT 07 · MARCH 14 · PRIVATE";
+    display: block;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    color: var(--ink-mute);
+    padding-bottom: 10px;
+    margin-bottom: 12px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .transcript .row {
+    display: grid;
+    grid-template-columns: 64px 110px 1fr;
+    gap: 16px;
+    padding: 3px 0;
+  }
+  .transcript .t  { color: var(--ink-mute); }
+  .transcript .w  { color: var(--ink); font-weight: 500; letter-spacing: 0.04em; }
+  .transcript .w.ab { color: var(--oxblood); }
+  .transcript .m  { color: var(--ink-soft); }
+  .transcript .m b { color: var(--ink); font-weight: 500; }
+  .transcript .bar {
+    height: 1px; background: var(--rule-soft);
+    margin: 10px 0;
+  }
+  .transcript .cursor {
+    display: inline-block;
+    width: 7px; height: 13px;
+    background: var(--oxblood);
+    vertical-align: -2px;
+    margin-left: 4px;
+    animation: blink 1.1s steps(1) infinite;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  /* ---------- Regions ticker ---------- */
+
+  .ticker {
+    padding: 32px 0;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    overflow: hidden;
+    background: linear-gradient(180deg, transparent, rgba(154,123,53,0.04));
+  }
+  .ticker .track {
+    display: flex;
+    gap: 64px;
+    font-family: var(--serif);
+    font-style: italic;
+    font-variation-settings: "opsz" 144, "SOFT" 100, "WONK" 1;
+    font-size: clamp(36px, 5vw, 72px);
+    color: var(--ink);
+    white-space: nowrap;
+    animation: slide 48s linear infinite;
+    letter-spacing: -0.01em;
+    font-weight: 340;
+  }
+  .ticker .track span.dot {
+    color: var(--brass);
+    font-style: normal;
+    padding: 0 0.2em;
+  }
+  @keyframes slide {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+
+  /* ---------- Contrast (We are / We are not) ---------- */
+
+  .contrast {
+    padding: 80px 0 80px;
+  }
+  .contrast .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+  }
+  .contrast .card {
+    padding: 40px 44px;
+    border: 1px solid var(--rule);
+    position: relative;
+  }
+  .contrast .card + .card { border-left: none; }
+  .contrast .card.is {
+    background: #1c1915;
+    color: var(--paper);
+    border-color: #1c1915;
+  }
+  .contrast .card h3 {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    margin: 0 0 24px;
+    color: var(--ink-mute);
+  }
+  .contrast .card.is h3 { color: var(--brass); }
+  .contrast .card ul { list-style: none; padding: 0; margin: 0; }
+  .contrast .card li {
+    font-family: var(--serif);
+    font-size: clamp(20px, 1.8vw, 26px);
+    line-height: 1.3;
+    padding: 14px 0;
+    border-top: 1px solid var(--rule-soft);
+    display: grid;
+    grid-template-columns: 28px 1fr;
+    align-items: baseline;
+  }
+  .contrast .card.is li { border-top-color: #2a2520; color: var(--paper); }
+  .contrast .card li:first-child { border-top: none; }
+  .contrast .card li::before {
+    content: "✕";
+    color: var(--oxblood);
+    font-family: var(--mono);
+    font-size: 12px;
+    transform: translateY(-2px);
+  }
+  .contrast .card.is li::before {
+    content: "✓";
+    color: var(--brass);
+  }
+  .contrast .card em {
+    font-style: italic;
+    font-variation-settings: "opsz" 48, "SOFT" 100, "WONK" 1;
+  }
+
+  /* ---------- Colophon / Footer ---------- */
+
+  footer.site {
+    padding: 80px 0 40px;
+    border-top: 1px solid var(--rule);
+    background:
+      radial-gradient(700px 260px at 100% 0%, rgba(154,123,53,0.10), transparent 70%),
+      transparent;
+  }
+  footer.site .row {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr 1fr 1fr;
+    gap: 40px;
+    align-items: start;
+  }
+  footer.site .brand p {
+    max-width: 36ch;
+    color: var(--ink-soft);
+    font-size: 15.5px;
+    margin: 14px 0 0;
+  }
+  footer.site .brand .logo img {
+    width: 220px; display: block;
+  }
+  footer.site h4 {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin: 6px 0 14px;
+  }
+  footer.site ul { list-style: none; padding: 0; margin: 0; }
+  footer.site li { padding: 4px 0; font-size: 15px; color: var(--ink); }
+  footer.site a {
+    color: var(--ink);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color .3s ease;
+  }
+  footer.site a:hover { border-bottom-color: var(--oxblood); }
+  footer.site .enquire {
+    margin-top: 10px;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 20px;
+    color: var(--oxblood);
+    font-variation-settings: "opsz" 48, "SOFT" 100, "WONK" 1;
+  }
+  footer.site .colophon {
+    margin-top: 48px;
+    padding-top: 20px;
+    border-top: 1px solid var(--rule-soft);
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+
+  /* ---------- Responsive ---------- */
+
+  @media (max-width: 920px) {
+    .meta-bar { grid-template-columns: 1fr; gap: 8px; }
+    .meta-bar .right { flex-wrap: wrap; gap: 14px; }
+    .meta-bar .mid, .meta-bar .right { justify-self: start; }
+    header.site { grid-template-columns: 1fr; gap: 14px; }
+    header.site nav { justify-self: start; flex-wrap: wrap; }
+    .folio { display: none; }
+    .section-head { grid-template-columns: 1fr; gap: 10px; }
+    .ledger .cols { grid-template-columns: 1fr; }
+    .ledger .col + .col { border-left: none; border-top: 1px solid var(--rule); padding-left: 0; padding-top: 28px; margin-top: 8px; }
+    .ledger .col:first-child { padding-right: 0; }
+    .surface-layout { grid-template-columns: 1fr; gap: 36px; }
+    .contrast .grid { grid-template-columns: 1fr; }
+    .contrast .card + .card { border-left: 1px solid var(--rule); border-top: none; }
+    footer.site .row { grid-template-columns: 1fr 1fr; }
+    .transcript .row { grid-template-columns: 50px 90px 1fr; gap: 10px; }
+    .manifesto li { grid-template-columns: 1fr; gap: 10px; }
+    .manifesto li::before { padding-top: 0; }
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .reveal, .ruledraw, .ticker .track, .transcript .cursor { animation: none; opacity: 1; transform: none; }
+    .meta-bar .dot { animation: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- META BAR -->
+  <div class="meta-bar reveal r1">
+    <div class="left">
+      <span>AB · Vol. VII</span>
+      <span style="color: var(--ink-mute); padding: 0 10px;">/</span>
+      <span>Spring Catalogue MMXXVI</span>
+    </div>
+    <div class="mid">
+      <span class="dot" aria-hidden="true"></span>
+      <span style="color: var(--ink)">Session active</span>
+      <span style="color: var(--ink-mute)">· private</span>
+    </div>
+    <div class="right">
+      <span class="clock"><b>NYC</b><span id="c-nyc">—</span></span>
+      <span class="clock"><b>LON</b><span id="c-lon">—</span></span>
+      <span class="clock"><b>DXB</b><span id="c-dxb">—</span></span>
+    </div>
+  </div>
+
+  <div class="rule brass ruledraw" aria-hidden="true"></div>
+
+  <!-- HEADER -->
+  <header class="site reveal r2">
+    <a class="logo" href="#" aria-label="ArtBound">
+      <img src="assets/images/ArtBound-logo-colorful.png" alt="ArtBound" />
+    </a>
+    <div></div>
+    <nav>
+      <a href="#manifesto">Manifesto</a>
+      <a href="#for-galleries">For Galleries</a>
+      <a href="#surface">Surface</a>
+      <a href="#stance">Stance</a>
+      <a class="enquire" href="mailto:galleries@artbound.art">Enquire</a>
+    </nav>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="folio reveal r3">
+      <div>Folio 01</div>
+      <div class="sm">A note on infrastructure,</div>
+      <div class="sm">for primary-market galleries.</div>
+      <div style="height: 14px;"></div>
+      <div><b>Editors</b></div>
+      <div class="sm">NY · LON · DXB</div>
+      <div style="height: 14px;"></div>
+      <div><b>Status</b></div>
+      <div class="sm">By invitation</div>
+    </div>
+
+    <div class="eyebrow reveal r3">
+      <span class="lot">№ 001</span>
+      <span class="sep" aria-hidden="true"></span>
+      <span>Infrastructure, not a marketplace</span>
+    </div>
+
+    <h1 class="reveal r4">
+      Infrastructure for<br />
+      private<span class="amp">,</span> <em>gallery-led</em><br />
+      auctions<span class="amp">—</span><br />
+      held in conversation.
+    </h1>
+
+    <p class="lede reveal r5">
+      ArtBound is the auction stack behind primary-market galleries in
+      New York, London and the Gulf. No storefront. No public catalogue.
+      The gallery keeps the collector; we run <b>the room</b>.
+    </p>
+
+    <div class="callouts reveal r6">
+      <span>AI-native</span>
+      <span>WhatsApp-first</span>
+      <span>Invitation only</span>
+      <span>Gallery-led</span>
+      <span>Multi-region</span>
+    </div>
+  </section>
+
+  <div class="rule" aria-hidden="true"></div>
+
+  <!-- MANIFESTO -->
+  <section id="manifesto" class="manifesto">
+    <div class="section-head">
+      <div class="no"><b>§ I.</b> &nbsp; Manifesto &nbsp;·&nbsp; Four statements</div>
+      <h2>What we <em>are</em>, said plainly.</h2>
+    </div>
+
+    <ol>
+      <li>
+        <p>
+          The gallery stays the relationship holder.
+          <em>Curation, collectors, data</em> — yours, and yours to keep.
+          <span class="note">Art. I — Authority</span>
+        </p>
+      </li>
+      <li>
+        <p>
+          Auctions happen in the thread your clients already use.
+          WhatsApp, real-time, AI-mediated — <em>the room moved</em>.
+          <span class="note">Art. II — Surface</span>
+        </p>
+      </li>
+      <li>
+        <p>
+          No storefront. No public catalogue. No discovery feed.
+          <em>Invitation only</em>, by design and by default.
+          <span class="note">Art. III — Discretion</span>
+        </p>
+      </li>
+      <li>
+        <p>
+          We are not a marketplace. <em>We are infrastructure.</em>
+          Quiet, compliant, multi-region, and almost invisible.
+          <span class="note">Art. IV — Stance</span>
+        </p>
+      </li>
+    </ol>
+  </section>
+
+  <!-- LEDGER -->
+  <section id="for-galleries" class="ledger">
+    <div class="section-head">
+      <div class="no"><b>§ II.</b> &nbsp; The ledger &nbsp;·&nbsp; Who holds what</div>
+      <h2>Galleries hold the relationship. <em>We hold the room.</em></h2>
+    </div>
+
+    <div class="cols">
+      <div class="col">
+        <h3>The gallery <b>holds</b></h3>
+        <ul>
+          <li><div>Curatorial authority<em>Artists, lot selection, reserves, narrative.</em></div></li>
+          <li><div>Collector relationships<em>Your contacts, your trust, your invitations.</em></div></li>
+          <li><div>Data ownership<em>Bid history, preferences, outcomes — returned to you.</em></div></li>
+          <li><div>Brand voice<em>Your name leads. Ours does not.</em></div></li>
+        </ul>
+      </div>
+      <div class="col">
+        <h3>ArtBound <b>provides</b></h3>
+        <ul>
+          <li><div>Auction orchestration<em>Session pacing, reserves, extensions, closes.</em></div></li>
+          <li><div>Bidding, escrow, settlement<em>KYC, custody, multi-currency reconciliation.</em></div></li>
+          <li><div>Conversational surface<em>AI-mediated dialogue on WhatsApp, in real time.</em></div></li>
+          <li><div>Regional compliance<em>NY · LON · DXB · AUH. Discretion, end to end.</em></div></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- REGIONS TICKER -->
+  <section class="ticker" aria-hidden="true">
+    <div class="track">
+      <span>New&nbsp;York</span><span class="dot">✦</span>
+      <span>London</span><span class="dot">✦</span>
+      <span>Dubai</span><span class="dot">✦</span>
+      <span>Abu&nbsp;Dhabi</span><span class="dot">✦</span>
+      <span>Paris</span><span class="dot">✦</span>
+      <span>Geneva</span><span class="dot">✦</span>
+      <span>Riyadh</span><span class="dot">✦</span>
+      <span>Miami</span><span class="dot">✦</span>
+      <span>New&nbsp;York</span><span class="dot">✦</span>
+      <span>London</span><span class="dot">✦</span>
+      <span>Dubai</span><span class="dot">✦</span>
+      <span>Abu&nbsp;Dhabi</span><span class="dot">✦</span>
+      <span>Paris</span><span class="dot">✦</span>
+      <span>Geneva</span><span class="dot">✦</span>
+      <span>Riyadh</span><span class="dot">✦</span>
+      <span>Miami</span><span class="dot">✦</span>
+    </div>
+  </section>
+
+  <!-- SURFACE -->
+  <section id="surface" class="surface">
+    <div class="section-head">
+      <div class="no"><b>§ III.</b> &nbsp; The surface &nbsp;·&nbsp; How a lot closes</div>
+      <h2>A private auction, held in <em>a message thread</em>.</h2>
+    </div>
+
+    <div class="surface-layout">
+      <div class="copy">
+        <p>
+          The auction surface is the thread your collectors already read.
+          ArtBound runs the <b>room</b>: opens the lot, holds the reserve,
+          keeps time across regions, records the close.
+        </p>
+        <p>
+          The gallery writes in its own voice. Collectors bid in the language
+          and channel they prefer. The AB agent handles the mechanics — pacing,
+          extensions, confirmations, settlement — in the background.
+        </p>
+        <p>
+          What you see on the right is an anonymised transcript from a closed
+          session. No catalogue, no microsite, no public page. <b>The thread
+          is the venue.</b>
+        </p>
+      </div>
+
+      <div class="transcript" role="img" aria-label="Anonymised auction transcript">
+        <div class="row"><span class="t">22:04</span><span class="w">Gallery</span><span class="m">Lot <b>07</b> opens in four minutes. Reserve held at USD 180,000.</span></div>
+        <div class="row"><span class="t">22:06</span><span class="w ab">AB ·</span><span class="m"><b>Lot 07 · open.</b> Three confirmed bidders in the room.</span></div>
+        <div class="row"><span class="t">22:06</span><span class="w">Collector · DXB</span><span class="m">Bid <b>USD 220,000</b>.</span></div>
+        <div class="row"><span class="t">22:07</span><span class="w">Collector · LON</span><span class="m"><b>235,000</b>.</span></div>
+        <div class="row"><span class="t">22:07</span><span class="w ab">AB ·</span><span class="m">Recorded. <b>Live with two</b>. Thirty seconds.</span></div>
+        <div class="row"><span class="t">22:08</span><span class="w">Collector · NYC</span><span class="m"><b>248,000</b>. Final.</span></div>
+        <div class="bar"></div>
+        <div class="row"><span class="t">22:08</span><span class="w ab">AB ·</span><span class="m"><b>Lot 07 closed</b> at USD 248,000. Settlement in progress.<span class="cursor" aria-hidden="true"></span></span></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="rule" aria-hidden="true"></div>
+
+  <!-- CONTRAST -->
+  <section id="stance" class="contrast">
+    <div class="section-head">
+      <div class="no"><b>§ IV.</b> &nbsp; The stance &nbsp;·&nbsp; What we do not do</div>
+      <h2>We are not Artsy. We are not 1stDibs. <em>We are not a marketplace.</em></h2>
+    </div>
+
+    <div class="grid">
+      <div class="card not">
+        <h3>What ArtBound is <em>not</em></h3>
+        <ul>
+          <li>A consumer marketplace.</li>
+          <li>A discovery platform or feed.</li>
+          <li>A third-party channel that disintermediates the gallery.</li>
+          <li>A replacement for the gallery&rsquo;s relationship with its collectors.</li>
+          <li>A public catalogue or a storefront.</li>
+        </ul>
+      </div>
+      <div class="card is">
+        <h3>What ArtBound <em>is</em></h3>
+        <ul>
+          <li>Auction infrastructure, licensed to galleries.</li>
+          <li>Private, invitation-only, conversational.</li>
+          <li>AI-native, WhatsApp-first, multi-region.</li>
+          <li>Compliant across NY, LON, DXB and AUH.</li>
+          <li>Almost invisible &mdash; and that is the point.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer id="enquire" class="site">
+    <div class="row">
+      <div class="brand">
+        <a class="logo" href="#" aria-label="ArtBound">
+          <img src="assets/images/ArtBound-logo-colorful.png" alt="ArtBound" />
+        </a>
+        <p>
+          Auction infrastructure for primary-market galleries.
+          By invitation, across New York, London and the Gulf.
+        </p>
+      </div>
+      <div>
+        <h4>Surface</h4>
+        <ul>
+          <li><a href="#manifesto">Manifesto</a></li>
+          <li><a href="#for-galleries">For Galleries</a></li>
+          <li><a href="#surface">Auction Surface</a></li>
+          <li><a href="#stance">Stance</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Offices</h4>
+        <ul>
+          <li>New York &nbsp;· &nbsp;Tribeca</li>
+          <li>London &nbsp;· &nbsp;Mayfair</li>
+          <li>Dubai &nbsp;· &nbsp;DIFC</li>
+        </ul>
+      </div>
+      <div>
+        <h4>Enquiries</h4>
+        <ul>
+          <li><a href="mailto:galleries@artbound.art">galleries@artbound.art</a></li>
+          <li><a href="mailto:press@artbound.art">press@artbound.art</a></li>
+        </ul>
+        <div class="enquire">Invitation&nbsp;only.</div>
+      </div>
+    </div>
+
+    <div class="colophon">
+      <div>© MMXXVI &nbsp;ArtBound Infrastructure Ltd.</div>
+      <div>Set in Fraunces &amp; JetBrains Mono · Catalogue No. VII</div>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+  // Live regional clocks — NYC · LON · DXB
+  (function () {
+    const zones = [
+      { id: "c-nyc", tz: "America/New_York" },
+      { id: "c-lon", tz: "Europe/London" },
+      { id: "c-dxb", tz: "Asia/Dubai" },
+    ];
+    function pad(n) { return String(n).padStart(2, "0"); }
+    function render() {
+      zones.forEach(z => {
+        const el = document.getElementById(z.id);
+        if (!el) return;
+        const parts = new Intl.DateTimeFormat("en-GB", {
+          timeZone: z.tz,
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+          hour12: false,
+        }).formatToParts(new Date());
+        const h = parts.find(p => p.type === "hour").value;
+        const m = parts.find(p => p.type === "minute").value;
+        const s = parts.find(p => p.type === "second").value;
+        el.textContent = pad(h) + ":" + pad(m) + ":" + pad(s);
+      });
+    }
+    render();
+    setInterval(render, 1000);
+  })();
+
+  // Gentle scroll reveal on sections below the fold
+  (function () {
+    if (!("IntersectionObserver" in window)) return;
+    const els = document.querySelectorAll(
+      ".manifesto li, .ledger .col, .surface .copy, .transcript, .contrast .card, .section-head"
+    );
+    els.forEach(el => {
+      el.style.opacity = "0";
+      el.style.transform = "translateY(12px)";
+      el.style.transition = "opacity .9s cubic-bezier(.2,.7,.1,1), transform .9s cubic-bezier(.2,.7,.1,1)";
+    });
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e, i) => {
+        if (e.isIntersecting) {
+          const t = e.target;
+          const delay = (t.dataset.idx ? +t.dataset.idx : i) * 70;
+          setTimeout(() => {
+            t.style.opacity = "1";
+            t.style.transform = "translateY(0)";
+          }, delay);
+          io.unobserve(t);
+        }
+      });
+    }, { threshold: 0.12 });
+    els.forEach((el, i) => { el.dataset.idx = i % 4; io.observe(el); });
+  })();
+</script>
+
+</body>
+</html>
