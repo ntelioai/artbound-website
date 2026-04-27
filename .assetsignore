@@ -1,0 +1,26 @@
+# Files in the repo root that should NOT be served as public static assets.
+# Wrangler reads this file when bundling the assets directory.
+
+CLAUDE.md
+.claude
+.claude/**
+**/.claude/**
+.git
+.git/**
+.gitignore
+.assetsignore
+wrangler.jsonc
+.wrangler/**
+.dev.vars*
+
+# Local-only working folder
+clientOnly
+clientOnly/**
+
+# Brand source files — large Pixelmator originals
+**/*.pxd
+assets/images/source/**
+
+# OS junk
+.DS_Store
+**/.DS_Store
