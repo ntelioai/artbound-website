@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>ArtBound — Infrastructure for private, gallery-led auctions</title>
-<meta name="description" content="ArtBound is the auction stack behind primary-market galleries. Private, invitation-only, conversational. New York · London · Dubai." />
+<meta name="description" content="ArtBound is the AI agent that runs private auctions for primary-market galleries. Invitation-only, conversational. Beirut · Dubai · Paris · New York." />
 
 <link rel="icon" type="image/png" href="assets/images/favicon.png" />
 <link rel="apple-touch-icon" href="assets/images/favicon.png" />
@@ -192,8 +192,6 @@
     gap: 14px;
     align-items: center;
   }
-  .hero .eyebrow .lot { color: var(--oxblood); }
-  .hero .eyebrow .sep { width: 28px; height: 1px; background: var(--rule); display: inline-block; }
 
   .hero h1 {
     font-family: var(--serif);
@@ -252,24 +250,6 @@
     display: inline-block;
   }
 
-  /* Diagonal hero ornament: a thin catalogue folio */
-  .folio {
-    position: absolute;
-    right: var(--gutter);
-    top: 60px;
-    width: 260px;
-    font-family: var(--mono);
-    font-size: 10.5px;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--ink-mute);
-    border-left: 1px solid var(--rule);
-    padding: 8px 0 8px 16px;
-    line-height: 1.9;
-  }
-  .folio b { color: var(--ink); font-weight: 500; letter-spacing: 0.2em; }
-  .folio .sm { color: var(--ink-soft); }
-
   /* ---------- Section titling ---------- */
 
   .section-head {
@@ -286,7 +266,6 @@
     text-transform: uppercase;
     color: var(--ink-mute);
   }
-  .section-head .no b { color: var(--oxblood); font-weight: 500; }
   .section-head h2 {
     font-family: var(--serif);
     font-variation-settings: "opsz" 96, "SOFT" 30;
@@ -323,7 +302,7 @@
   }
   .manifesto li:last-child { border-bottom: 1px solid var(--rule); }
   .manifesto li::before {
-    content: "№ 0" counter(mf);
+    content: "0" counter(mf);
     font-family: var(--mono);
     font-size: 11.5px;
     letter-spacing: 0.22em;
@@ -482,38 +461,6 @@
   }
   @keyframes blink { 50% { opacity: 0; } }
 
-  /* ---------- Regions ticker ---------- */
-
-  .ticker {
-    padding: 32px 0;
-    border-top: 1px solid var(--rule);
-    border-bottom: 1px solid var(--rule);
-    overflow: hidden;
-    background: linear-gradient(180deg, transparent, rgba(154,123,53,0.04));
-  }
-  .ticker .track {
-    display: flex;
-    gap: 64px;
-    font-family: var(--serif);
-    font-style: italic;
-    font-variation-settings: "opsz" 144, "SOFT" 100, "WONK" 1;
-    font-size: clamp(36px, 5vw, 72px);
-    color: var(--ink);
-    white-space: nowrap;
-    animation: slide 48s linear infinite;
-    letter-spacing: -0.01em;
-    font-weight: 340;
-  }
-  .ticker .track span.dot {
-    color: var(--brass);
-    font-style: normal;
-    padding: 0 0.2em;
-  }
-  @keyframes slide {
-    from { transform: translateX(0); }
-    to   { transform: translateX(-50%); }
-  }
-
   /* ---------- Contrast (We are / We are not) ---------- */
 
   .contrast {
@@ -643,7 +590,6 @@
     .meta-bar .mid, .meta-bar .right { justify-self: start; }
     header.site { grid-template-columns: 1fr; gap: 14px; }
     header.site nav { justify-self: start; flex-wrap: wrap; }
-    .folio { display: none; }
     .section-head { grid-template-columns: 1fr; gap: 10px; }
     .ledger .cols { grid-template-columns: 1fr; }
     .ledger .col + .col { border-left: none; border-top: 1px solid var(--rule); padding-left: 0; padding-top: 28px; margin-top: 8px; }
@@ -659,7 +605,7 @@
 
   /* Reduced motion */
   @media (prefers-reduced-motion: reduce) {
-    .reveal, .ruledraw, .ticker .track, .transcript .cursor { animation: none; opacity: 1; transform: none; }
+    .reveal, .ruledraw, .transcript .cursor { animation: none; opacity: 1; transform: none; }
     .meta-bar .dot { animation: none; }
   }
 </style>
@@ -670,20 +616,17 @@
 
   <!-- META BAR -->
   <div class="meta-bar reveal r1">
-    <div class="left">
-      <span>AB · Vol. VII</span>
-      <span style="color: var(--ink-mute); padding: 0 10px;">/</span>
-      <span>Spring Catalogue MMXXVI</span>
-    </div>
+    <div class="left"></div>
     <div class="mid">
       <span class="dot" aria-hidden="true"></span>
       <span style="color: var(--ink)">Session active</span>
       <span style="color: var(--ink-mute)">· private</span>
     </div>
     <div class="right">
-      <span class="clock"><b>NYC</b><span id="c-nyc">—</span></span>
-      <span class="clock"><b>LON</b><span id="c-lon">—</span></span>
+      <span class="clock"><b>BEY</b><span id="c-bey">—</span></span>
       <span class="clock"><b>DXB</b><span id="c-dxb">—</span></span>
+      <span class="clock"><b>PAR</b><span id="c-par">—</span></span>
+      <span class="clock"><b>NYC</b><span id="c-nyc">—</span></span>
     </div>
   </div>
 
@@ -706,21 +649,7 @@
 
   <!-- HERO -->
   <section class="hero">
-    <div class="folio reveal r3">
-      <div>Folio 01</div>
-      <div class="sm">A note on infrastructure,</div>
-      <div class="sm">for primary-market galleries.</div>
-      <div style="height: 14px;"></div>
-      <div><b>Editors</b></div>
-      <div class="sm">NY · LON · DXB</div>
-      <div style="height: 14px;"></div>
-      <div><b>Status</b></div>
-      <div class="sm">By invitation</div>
-    </div>
-
     <div class="eyebrow reveal r3">
-      <span class="lot">№ 001</span>
-      <span class="sep" aria-hidden="true"></span>
       <span>Infrastructure, not a marketplace</span>
     </div>
 
@@ -732,9 +661,10 @@
     </h1>
 
     <p class="lede reveal r5">
-      ArtBound is the auction stack behind primary-market galleries in
-      New York, London and the Gulf. No storefront. No public catalogue.
-      The gallery keeps the collector; we run <b>the room</b>.
+      ArtBound is the AI agent that runs private auctions for primary-market
+      galleries in Beirut, Dubai, Paris and New York. No storefront. No public
+      catalogue. The gallery keeps the collector, the contract and the
+      funds &mdash; we run <b>the room</b>.
     </p>
 
     <div class="callouts reveal r6">
@@ -751,7 +681,7 @@
   <!-- MANIFESTO -->
   <section id="manifesto" class="manifesto">
     <div class="section-head">
-      <div class="no"><b>§ I.</b> &nbsp; Manifesto &nbsp;·&nbsp; Four statements</div>
+      <div class="no">Manifesto</div>
       <h2>What we <em>are</em>, said plainly.</h2>
     </div>
 
@@ -780,7 +710,7 @@
       <li>
         <p>
           We are not a marketplace. <em>We are infrastructure.</em>
-          Quiet, compliant, multi-region, and almost invisible.
+          Quiet, multi-region, and almost invisible.
           <span class="note">Art. IV — Stance</span>
         </p>
       </li>
@@ -790,7 +720,7 @@
   <!-- LEDGER -->
   <section id="for-galleries" class="ledger">
     <div class="section-head">
-      <div class="no"><b>§ II.</b> &nbsp; The ledger &nbsp;·&nbsp; Who holds what</div>
+      <div class="no">The ledger</div>
       <h2>Galleries hold the relationship. <em>We hold the room.</em></h2>
     </div>
 
@@ -802,46 +732,25 @@
           <li><div>Collector relationships<em>Your contacts, your trust, your invitations.</em></div></li>
           <li><div>Data ownership<em>Bid history, preferences, outcomes — returned to you.</em></div></li>
           <li><div>Brand voice<em>Your name leads. Ours does not.</em></div></li>
+          <li><div>The transaction<em>Contracts, funds and collector checks stay with you.</em></div></li>
         </ul>
       </div>
       <div class="col">
         <h3>ArtBound <b>provides</b></h3>
         <ul>
           <li><div>Auction orchestration<em>Session pacing, reserves, extensions, closes.</em></div></li>
-          <li><div>Bidding, escrow, settlement<em>KYC, custody, multi-currency reconciliation.</em></div></li>
+          <li><div>Bid handling<em>Increments, tie-breaks, confirmations, a recorded trail.</em></div></li>
           <li><div>Conversational surface<em>AI-mediated dialogue on WhatsApp, in real time.</em></div></li>
-          <li><div>Regional compliance<em>NY · LON · DXB · AUH. Discretion, end to end.</em></div></li>
+          <li><div>Multi-region timing<em>One session, collectors across four time zones.</em></div></li>
         </ul>
       </div>
-    </div>
-  </section>
-
-  <!-- REGIONS TICKER -->
-  <section class="ticker" aria-hidden="true">
-    <div class="track">
-      <span>New&nbsp;York</span><span class="dot">✦</span>
-      <span>London</span><span class="dot">✦</span>
-      <span>Dubai</span><span class="dot">✦</span>
-      <span>Abu&nbsp;Dhabi</span><span class="dot">✦</span>
-      <span>Paris</span><span class="dot">✦</span>
-      <span>Geneva</span><span class="dot">✦</span>
-      <span>Riyadh</span><span class="dot">✦</span>
-      <span>Miami</span><span class="dot">✦</span>
-      <span>New&nbsp;York</span><span class="dot">✦</span>
-      <span>London</span><span class="dot">✦</span>
-      <span>Dubai</span><span class="dot">✦</span>
-      <span>Abu&nbsp;Dhabi</span><span class="dot">✦</span>
-      <span>Paris</span><span class="dot">✦</span>
-      <span>Geneva</span><span class="dot">✦</span>
-      <span>Riyadh</span><span class="dot">✦</span>
-      <span>Miami</span><span class="dot">✦</span>
     </div>
   </section>
 
   <!-- SURFACE -->
   <section id="surface" class="surface">
     <div class="section-head">
-      <div class="no"><b>§ III.</b> &nbsp; The surface &nbsp;·&nbsp; How a lot closes</div>
+      <div class="no">The surface</div>
       <h2>A private auction, held in <em>a message thread</em>.</h2>
     </div>
 
@@ -855,7 +764,7 @@
         <p>
           The gallery writes in its own voice. Collectors bid in the language
           and channel they prefer. The AB agent handles the mechanics — pacing,
-          extensions, confirmations, settlement — in the background.
+          extensions, confirmations, the record — in the background.
         </p>
         <p>
           What you see on the right is an anonymised transcript from a closed
@@ -868,11 +777,11 @@
         <div class="row"><span class="t">22:04</span><span class="w">Gallery</span><span class="m">Lot <b>07</b> opens in four minutes. Reserve held at USD 180,000.</span></div>
         <div class="row"><span class="t">22:06</span><span class="w ab">AB ·</span><span class="m"><b>Lot 07 · open.</b> Three confirmed bidders in the room.</span></div>
         <div class="row"><span class="t">22:06</span><span class="w">Collector · DXB</span><span class="m">Bid <b>USD 220,000</b>.</span></div>
-        <div class="row"><span class="t">22:07</span><span class="w">Collector · LON</span><span class="m"><b>235,000</b>.</span></div>
+        <div class="row"><span class="t">22:07</span><span class="w">Collector · BEY</span><span class="m"><b>235,000</b>.</span></div>
         <div class="row"><span class="t">22:07</span><span class="w ab">AB ·</span><span class="m">Recorded. <b>Live with two</b>. Thirty seconds.</span></div>
         <div class="row"><span class="t">22:08</span><span class="w">Collector · NYC</span><span class="m"><b>248,000</b>. Final.</span></div>
         <div class="bar"></div>
-        <div class="row"><span class="t">22:08</span><span class="w ab">AB ·</span><span class="m"><b>Lot 07 closed</b> at USD 248,000. Settlement in progress.<span class="cursor" aria-hidden="true"></span></span></div>
+        <div class="row"><span class="t">22:08</span><span class="w ab">AB ·</span><span class="m"><b>Lot 07 closed</b> at USD 248,000. Handed to the gallery.<span class="cursor" aria-hidden="true"></span></span></div>
       </div>
     </div>
   </section>
@@ -882,7 +791,7 @@
   <!-- CONTRAST -->
   <section id="stance" class="contrast">
     <div class="section-head">
-      <div class="no"><b>§ IV.</b> &nbsp; The stance &nbsp;·&nbsp; What we do not do</div>
+      <div class="no">The stance</div>
       <h2>We are not Artsy. We are not 1stDibs. <em>We are not a marketplace.</em></h2>
     </div>
 
@@ -895,6 +804,7 @@
           <li>A third-party channel that disintermediates the gallery.</li>
           <li>A replacement for the gallery&rsquo;s relationship with its collectors.</li>
           <li>A public catalogue or a storefront.</li>
+          <li>A broker, a payment provider, or a party to the sale.</li>
         </ul>
       </div>
       <div class="card is">
@@ -903,7 +813,7 @@
           <li>Auction infrastructure, licensed to galleries.</li>
           <li>Private, invitation-only, conversational.</li>
           <li>AI-native, WhatsApp-first, multi-region.</li>
-          <li>Compliant across NY, LON, DXB and AUH.</li>
+          <li>Orchestration only &mdash; the session, and nothing beyond it.</li>
           <li>Almost invisible &mdash; and that is the point.</li>
         </ul>
       </div>
@@ -919,7 +829,7 @@
         </a>
         <p>
           Auction infrastructure for primary-market galleries.
-          By invitation, across New York, London and the Gulf.
+          By invitation. Beirut &middot; Dubai &middot; Paris &middot; New York.
         </p>
       </div>
       <div>
@@ -942,20 +852,20 @@
     </div>
 
     <div class="colophon">
-      <div>© MMXXVI &nbsp;ArtBound Infrastructure Ltd.</div>
-      <div>Set in Fraunces &amp; JetBrains Mono · Catalogue No. VII</div>
+      <div>© 2026 &nbsp;ArtBound &mdash; a product of ntelio L.L.C.</div>
     </div>
   </footer>
 
 </div>
 
 <script>
-  // Live regional clocks — NYC · LON · DXB
+  // Live regional clocks — BEY · DXB · PAR · NYC
   (function () {
     const zones = [
-      { id: "c-nyc", tz: "America/New_York" },
-      { id: "c-lon", tz: "Europe/London" },
+      { id: "c-bey", tz: "Asia/Beirut" },
       { id: "c-dxb", tz: "Asia/Dubai" },
+      { id: "c-par", tz: "Europe/Paris" },
+      { id: "c-nyc", tz: "America/New_York" },
     ];
     function pad(n) { return String(n).padStart(2, "0"); }
     function render() {
