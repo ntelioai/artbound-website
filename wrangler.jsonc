@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "artbound-website",
+  "name": "artbound-www",
   "compatibility_date": "2026-04-27",
   "observability": {
     "enabled": true

@@ -45,7 +45,7 @@ Avoid positioning Artbound as a consumer marketplace or a replacement for galler
 
 ## Deployment
 
-The site is a **Cloudflare Worker** named `artbound-website` in the **`Rabih@ntelio.ai`** account
+The site is a **Cloudflare Worker** named `artbound-www` in the **`Rabih@ntelio.ai`** account
 (`78a22864ee639785fe86b6257a771450`). It serves `artbound.art` and `www.artbound.art`.
 
 Do not confuse it with the Pages project `artbound` in the same account — that is the auction
