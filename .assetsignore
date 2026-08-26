@@ -13,6 +13,14 @@ wrangler.jsonc
 .wrangler/**
 .dev.vars*
 
+# Node / build tooling — must never be served publicly
+package.json
+package-lock.json
+node_modules
+node_modules/**
+.github
+.github/**
+
 # Local-only working folder
 clientOnly
 clientOnly/**

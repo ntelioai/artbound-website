@@ -43,6 +43,47 @@ Avoid positioning Artbound as a consumer marketplace or a replacement for galler
 - Integrate brand assets from [assets/images/](assets/images/)
 - Maintain responsive, accessible, production-quality web UI
 
+## Deployment
+
+The site is a **Cloudflare Worker** named `artbound-website` in the **`Rabih@ntelio.ai`** account
+(`78a22864ee639785fe86b6257a771450`). It serves `artbound.art` and `www.artbound.art`.
+
+Do not confuse it with the Pages project `artbound` in the same account — that is the auction
+*application* (`auction.artbound.art`), built from the separate `ntelioai/artbound` repo.
+
+### Auto-deploy
+
+Pushes to `main` deploy automatically via **Cloudflare Workers Builds** (native Git integration,
+configured in the dashboard — no API token is stored in GitHub).
+
+- Build command: *(none)*
+- Deploy command: `npx wrangler deploy`
+- Install: `npm ci` — `wrangler` is pinned in `package.json` / `package-lock.json`
+
+To deploy by hand (needs `wrangler login`; the account must be selected because the token sees
+several):
+
+```
+CLOUDFLARE_ACCOUNT_ID=78a22864ee639785fe86b6257a771450 npx wrangler deploy
+```
+
+### Static assets — important
+
+`wrangler.jsonc` sets `assets.directory` to the **repository root**, so every file in the repo is a
+candidate for public serving. [.assetsignore](.assetsignore) is the only thing keeping private files
+off the web. **Any new tooling, config, or build artifact added to the root must be added there too**
+— otherwise it is published at `https://artbound.art/<path>`.
+
+Verify after a change:
+
+```
+curl -o /dev/null -w '%{http_code}\n' https://artbound.art/package.json   # expect 404
+```
+
+Note: `npx wrangler dev` reload-loops on this repo — it watches the assets directory (the root) and
+its own `.wrangler/` cache writes inside it retrigger the build. Preview with any static file server
+instead.
+
 ## Notes
 
 - No build system or framework is set up yet — when introducing one, prefer a minimal, modern stack appropriate for a marketing site

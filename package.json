@@ -1,0 +1,13 @@
+{
+  "name": "artbound-website",
+  "version": "1.0.0",
+  "private": true,
+  "description": "ArtBound marketing site — static assets served by a Cloudflare Worker",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "wrangler": "4.126.0"
+  }
+}
