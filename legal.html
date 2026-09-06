@@ -1,0 +1,1206 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Terms &amp; Privacy — ArtBound</title>
+<meta name="description" content="Terms of Service and Privacy Policy for ArtBound — auction infrastructure for primary-market galleries, operated on WhatsApp by ntelio L.L.C." />
+<link rel="canonical" href="https://artbound.art/legal.html" />
+<meta name="robots" content="index, follow" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="ArtBound" />
+<meta property="og:title" content="Terms &amp; Privacy — ArtBound" />
+<meta property="og:description" content="Terms of Service and Privacy Policy for ArtBound." />
+<meta property="og:url" content="https://artbound.art/legal.html" />
+
+<link rel="icon" type="image/png" href="assets/images/favicon.png" />
+<link rel="apple-touch-icon" href="assets/images/favicon.png" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..900,0..100,0..1;1,9..144,300..900,0..100,0..1&family=JetBrains+Mono:ital,wght@0,300..700;1,300..700&display=swap" rel="stylesheet" />
+
+<style>
+  :root {
+    --paper:     #f2ebdb;
+    --paper-2:   #ece3cd;
+    --ink:       #14110d;
+    --ink-soft:  #3a332a;
+    --ink-mute:  #6a5f51;
+    --rule:      #b1a07a;
+    --rule-soft: #c8b994;
+    --brass:     #9a7b35;
+    --oxblood:   #6e1f1c;
+    --session:   #1f6b3a;
+
+    --serif: "Fraunces", "Times New Roman", serif;
+    --mono:  "JetBrains Mono", ui-monospace, monospace;
+
+    --gutter: clamp(20px, 4vw, 56px);
+    --max:    1080px;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+
+  html { background: var(--paper); color: var(--ink); scroll-behavior: smooth; }
+  body {
+    font-family: var(--serif);
+    font-variation-settings: "opsz" 14, "SOFT" 30, "WONK" 0;
+    font-weight: 380;
+    font-size: 17px;
+    line-height: 1.62;
+    letter-spacing: 0.005em;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    background:
+      radial-gradient(1200px 600px at 85% -10%, rgba(154,123,53,0.10), transparent 60%),
+      radial-gradient(900px 500px at 0% 110%, rgba(110,31,28,0.06), transparent 60%),
+      var(--paper);
+    overflow-x: hidden;
+  }
+
+  /* Paper grain */
+  body::before {
+    content: "";
+    position: fixed; inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.5;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.08  0 0 0 0 0.07  0 0 0 0 0.05  0 0 0 0.055 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  }
+
+  ::selection { background: var(--oxblood); color: var(--paper); }
+
+  .wrap {
+    max-width: var(--max);
+    margin: 0 auto;
+    padding: 0 var(--gutter);
+    position: relative;
+    z-index: 2;
+  }
+
+  .rule { height: 1px; background: var(--rule); }
+  .rule.brass { background: var(--brass); opacity: 0.65; }
+
+  /* ---------- Header ---------- */
+
+  header.site {
+    padding: 22px 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  header.site .logo img {
+    display: block;
+    width: 200px;
+    max-width: 52vw;
+    height: auto;
+    user-select: none;
+    -webkit-user-drag: none;
+  }
+  header.site nav {
+    display: flex;
+    gap: 24px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+  header.site nav a {
+    color: var(--ink);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    padding-bottom: 2px;
+    transition: border-color .3s ease;
+  }
+  header.site nav a:hover { border-bottom-color: var(--oxblood); }
+
+  /* ---------- Hero ---------- */
+
+  .legal-hero { padding: 40px 0 30px; }
+  .legal-hero .eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .legal-hero .eyebrow::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--rule-soft);
+  }
+  .legal-hero h1 {
+    font-family: var(--serif);
+    font-variation-settings: "opsz" 144, "SOFT" 30, "WONK" 0;
+    font-weight: 360;
+    font-size: clamp(40px, 7vw, 82px);
+    line-height: 0.96;
+    letter-spacing: -0.025em;
+    margin: 24px 0 0;
+    max-width: 16ch;
+  }
+  .legal-hero h1 em {
+    font-style: italic;
+    font-weight: 340;
+    font-variation-settings: "opsz" 144, "SOFT" 100, "WONK" 1;
+    color: var(--oxblood);
+  }
+  .legal-hero .lede {
+    margin-top: 26px;
+    max-width: 58ch;
+    font-size: clamp(16px, 1.25vw, 19px);
+    color: var(--ink-soft);
+  }
+  .legal-meta {
+    margin-top: 30px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 34px;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .legal-meta b { color: var(--ink); font-weight: 500; margin-right: 8px; }
+
+  /* ---------- Sticky part switcher ---------- */
+
+  .switcher {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    background: color-mix(in srgb, var(--paper) 88%, transparent);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    margin-top: 34px;
+  }
+  .switcher .wrap {
+    display: flex;
+    gap: 26px;
+    align-items: center;
+    padding-top: 13px;
+    padding-bottom: 13px;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .switcher .wrap::-webkit-scrollbar { display: none; }
+  .switcher a {
+    color: var(--ink-soft);
+    text-decoration: none;
+    white-space: nowrap;
+    border-bottom: 1px solid transparent;
+    padding-bottom: 2px;
+    transition: color .25s ease, border-color .25s ease;
+  }
+  .switcher a:hover { color: var(--oxblood); border-bottom-color: var(--oxblood); }
+  .switcher .sep { color: var(--rule); }
+
+  /* ---------- Prose ---------- */
+
+  .legal-body { padding: 44px 0 20px; }
+
+  .part-head {
+    padding: 26px 0 8px;
+    scroll-margin-top: 60px;
+  }
+  .part-head .no {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--brass);
+  }
+  .part-head h2 {
+    font-family: var(--serif);
+    font-variation-settings: "opsz" 96, "SOFT" 30;
+    font-weight: 370;
+    font-size: clamp(30px, 4.4vw, 54px);
+    line-height: 1.04;
+    letter-spacing: -0.018em;
+    margin: 12px 0 0;
+  }
+  .part-head h2 em {
+    font-style: italic;
+    font-variation-settings: "opsz" 96, "SOFT" 100, "WONK" 1;
+    color: var(--oxblood);
+  }
+  .part-head p {
+    margin: 16px 0 0;
+    max-width: 62ch;
+    color: var(--ink-soft);
+  }
+
+  .prose { max-width: 74ch; }
+
+  .prose .standfirst {
+    font-size: clamp(17px, 1.3vw, 20px);
+    line-height: 1.5;
+    color: var(--ink-soft);
+    border-left: 2px solid var(--oxblood);
+    padding-left: 18px;
+    margin: 34px 0 8px;
+  }
+
+  .prose h3 {
+    font-family: var(--serif);
+    font-variation-settings: "opsz" 48, "SOFT" 30;
+    font-weight: 400;
+    font-size: clamp(20px, 2.2vw, 27px);
+    line-height: 1.18;
+    letter-spacing: -0.01em;
+    margin: 52px 0 14px;
+    padding-top: 24px;
+    border-top: 1px solid var(--rule);
+    display: flex;
+    align-items: baseline;
+    gap: 18px;
+    scroll-margin-top: 60px;
+  }
+  .prose h3 .n {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.2em;
+    color: var(--brass);
+    flex: 0 0 auto;
+    min-width: 2.4em;
+  }
+
+  .prose h4 {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: 17px;
+    letter-spacing: 0.005em;
+    margin: 26px 0 6px;
+    color: var(--ink);
+  }
+
+  .prose p { margin: 12px 0; color: var(--ink-soft); }
+  .prose strong { font-weight: 500; color: var(--ink); }
+  .prose em { font-style: italic; }
+
+  .prose a {
+    color: var(--oxblood);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(110,31,28,0.35);
+    transition: border-color .25s ease;
+  }
+  .prose a:hover { border-bottom-color: var(--oxblood); }
+
+  .prose ul, .prose ol { margin: 12px 0; padding-left: 1.3em; color: var(--ink-soft); }
+  .prose li { margin: 7px 0; }
+  .prose li::marker { color: var(--brass); }
+
+  .prose .caps {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    line-height: 1.62;
+    letter-spacing: 0.01em;
+    background: rgba(154,123,53,0.07);
+    border-left: 2px solid var(--brass);
+    padding: 16px 18px;
+    margin: 18px 0;
+    color: var(--ink-soft);
+  }
+
+  .prose .note {
+    background: var(--paper-2);
+    border: 1px solid var(--rule-soft);
+    padding: 18px 20px;
+    margin: 22px 0;
+    font-size: 16px;
+    color: var(--ink-soft);
+  }
+  .prose .note b { color: var(--ink); font-weight: 500; }
+
+  .prose table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 18px 0;
+    font-size: 15.5px;
+  }
+  .prose th, .prose td {
+    text-align: left;
+    padding: 11px 12px 11px 0;
+    border-bottom: 1px solid var(--rule-soft);
+    vertical-align: top;
+    color: var(--ink-soft);
+  }
+  .prose th {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    font-weight: 500;
+    border-bottom: 1px solid var(--rule);
+  }
+  .prose td:first-child { color: var(--ink); }
+
+  .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+  .prose .footnote {
+    margin-top: 46px;
+    padding-top: 22px;
+    border-top: 1px solid var(--rule);
+    font-size: 15px;
+    font-style: italic;
+    color: var(--ink-mute);
+  }
+
+  .backtop {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+  }
+  .backtop:hover { color: var(--oxblood); border-bottom-color: var(--oxblood); }
+
+  /* ---------- Footer ---------- */
+
+  footer.site {
+    margin-top: 70px;
+    padding: 56px 0 40px;
+    border-top: 1px solid var(--rule);
+    background:
+      radial-gradient(700px 260px at 100% 0%, rgba(154,123,53,0.10), transparent 70%),
+      transparent;
+  }
+  footer.site .row {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 40px;
+    align-items: start;
+  }
+  footer.site .brand img { width: 200px; max-width: 52vw; display: block; }
+  footer.site .brand p {
+    max-width: 36ch;
+    color: var(--ink-soft);
+    font-size: 15.5px;
+    margin: 14px 0 0;
+  }
+  footer.site h4 {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin: 6px 0 14px;
+  }
+  footer.site ul { list-style: none; padding: 0; margin: 0; }
+  footer.site li { padding: 4px 0; font-size: 15px; }
+  footer.site a {
+    color: var(--ink);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color .3s ease;
+  }
+  footer.site a:hover { border-bottom-color: var(--oxblood); }
+  footer.site .colophon {
+    margin-top: 44px;
+    padding-top: 20px;
+    border-top: 1px solid var(--rule-soft);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+
+  @media (max-width: 760px) {
+    body { font-size: 16.5px; }
+    .prose h3 { flex-direction: column; gap: 4px; }
+    .prose h3 .n { min-width: 0; }
+    .switcher .pfx, .switcher .sfx { display: none; }
+    .switcher .wrap { gap: 22px; }
+    footer.site .row { grid-template-columns: 1fr; gap: 30px; }
+  }
+
+  /* On a phone a multi-column table is unreadable — stack each row into
+     labelled lines instead. Labels come from the <th> via data-l. */
+  @media (max-width: 620px) {
+    .prose table, .prose tbody, .prose tr, .prose td { display: block; width: 100%; }
+    .prose thead { display: none; }
+    .prose tr {
+      padding: 16px 0;
+      border-bottom: 1px solid var(--rule);
+    }
+    .prose tr:last-child { border-bottom: none; }
+    .prose td {
+      border: none;
+      padding: 0 0 10px;
+    }
+    .prose td:last-child { padding-bottom: 0; }
+    .prose td::before {
+      content: attr(data-l);
+      display: block;
+      font-family: var(--mono);
+      font-size: 9.5px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink-mute);
+      margin-bottom: 3px;
+    }
+    .prose td:first-child { font-weight: 500; color: var(--ink); }
+    .table-scroll { overflow-x: visible; }
+  }
+
+  @media print {
+    body::before, .switcher, header.site nav { display: none; }
+    body { background: #fff; }
+    .prose { max-width: none; }
+  }
+</style>
+</head>
+
+<body>
+
+<div class="wrap" id="top">
+  <header class="site">
+    <a class="logo" href="/" aria-label="ArtBound home">
+      <img src="assets/images/ArtBound-logo-colorful.png" alt="ArtBound" />
+    </a>
+    <nav>
+      <a href="/">← artbound.art</a>
+      <a href="#terms">Terms</a>
+      <a href="#privacy">Privacy</a>
+    </nav>
+  </header>
+</div>
+
+<div class="wrap"><div class="rule brass" aria-hidden="true"></div></div>
+
+<main>
+
+  <section class="legal-hero">
+    <div class="wrap">
+      <span class="eyebrow">Legal</span>
+      <h1>Terms &amp; <em>Privacy</em></h1>
+      <p class="lede">
+        One page, two documents. <strong>Part One</strong> sets out the terms on which you take part
+        in an ArtBound auction. <strong>Part Two</strong> explains what happens to your information
+        when you do. Both apply whether you reach ArtBound on WhatsApp, by email, or through this website.
+      </p>
+      <div class="legal-meta">
+        <span><b>Effective</b>2026-09-06</span>
+        <span><b>Updated</b>2026-09-06</span>
+        <span><b>Operator</b>ntelio L.L.C. (New York)</span>
+      </div>
+    </div>
+  </section>
+
+  <nav class="switcher" aria-label="Document sections">
+    <div class="wrap">
+      <a href="#terms"><span class="pfx">Part One&nbsp;· </span>Terms<span class="sfx"> of Service</span></a>
+      <span class="sep" aria-hidden="true">/</span>
+      <a href="#privacy"><span class="pfx">Part Two&nbsp;· </span>Privacy<span class="sfx"> Policy</span></a>
+      <span class="sep" aria-hidden="true">/</span>
+      <a href="#contact">Contact</a>
+    </div>
+  </nav>
+
+  <div class="legal-body">
+    <div class="wrap">
+
+      <!-- ═══════════════════ PART ONE — TERMS ═══════════════════ -->
+
+      <section class="part-head" id="terms">
+        <span class="no">Part One</span>
+        <h2>Terms of <em>Service</em></h2>
+      </section>
+
+      <article class="prose">
+
+        <p class="standfirst">
+          These Terms govern your access to and use of ArtBound — the auction infrastructure operated by
+          <strong>ntelio L.L.C.</strong>, a New York limited liability company ("ArtBound," "we," "us," "our") —
+          including the WhatsApp auction service, artbound.art, and any invitation, catalogue, or bidding
+          thread we operate on behalf of a gallery. By registering for, bidding in, or otherwise
+          participating in an ArtBound auction, you accept these Terms. If you do not accept them, do not
+          participate.
+        </p>
+
+        <h3 id="t-01"><span class="n">01</span><span>ArtBound is infrastructure, not the seller</span></h3>
+        <p>
+          ArtBound is an auction and price-discovery service supplied to art galleries. Every lot offered
+          through ArtBound is offered by a <strong>gallery</strong> — the party that owns or is authorised to
+          sell the work. The gallery is the seller and remains your counterparty throughout.
+        </p>
+        <p>ArtBound does <strong>not</strong>:</p>
+        <ul>
+          <li>own, hold title to, take possession of, or warehouse any lot;</li>
+          <li>act as principal, consignee, agent for the buyer, or seller of record;</li>
+          <li>guarantee the authenticity, attribution, provenance, condition, legal title, import or export
+            eligibility, or value of any lot;</li>
+          <li>collect or hold the hammer price. The hammer price is paid by the buyer to the gallery directly.</li>
+        </ul>
+        <p>
+          The contract of sale on a hammered lot is formed <strong>between you and the gallery</strong>, on the
+          gallery’s own conditions of sale. Those conditions govern the sale itself. These Terms govern your
+          use of ArtBound.
+        </p>
+        <div class="note">
+          <b>Read both.</b> Where the gallery’s conditions of sale and these Terms conflict on a question
+          about the sale — title, payment of the hammer price, delivery, warranties, returns — the gallery’s
+          conditions prevail. Where they conflict on a question about the ArtBound service itself — access,
+          bidding mechanics, our fees, our liability, your data — these Terms prevail.
+        </div>
+
+        <h3 id="t-02"><span class="n">02</span><span>Access is by invitation</span></h3>
+        <p>
+          ArtBound auctions are private and invitation-only. They are not public listings and not a
+          marketplace. You may take part only if a participating gallery has invited you and we have
+          registered you for that sale.
+        </p>
+        <p>By registering you confirm that:</p>
+        <ol>
+          <li>you are at least 18 years old and have legal capacity to enter a binding contract;</li>
+          <li>the identity, contact, and billing details you give us are true, current, and your own;</li>
+          <li>you are bidding for yourself, or you have disclosed to us in writing that you are bidding as
+            agent for a named principal and are authorised to bind them — in which case you remain jointly
+            and severally liable;</li>
+          <li>you are not subject to sanctions, and are not acting for a sanctioned person or entity;</li>
+          <li>the funds you will use are from a lawful source.</li>
+        </ol>
+        <p>
+          Your registration and the WhatsApp number attached to it are personal to you. Do not share them, and
+          tell us immediately if you lose control of that number or believe someone else is bidding under your
+          registration. Until you do, bids sent from your number are treated as yours.
+        </p>
+        <p>
+          We or the gallery may decline, suspend, or withdraw a registration at any time, with or without
+          reason. Invitation to one sale does not entitle you to an invitation to another.
+        </p>
+
+        <h3 id="t-03"><span class="n">03</span><span>How bidding works</span></h3>
+        <p>
+          Auctions run as a conversation — in a WhatsApp thread with the ArtBound agent, an automated assistant
+          operating on the gallery’s behalf. The mechanics for a given sale are stated in the invitation and in
+          the thread, and typically work as follows.
+        </p>
+
+        <h4>3.1 Lots, estimates, and reserves</h4>
+        <p>
+          Estimates are the gallery’s opinion of likely value, expressed before premium and taxes. They are not
+          predictions, valuations, or guarantees. A lot may carry a confidential <strong>reserve</strong> — a
+          minimum below which it will not be sold. Reserves are not disclosed and are never above the high
+          estimate.
+        </p>
+
+        <h4>3.2 Placing a bid — the confirmation step</h4>
+        <p>
+          A message expressing interest, naming a number, or asking a question is <strong>not</strong> a bid.
+          A bid is placed only when the agent puts a specific amount to you and you confirm it in the thread as
+          instructed. If you do not confirm, no bid exists.
+        </p>
+        <p class="caps">
+          ONCE CONFIRMED, A BID IS A BINDING, IRREVOCABLE OFFER TO BUY THE LOT AT THAT AMOUNT, PLUS BUYER’S
+          PREMIUM AND ANY APPLICABLE TAXES, DUTIES, AND SHIPPING. IT CANNOT BE WITHDRAWN, REDUCED, OR MADE
+          CONDITIONAL.
+        </p>
+
+        <h4>3.3 Increments, outbidding, and extensions</h4>
+        <ul>
+          <li>Bids must meet or exceed the increment the agent states. The gallery may vary increments during
+            a sale.</li>
+          <li>You cannot outbid yourself. If you already hold the leading bid, the agent will decline a further
+            bid from you until someone else bids.</li>
+          <li>You will be told when you are leading and when you have been outbid. You will not be told who
+            else is bidding (see <a href="#t-08">08</a>).</li>
+          <li>Where anti-sniping applies, a bid confirmed in the closing minutes extends the lot’s close by the
+            stated interval, repeating until the interval passes with no new bid.</li>
+        </ul>
+
+        <h4>3.4 Close, hammer, and the gallery’s discretion</h4>
+        <p>
+          A lot is sold when the gallery accepts the leading bid — the hammer. Until then, the gallery may, at
+          its sole discretion and without liability: withdraw, split, or combine lots; refuse or cancel any bid;
+          reopen bidding on a lot where a bid was missed, disputed, or made in error; re-offer an unsold lot;
+          or cancel a sale. An <em>unsold</em> lot is one that did not reach its reserve.
+        </p>
+
+        <h4>3.5 Fixed-price offers</h4>
+        <p>
+          Some lots are offered at a fixed price rather than by auction. Confirming a purchase on such a lot is
+          likewise a binding offer, accepted when the gallery confirms; the same fees, payment, and delivery
+          terms apply.
+        </p>
+
+        <h3 id="t-04"><span class="n">04</span><span>Messaging, automation, and the record of bids</span></h3>
+        <p>
+          Auctions depend on a third-party messaging network and on your device and connectivity. Messages can
+          be delayed, reordered, undelivered, or lost, and an auction can close while a message of yours is in
+          flight. <strong>That risk is yours.</strong> We do not guarantee delivery, timing, or availability,
+          and we are not liable for a bid you were unable to place, or that arrived after a lot closed.
+        </p>
+        <p>
+          The ArtBound agent is automated and, like any such system, may misread a message or respond
+          imperfectly. Nothing the agent says is a warranty about a lot; statements about lots come from the
+          gallery. A bid is effective only where it appears as a confirmed bid in our records, and the
+          gallery’s acceptance is what completes a sale.
+        </p>
+        <p>
+          <strong>Our server-side record of registrations, bids, confirmations, and timestamps is the
+          authoritative record</strong> of what happened in a sale, and is conclusive in the absence of manifest
+          error. Screenshots and local message histories are not. Raise any dispute over a bid with us within
+          <strong>48 hours</strong> of the close of the lot.
+        </p>
+
+        <h3 id="t-05"><span class="n">05</span><span>Fees</span></h3>
+        <p>Unless the invitation for a given sale states otherwise:</p>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr><th>Fee</th><th>Amount</th><th>Payable by</th><th>Payable to</th></tr>
+            </thead>
+            <tbody>
+              <tr><td data-l="Fee">Hammer price</td><td data-l="Amount">As bid</td><td data-l="Payable by">Buyer</td><td data-l="Payable to">The gallery, directly</td></tr>
+              <tr><td data-l="Fee">Buyer’s premium</td><td data-l="Amount">4% of the hammer price</td><td data-l="Payable by">Buyer</td><td data-l="Payable to">ArtBound, invoiced separately</td></tr>
+              <tr><td data-l="Fee">Seller’s commission</td><td data-l="Amount">4% of the hammer price</td><td data-l="Payable by">Gallery</td><td data-l="Payable to">ArtBound, invoiced separately</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>
+          Buyer’s premium is stated exclusive of VAT, sales tax, and any other tax, which is added where
+          applicable. Taxes, duties, levies, shipping, packing, insurance, and any export or import licence on
+          the lot itself are the buyer’s responsibility and are dealt with under the gallery’s conditions of
+          sale. Bank charges are borne by the payer. Fee rates in force for a sale are those stated in that
+          sale’s invitation.
+        </p>
+        <p>
+          ArtBound invoices its premium and commission as separate transactions from the sale. Overdue invoices
+          carry interest at 1.5% per month or the maximum permitted by law, whichever is lower.
+        </p>
+
+        <h3 id="t-06"><span class="n">06</span><span>Payment, title, and delivery</span></h3>
+        <p>
+          Payment for the lot, passing of title and risk, collection, packing, shipping, insurance, and export
+          are all governed by the <strong>gallery’s</strong> conditions of sale. As a general matter, title
+          passes only when the gallery has received the hammer price in cleared funds, and delivery is arranged
+          by the gallery or its logistics partners.
+        </p>
+        <p>
+          ArtBound is not a party to that delivery, does not handle the work, and is not liable for late,
+          damaged, lost, or refused shipments, nor for any customs, cultural-property, or export-licence issue
+          affecting a lot.
+        </p>
+        <p>
+          If a buyer defaults, the gallery may exercise the remedies in its conditions of sale. ArtBound’s
+          premium remains payable on a lot that was hammered to you, and we may suspend your registration
+          across all participating galleries while a default is outstanding.
+        </p>
+
+        <h3 id="t-07"><span class="n">07</span><span>Compliance, identity, and screening</span></h3>
+        <p>
+          Art-market transactions are subject to anti-money-laundering, counter-terrorist-financing, and
+          sanctions rules in several of the jurisdictions we operate in. Accordingly, we and the gallery may:
+        </p>
+        <ul>
+          <li>verify your identity and, where you bid as agent, that of your principal and beneficial owner;</li>
+          <li>require identity documents, proof of address, and evidence of source of funds — as a rule for
+            transactions at or above <strong>USD 10,000</strong>, and at our discretion below it;</li>
+          <li>screen you against sanctions and politically-exposed-person lists;</li>
+          <li>delay, refuse, or unwind a registration, a bid, or a sale, and decline to explain why;</li>
+          <li>make a report to a competent authority where required by law, without notifying you where
+            notification is prohibited.</li>
+        </ul>
+        <p>
+          We may decline to act for anyone in a jurisdiction where doing so would breach applicable law or
+          sanctions. Providing false or misleading verification information is a material breach of these Terms.
+        </p>
+
+        <h3 id="t-08"><span class="n">08</span><span>Discretion and confidentiality</span></h3>
+        <p>
+          Discretion is the point of a private sale, and it runs in both directions.
+        </p>
+        <p>
+          <strong>We protect you.</strong> Your identity as a participant, your bids, and your bidding history
+          are not disclosed to other participants. The agent is built to refuse questions about who else is in
+          the room, how many are bidding, or what anyone else has bid, and will decline them.
+        </p>
+        <p>
+          <strong>You protect the room.</strong> Lot details, estimates, reserves, bid levels, hammer prices,
+          participant information, and the contents of the auction thread are confidential. You may not
+          publish, broadcast, forward outside the sale, post, sell, or otherwise disclose them, and you may not
+          record, screen-capture for publication, or republish any part of an auction thread, without the
+          gallery’s prior written consent. This obligation survives the sale.
+        </p>
+
+        <h3 id="t-09"><span class="n">09</span><span>Acceptable use</span></h3>
+        <p>You must not:</p>
+        <ol>
+          <li>bid without the intention or ability to pay;</li>
+          <li>engage in shill bidding, bid rigging, price fixing, chandelier bidding, or any other collusive or
+            manipulative practice, or place bids on a lot in which you have an undisclosed interest;</li>
+          <li>use bots, scripts, macros, or any automated means to bid, monitor, or interact with the service;</li>
+          <li>scrape, harvest, mirror, or systematically extract lot data, images, prices, or messages, or use
+            any of it to train or fine-tune a machine-learning model;</li>
+          <li>impersonate another person, or let another person use your registration;</li>
+          <li>probe, scan, overload, or interfere with the service or its infrastructure;</li>
+          <li>use ArtBound to launder money, evade sanctions or tax, or trade goods you are not lawfully
+            entitled to buy or sell;</li>
+          <li>harass gallery staff, our staff, or other participants.</li>
+        </ol>
+        <p>
+          We may suspend or terminate your access immediately for a breach, cancel affected bids, void a sale,
+          and inform the gallery and, where required, the authorities.
+        </p>
+
+        <h3 id="t-10"><span class="n">10</span><span>Intellectual property</span></h3>
+        <p>
+          Images, catalogue text, condition reports, and other lot material are the property of the artists,
+          galleries, photographers, or rights-holders concerned, and are made available to you solely to
+          evaluate a lot in a sale you have been invited to. No other licence is granted — in particular, no
+          right to reproduce, distribute, display publicly, or use them commercially or as training data.
+        </p>
+        <p>
+          The ArtBound service, this website, its design and code, and the marks "ArtBound," "artbound.art,"
+          and "ntelio" are owned by ntelio L.L.C. or its licensors. All rights reserved. Reproduction of an
+          artwork does not transfer any copyright in it; copyright generally remains with the artist or their
+          estate.
+        </p>
+
+        <h3 id="t-11"><span class="n">11</span><span>Disclaimers</span></h3>
+        <p class="caps">
+          THE ARTBOUND SERVICE IS PROVIDED "AS IS" AND "AS AVAILABLE," WITHOUT WARRANTIES OF ANY KIND, EXPRESS
+          OR IMPLIED, INCLUDING WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE,
+          NON-INFRINGEMENT, ACCURACY, UNINTERRUPTED OR ERROR-FREE OPERATION, AND SECURITY. WE MAKE NO WARRANTY
+          WHATSOEVER IN RESPECT OF ANY LOT — INCLUDING ITS AUTHENTICITY, ATTRIBUTION, PROVENANCE, CONDITION,
+          TITLE, DESCRIPTION, OR VALUE — ALL OF WHICH ARE MATTERS BETWEEN YOU AND THE GALLERY UNDER THE
+          GALLERY’S CONDITIONS OF SALE.
+        </p>
+        <p>
+          Nothing on this website or in an auction thread is legal, tax, investment, or valuation advice, and
+          nothing here is a representation that art is a sound investment or will hold or increase in value.
+        </p>
+
+        <h3 id="t-12"><span class="n">12</span><span>Limitation of liability</span></h3>
+        <p class="caps">
+          TO THE MAXIMUM EXTENT PERMITTED BY LAW, NTELIO L.L.C. AND ITS AFFILIATES, MEMBERS, OFFICERS,
+          EMPLOYEES, AND AGENTS WILL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, CONSEQUENTIAL, SPECIAL, OR
+          PUNITIVE DAMAGES, NOR FOR LOST PROFITS, LOST OPPORTUNITY, LOST OR DELAYED BIDS, LOSS OF THE CHANCE
+          TO ACQUIRE A LOT, LOSS OF ANTICIPATED SAVINGS, LOSS OF DATA, OR REPUTATIONAL HARM, ARISING FROM OR
+          RELATED TO THE ARTBOUND SERVICE.
+        </p>
+        <p class="caps">
+          OUR TOTAL AGGREGATE LIABILITY FOR ALL CLAIMS ARISING FROM OR RELATED TO THESE TERMS OR THE SERVICE
+          IS LIMITED TO THE GREATER OF (A) THE FEES YOU PAID TO ARTBOUND IN THE TWELVE MONTHS BEFORE THE EVENT
+          GIVING RISE TO THE CLAIM, OR (B) ONE HUNDRED U.S. DOLLARS (US$100).
+        </p>
+        <p>
+          These limits apply regardless of the theory of liability. Nothing in these Terms excludes or limits
+          liability that cannot lawfully be excluded — including for fraud or fraudulent misrepresentation, or
+          for death or personal injury caused by negligence — and consumers retain any mandatory rights under
+          the law of their country of residence.
+        </p>
+
+        <h3 id="t-13"><span class="n">13</span><span>Indemnity</span></h3>
+        <p>
+          You will indemnify and hold harmless ntelio L.L.C. and its affiliates, members, officers, employees,
+          and agents against any claim, loss, liability, or expense (including reasonable legal fees) arising
+          from your breach of these Terms, your breach of a gallery’s conditions of sale, your default on a lot
+          hammered to you, or your violation of any law or third-party right.
+        </p>
+
+        <h3 id="t-14"><span class="n">14</span><span>Governing law and disputes</span></h3>
+        <p>
+          These Terms, and any dispute about the ArtBound service, are governed by the laws of the
+          <strong>State of New York</strong>, United States, without regard to its conflict-of-law rules, and
+          are subject to the exclusive jurisdiction of the state and federal courts sitting in New York County,
+          New York. You consent to personal jurisdiction there.
+        </p>
+        <p>
+          A dispute about a <strong>sale</strong> — the lot, the price, payment, title, or delivery — is between
+          you and the gallery, and is governed by the gallery’s conditions of sale and the law and forum they
+          specify, which is typically the gallery’s home jurisdiction.
+        </p>
+        <p>
+          Before filing, please raise any dispute with us at
+          <a href="mailto:legal@ntelio.ai">legal@ntelio.ai</a>; we will try in good faith to resolve it
+          within 30 days. Claims must be brought within one year of the event giving rise to them, to the
+          extent that limit is enforceable. Consumers in the EU and UK retain the protections and forum rights
+          of their country of residence.
+        </p>
+
+        <h3 id="t-15"><span class="n">15</span><span>Changes, suspension, and general terms</span></h3>
+        <ul>
+          <li><strong>Changes:</strong> we may update these Terms. The "Updated" date at the top reflects the
+            most recent change, and the version in force when a sale opens governs that sale. Continued
+            participation after an update is acceptance.</li>
+          <li><strong>Suspension:</strong> we may modify, suspend, or discontinue the service, in whole or in
+            part, at any time.</li>
+          <li><strong>Severability:</strong> if a provision is unenforceable, the rest stands.</li>
+          <li><strong>No waiver:</strong> not enforcing a provision once does not waive it.</li>
+          <li><strong>Assignment:</strong> we may assign these Terms in a merger, acquisition, or sale of
+            assets; you may not assign them.</li>
+          <li><strong>Force majeure:</strong> we are not liable for delay or failure caused by events beyond
+            our reasonable control, including network, platform, or infrastructure outages.</li>
+          <li><strong>Entire agreement:</strong> these Terms and the Privacy Policy below are the entire
+            agreement between you and ArtBound about the service, and replace any prior understanding about it.</li>
+          <li><strong>Language:</strong> the English text governs; any translation is for convenience.</li>
+        </ul>
+
+        <p class="footnote">
+          End of Part One. <a href="#privacy">Part Two — Privacy Policy →</a>
+        </p>
+
+      </article>
+
+      <!-- ═══════════════════ PART TWO — PRIVACY ═══════════════════ -->
+
+      <section class="part-head" id="privacy">
+        <span class="no">Part Two</span>
+        <h2>Privacy <em>Policy</em></h2>
+      </section>
+
+      <article class="prose">
+
+        <p class="standfirst">
+          This policy explains what personal information ArtBound handles when you take part in an auction —
+          on WhatsApp, by email, or through artbound.art — why we handle it, who we share it with, and the
+          rights you have over it. We follow the EU and UK GDPR, the California Consumer Privacy Act
+          (CCPA/CPRA), and the UAE Personal Data Protection Law where each applies.
+        </p>
+
+        <h3 id="p-01"><span class="n">01</span><span>Who is responsible for your data</span></h3>
+        <p>
+          Two parties are involved, with different roles.
+        </p>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr><th>Party</th><th>Role</th><th>For what</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td data-l="Party">The inviting gallery</td>
+                <td data-l="Role">Controller</td>
+                <td data-l="For what">Its collector relationship with you — who it invites, what it offers you, and how it
+                  markets to you. Galleries own their collector data; ArtBound does not acquire it for its own
+                  marketing.</td>
+              </tr>
+              <tr>
+                <td data-l="Party">ntelio L.L.C. (ArtBound)</td>
+                <td data-l="Role">Processor for the gallery</td>
+                <td data-l="For what">Running the auction on the gallery’s instructions — invitations, the message thread,
+                  bidding, and the sale record.</td>
+              </tr>
+              <tr>
+                <td data-l="Party">ntelio L.L.C. (ArtBound)</td>
+                <td data-l="Role">Independent controller</td>
+                <td data-l="For what">Our own purposes: invoicing our premium and commission, identity and sanctions checks,
+                  fraud prevention, security, keeping legally required records, and operating and securing the
+                  platform.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p>
+          You may exercise your rights against either of us; we will pass a request to the right party where
+          we are not the one who can answer it. The gallery publishes its own privacy notice — please read it
+          as well.
+        </p>
+
+        <h3 id="p-02"><span class="n">02</span><span>What we collect</span></h3>
+        <h4>2.1 Identity and contact</h4>
+        <p>
+          Your name, WhatsApp number, WhatsApp profile name, email address, postal and billing address,
+          country, and — where you bid as agent — the same for your principal.
+        </p>
+        <h4>2.2 Messages</h4>
+        <p>
+          The content of your auction thread: everything you send us and everything the agent sends you,
+          including any images, documents, voice notes, or attachments you choose to send, together with
+          timestamps and delivery status.
+        </p>
+        <h4>2.3 Auction and transaction data</h4>
+        <p>
+          Invitations and RSVPs, registration and paddle records, lots viewed, questions asked, bids confirmed
+          and their exact times, outbid and hammer events, purchases, invoices, and payment status.
+        </p>
+        <h4>2.4 Verification data</h4>
+        <p>
+          Where identity or source-of-funds checks apply (see Terms <a href="#t-07">07</a>): identity
+          documents, date of birth, nationality, proof of address, beneficial-ownership details, and the
+          results of sanctions and PEP screening.
+        </p>
+        <h4>2.5 Technical data</h4>
+        <p>
+          Server logs from the platform: IP address, request times, error and security events. If you visit
+          artbound.art, your browser type and IP are visible to our hosting provider in the ordinary course of
+          serving the page.
+        </p>
+        <h4>2.6 What we do not do</h4>
+        <ul>
+          <li>We do <strong>not</strong> sell or rent personal information, and we do not "share" it for
+            cross-context behavioural advertising as CCPA/CPRA defines that term.</li>
+          <li>We do <strong>not</strong> run advertising trackers, browser fingerprinting, session replay, or
+            behavioural profiling.</li>
+          <li>We do <strong>not</strong> use your messages, bids, or documents to train foundation or
+            general-purpose AI models, and we require the same of our AI vendors.</li>
+          <li>We do <strong>not</strong> disclose your participation or your bids to other participants.</li>
+        </ul>
+
+        <h3 id="p-03"><span class="n">03</span><span>WhatsApp and Meta</span></h3>
+        <p>
+          Auctions run over the WhatsApp Business Platform, operated by Meta. That means:
+        </p>
+        <ul>
+          <li>Meta processes your messages and the metadata around them (your number, timings, delivery
+            receipts) under <a href="https://www.whatsapp.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer">WhatsApp’s own privacy policy</a>,
+            which is outside our control.</li>
+          <li>WhatsApp encrypts messages in transit. That protects them from third parties — it does not hide
+            them from us: <strong>we and the gallery can read what you send to the auction number</strong>,
+            because we are the party you are messaging.</li>
+          <li>Your device holds its own copy of the thread and may back it up to your own cloud account. That
+            copy is yours to manage.</li>
+        </ul>
+        <p>
+          If you would rather not use WhatsApp, tell the gallery — some sales can be run by email or telephone
+          instead, at the gallery’s discretion.
+        </p>
+
+        <h3 id="p-04"><span class="n">04</span><span>Automated processing and AI</span></h3>
+        <p>
+          The ArtBound agent is an AI system. Your messages are processed by large language models, supplied by
+          third-party vendors acting as our processors under contract, in order to understand what you are
+          asking and to reply — including to walk you through bidding, answer questions about a lot from the
+          gallery’s material, and decline questions it should not answer.
+        </p>
+        <p>
+          Bidding logic itself is rule-based: increments, the confirmation step, the self-outbid block,
+          anti-sniping, and reserve handling are deterministic, not model judgment. No decision producing a
+          legal or similarly significant effect on you is made by AI alone — registration, verification
+          outcomes, refusal of a bid, and the hammer are decided by us or the gallery, with human oversight.
+          You may ask for human review of any such decision by writing to
+          <a href="mailto:privacy@ntelio.ai">privacy@ntelio.ai</a>.
+        </p>
+
+        <h3 id="p-05"><span class="n">05</span><span>Why we use it, and on what legal basis</span></h3>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr><th>Purpose</th><th>Data used</th><th>Legal basis (GDPR Art. 6)</th></tr>
+            </thead>
+            <tbody>
+              <tr><td data-l="Purpose">Register you and run the auction</td><td data-l="Data used">Identity, messages, auction data</td><td data-l="Legal basis (GDPR Art. 6)">Contract (b), or legitimate interest (f) where you bid via an agent</td></tr>
+              <tr><td data-l="Purpose">Invoice and collect our premium or commission</td><td data-l="Data used">Identity, transaction data</td><td data-l="Legal basis (GDPR Art. 6)">Contract (b); legal obligation (c) for tax records</td></tr>
+              <tr><td data-l="Purpose">Identity, sanctions, and source-of-funds checks</td><td data-l="Data used">Verification data</td><td data-l="Legal basis (GDPR Art. 6)">Legal obligation (c); legitimate interest (f)</td></tr>
+              <tr><td data-l="Purpose">Prevent fraud, manipulation, and abuse; secure the platform</td><td data-l="Data used">Messages, auction data, logs</td><td data-l="Legal basis (GDPR Art. 6)">Legitimate interest (f)</td></tr>
+              <tr><td data-l="Purpose">Resolve bid disputes and defend legal claims</td><td data-l="Data used">Auction record, messages</td><td data-l="Legal basis (GDPR Art. 6)">Legitimate interest (f); legal claims (Art. 9(2)(f) where relevant)</td></tr>
+              <tr><td data-l="Purpose">Improve the service and the agent’s quality</td><td data-l="Data used">Aggregated and de-identified interaction data</td><td data-l="Legal basis (GDPR Art. 6)">Legitimate interest (f)</td></tr>
+              <tr><td data-l="Purpose">Send you invitations to future sales</td><td data-l="Data used">Identity, contact</td><td data-l="Legal basis (GDPR Art. 6)">The gallery’s basis — consent (a) or soft opt-in, per local law</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>
+          Where we rely on legitimate interests, we have weighed them against your rights and concluded they do
+          not override them; you may object at any time (see <a href="#p-09">09</a>).
+        </p>
+
+        <h3 id="p-06"><span class="n">06</span><span>Who we share it with</span></h3>
+        <ul>
+          <li><strong>The inviting gallery</strong> — it sees your identity, your questions, your bids on its
+            lots, and your purchases. That is the relationship you were invited into.</li>
+          <li><strong>Meta / WhatsApp</strong> — as the messaging carrier (see <a href="#p-03">03</a>).</li>
+          <li><strong>Payment and settlement providers</strong> — payment processors, banks, and, for
+            high-value lots, escrow providers, for our invoices and for the gallery’s settlement.</li>
+          <li><strong>Identity-verification and screening providers</strong> — for KYC, AML, and sanctions
+            checks.</li>
+          <li><strong>Infrastructure and AI vendors</strong> — cloud hosting, messaging infrastructure, and
+            model providers, all under contract and processing only on our instructions.</li>
+          <li><strong>Professional advisers</strong> — auditors, lawyers, and insurers, where needed.</li>
+          <li><strong>Authorities</strong> — where required by law, court order, or a regulatory or AML
+            obligation, or to protect our rights or someone’s safety.</li>
+          <li><strong>An acquirer</strong> — if the business is merged, acquired, or its assets sold, under
+            equivalent protections.</li>
+        </ul>
+        <p>Other participants in a sale are never told who you are or what you bid.</p>
+
+        <h3 id="p-07"><span class="n">07</span><span>International transfers</span></h3>
+        <p>
+          ArtBound operates across North America, Europe, and the Middle East, and our infrastructure and
+          vendors are located in several countries — including the United States. Where personal data leaves the
+          EEA, the UK, or another jurisdiction with transfer restrictions, we rely on an adequacy decision, on
+          Standard Contractual Clauses (with the UK Addendum where applicable), or on another lawful transfer
+          mechanism, together with appropriate technical and organisational safeguards. Ask us for details of
+          the safeguards used for a specific transfer.
+        </p>
+
+        <h3 id="p-08"><span class="n">08</span><span>How long we keep it</span></h3>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr><th>Data</th><th>Retention</th></tr>
+            </thead>
+            <tbody>
+              <tr><td data-l="Data">Auction and bid records for a completed sale</td><td data-l="Retention">Kept as part of the transaction record — typically 7 years from the sale, for tax, accounting, and dispute purposes</td></tr>
+              <tr><td data-l="Data">KYC, AML, and sanctions-screening records</td><td data-l="Retention">As required by applicable AML law — commonly 5 years after the end of the relationship</td></tr>
+              <tr><td data-l="Data">Message threads</td><td data-l="Retention">Kept for the sale and the dispute window, then archived with the transaction record or deleted</td></tr>
+              <tr><td data-l="Data">Registrations that never transacted</td><td data-l="Retention">Up to 24 months from your last interaction, then deleted or anonymised</td></tr>
+              <tr><td data-l="Data">Security and server logs</td><td data-l="Retention">Up to 12 months</td></tr>
+              <tr><td data-l="Data">Invitation / contact list</td><td data-l="Retention">Held by the gallery under its own policy, until you opt out</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>
+          We will delete or anonymise data earlier on request, except where we must keep it to meet a legal
+          obligation or to establish, exercise, or defend a legal claim.
+        </p>
+
+        <h3 id="p-09"><span class="n">09</span><span>Your rights</span></h3>
+        <p>Depending on where you live, you have some or all of the following rights:</p>
+        <ul>
+          <li><strong>Access</strong> — a copy of the personal data we hold about you, and information about how
+            we use it.</li>
+          <li><strong>Correction</strong> — to have inaccurate data fixed.</li>
+          <li><strong>Deletion</strong> — to have data erased, subject to our retention obligations above.</li>
+          <li><strong>Restriction and objection</strong> — including objecting to processing based on
+            legitimate interests, and to direct marketing at any time and without reason.</li>
+          <li><strong>Portability</strong> — a machine-readable copy of data you provided to us.</li>
+          <li><strong>Human review</strong> — of any significant automated decision (see <a href="#p-04">04</a>).</li>
+          <li><strong>Withdraw consent</strong> — where we rely on consent, without affecting processing already
+            carried out.</li>
+          <li><strong>California</strong> — to know, delete, correct, and limit use of sensitive personal
+            information, and not to be discriminated against for exercising those rights. We do not sell or
+            share personal information as CCPA/CPRA defines those terms.</li>
+        </ul>
+        <p>
+          Write to <a href="mailto:privacy@ntelio.ai">privacy@ntelio.ai</a>. We will verify your identity
+          and respond within 30 days (45 days in California, extendable where the law allows). There is no
+          charge for a reasonable request. An authorised agent may act for you with proof of authority.
+        </p>
+        <p>
+          If you are unhappy with our response, you may complain to your data protection authority — in the EU,
+          the list is at <a href="https://edpb.europa.eu/about-edpb/about-edpb/members_en" target="_blank" rel="noopener noreferrer">edpb.europa.eu</a>;
+          in the UK, to the <a href="https://ico.org.uk" target="_blank" rel="noopener noreferrer">ICO</a>. We would
+          appreciate the chance to put it right first.
+        </p>
+
+        <h3 id="p-10"><span class="n">10</span><span>Stopping messages</span></h3>
+        <p>
+          Reply <strong>STOP</strong> in the WhatsApp thread at any time and we will stop sending you
+          non-essential messages, and remove you from future invitations for that gallery. Reply
+          <strong>START</strong> to resume.
+        </p>
+        <div class="note">
+          <b>One caveat.</b> Stopping messages during a live sale ends your participation in it — we cannot run
+          a bidding thread without messaging you. Where you have already bought a lot, we will still send you
+          the messages needed to complete that transaction (invoices, payment, and delivery), because those are
+          service messages, not marketing.
+        </div>
+
+        <h3 id="p-11"><span class="n">11</span><span>Cookies and this website</span></h3>
+        <p>
+          artbound.art sets <strong>no cookies</strong>, runs no analytics, and has no advertising or tracking
+          scripts. It does load typefaces from Google Fonts, which means your browser makes a request to
+          Google’s servers and Google sees your IP address for that request; nothing else about your visit is
+          shared. Our hosting provider keeps standard server logs.
+        </p>
+
+        <h3 id="p-12"><span class="n">12</span><span>Security</span></h3>
+        <p>
+          We use encryption in transit, access controls on a need-to-know basis, isolated per-gallery data
+          storage, logging, and vendor due diligence. No system is perfectly secure; if a breach affects your
+          personal data and the law requires it, we will notify you and the relevant authority within the
+          required timeframes.
+        </p>
+
+        <h3 id="p-13"><span class="n">13</span><span>Children</span></h3>
+        <p>
+          ArtBound is for adults. It is not directed at anyone under 18, and we do not knowingly collect their
+          data. If you believe a minor has been registered, write to us and we will delete the record.
+        </p>
+
+        <h3 id="p-14"><span class="n">14</span><span>Changes to this policy</span></h3>
+        <p>
+          We may update this policy. The "Updated" date at the top reflects the most recent change, and
+          material changes will be notified to active participants in the WhatsApp thread or by email.
+        </p>
+
+        <h3 id="contact"><span class="n">15</span><span>Contact</span></h3>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Subject</th><th>Where to write</th></tr></thead>
+            <tbody>
+              <tr><td data-l="Subject">Privacy, data rights, deletion requests</td><td data-l="Where to write"><a href="mailto:privacy@ntelio.ai">privacy@ntelio.ai</a></td></tr>
+              <tr><td data-l="Subject">Terms, disputes, legal notices</td><td data-l="Where to write"><a href="mailto:legal@ntelio.ai">legal@ntelio.ai</a></td></tr>
+              <tr><td data-l="Subject">Galleries and partnerships</td><td data-l="Where to write"><a href="mailto:galleries@artbound.art">galleries@artbound.art</a></td></tr>
+              <tr><td data-l="Subject">Press</td><td data-l="Where to write"><a href="mailto:press@artbound.art">press@artbound.art</a></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>
+          <strong>Operator:</strong> ntelio L.L.C., a limited liability company registered in the State of New
+          York, United States. ArtBound is a product of ntelio L.L.C.
+        </p>
+
+        <p class="footnote">
+          This page covers ArtBound. The gallery that invited you publishes its own conditions of sale and its
+          own privacy notice, which govern the sale itself and the gallery’s own collector relationship with
+          you. Ask the gallery for them if you have not seen them.
+          &nbsp;<a href="#top" class="backtop">↑ Back to top</a>
+        </p>
+
+      </article>
+
+    </div>
+  </div>
+
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <div class="row">
+      <div class="brand">
+        <a href="/" aria-label="ArtBound home">
+          <img src="assets/images/ArtBound-logo-colorful.png" alt="ArtBound" />
+        </a>
+        <p>
+          Auction infrastructure for primary-market galleries.
+          By invitation. Beirut &middot; Dubai &middot; Paris &middot; New York.
+        </p>
+      </div>
+      <div>
+        <h4>This page</h4>
+        <ul>
+          <li><a href="#terms">Terms of Service</a></li>
+          <li><a href="#privacy">Privacy Policy</a></li>
+          <li><a href="#contact">Contact</a></li>
+          <li><a href="/">artbound.art</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="colophon">
+      <div>© 2026 &nbsp;ArtBound &mdash; a product of ntelio L.L.C.</div>
+      <div>Updated 2026-09-06</div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
