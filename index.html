@@ -561,6 +561,73 @@
   .surface .copy p b { font-style: italic; font-weight: 500; color: var(--ink); }
 
 
+  /* ---------- The case (why a gallery runs one) ----------
+     The rest of the page defines ArtBound; this section is the only place the
+     gallery is the subject of the sentence and gains something. Kept in the
+     ledger's rule-drawn idiom rather than a card/icon grid — the register of
+     the page does not survive a benefits row. */
+
+  .why { padding: 40px 0 84px; }
+  .why .cases {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border-top: 1px solid var(--rule);
+  }
+  .why .case {
+    padding: 30px 0 34px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .why .case:nth-child(odd)  { padding-right: 56px; }
+  .why .case:nth-child(even) { padding-left: 44px; border-left: 1px solid var(--rule); }
+  .why .case .k {
+    display: block;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--brass);
+    margin-bottom: 14px;
+  }
+  .why .case h3 {
+    margin: 0 0 12px;
+    font-family: var(--serif);
+    font-variation-settings: "opsz" 72, "SOFT" 30;
+    font-size: clamp(21px, 1.95vw, 28px);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    font-weight: 370;
+    color: var(--ink);
+    max-width: 26ch;
+  }
+  .why .case h3 em {
+    font-style: italic;
+    color: var(--oxblood);
+    font-variation-settings: "opsz" 72, "SOFT" 100, "WONK" 1;
+  }
+  .why .case p {
+    margin: 0;
+    font-size: clamp(15px, 1.05vw, 17px);
+    line-height: 1.6;
+    color: var(--ink-soft);
+    max-width: 48ch;
+  }
+  .why .close {
+    margin: 40px 0 0;
+    font-family: var(--serif);
+    font-size: clamp(19px, 1.7vw, 26px);
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+    font-weight: 360;
+    color: var(--ink);
+    max-width: 58ch;
+  }
+  .why .close em {
+    font-style: italic;
+    color: var(--oxblood);
+    font-variation-settings: "opsz" 72, "SOFT" 100, "WONK" 1;
+  }
+
   /* ---------- Contrast (We are / We are not) ---------- */
 
   .contrast {
@@ -713,6 +780,9 @@
     .surface-layout { grid-template-columns: 1fr; gap: 36px; }
     .hero-demo, .hero-demo__bezel { width: min(348px, 88vw); }
     .hero-demo__bezel { height: min(700px, 128vw); }
+    .why .cases { grid-template-columns: 1fr; }
+    .why .case:nth-child(odd)  { padding-right: 0; }
+    .why .case:nth-child(even) { padding-left: 0; border-left: none; }
     .contrast .grid { grid-template-columns: 1fr; }
     .contrast .card + .card { border-left: 1px solid var(--rule); border-top: none; }
     footer.site .row { grid-template-columns: 1fr 1fr; }
@@ -756,6 +826,7 @@
     </a>
     <div></div>
     <nav>
+      <a href="#case">The Case</a>
       <a href="#manifesto">Manifesto</a>
       <a href="#for-galleries">For Galleries</a>
       <a href="#surface">Surface</a>
@@ -825,6 +896,87 @@
         <b>Live pipeline</b> &mdash; every line the system sends today
       </p>
     </aside>
+  </section>
+
+  <div class="rule" aria-hidden="true"></div>
+
+  <!-- THE CASE -->
+  <section id="case" class="why">
+    <div class="section-head">
+      <div class="no">The case</div>
+      <h2>Why a gallery <em>runs one</em>.</h2>
+    </div>
+
+    <div class="cases">
+
+      <div class="case">
+        <span class="k">Reach</span>
+        <h3>Your whole list on one lot, <em>at the same moment</em>.</h3>
+        <p>
+          A private sale worked by phone is sequential, and sequential cannot
+          produce competition. A session puts every invited collector on the
+          same work at the same time — and competition is what sets a price.
+        </p>
+      </div>
+
+      <div class="case">
+        <span class="k">Hours</span>
+        <h3>The room opens where your collectors <em>already are</em>.</h3>
+        <p>
+          No flights, no saleroom, no hour that suits the auctioneer. Beirut,
+          Dubai, Paris and New York bid into one session from the phone in
+          their pocket, in the language they actually write in.
+        </p>
+      </div>
+
+      <div class="case">
+        <span class="k">Threshold</span>
+        <h3>Auctions for the works that could <em>never carry one</em>.</h3>
+        <p>
+          Catalogue, photography, a date, a room, staff — the fixed cost of a
+          conventional sale is what makes most of a gallery&rsquo;s inventory
+          un-auctionable. Take the floor away and a Tuesday session for six
+          works back from a show becomes worth holding.
+        </p>
+      </div>
+
+      <div class="case">
+        <span class="k">Tempo</span>
+        <h3>This week, not <em>the next calendar</em>.</h3>
+        <p>
+          A session is scheduled in the time it takes to send the invitations.
+          Works move while the interest is live, rather than waiting for a
+          season that was set months ago.
+        </p>
+      </div>
+
+      <div class="case">
+        <span class="k">Record</span>
+        <h3>A lot that doesn&rsquo;t sell <em>leaves no mark</em>.</h3>
+        <p>
+          Bought in publicly, a work carries that result in its artist&rsquo;s
+          price history for good. A private session that closes short of
+          reserve is simply a conversation that ended.
+        </p>
+      </div>
+
+      <div class="case">
+        <span class="k">Terms</span>
+        <h3>A single-digit fee, and <em>no one courting your collector</em>.</h3>
+        <p>
+          Consigning elsewhere means paying a quarter or more of the hammer to
+          a house that then markets to your collector directly, for the rest of
+          their collecting life. We take a single-digit percentage and never
+          write to them at all.
+        </p>
+      </div>
+
+    </div>
+
+    <p class="close">
+      The argument is not that an auction costs less here.
+      It is that <em>there is far more worth auctioning</em>.
+    </p>
   </section>
 
   <div class="rule" aria-hidden="true"></div>
@@ -940,7 +1092,7 @@
   <section id="stance" class="contrast">
     <div class="section-head">
       <div class="no">The stance</div>
-      <h2>Not a channel. Not a feed. <em>Not a marketplace.</em></h2>
+      <h2>What we refuse to be. <em>What that lets you do.</em></h2>
     </div>
 
     <div class="grid">
@@ -955,14 +1107,17 @@
           <li>A broker, a payment provider, or a party to the sale.</li>
         </ul>
       </div>
+      <!-- This column used to restate the Manifesto. It now carries the gain,
+           so the contrast is "what we will not do" against "what you can" —
+           rather than two definitions of the same thing. -->
       <div class="card is">
-        <h3>What ArtBound <em>is</em></h3>
+        <h3>What changes <em>for the gallery</em></h3>
         <ul>
-          <li>Auction infrastructure, licensed to galleries.</li>
-          <li>Private, invitation-only, conversational.</li>
-          <li>AI-native, WhatsApp-first, multi-region.</li>
-          <li>Orchestration only &mdash; the session, and nothing beyond it.</li>
-          <li>Almost invisible &mdash; and that is the point.</li>
+          <li>Your whole invited list on one lot, at one time.</li>
+          <li>Sessions kept to your collectors&rsquo; hours, not a saleroom&rsquo;s.</li>
+          <li>Auctions worth running for works that could never carry one.</li>
+          <li>A sale held this week, not next season.</li>
+          <li>An unsold lot that leaves no public record.</li>
         </ul>
       </div>
     </div>
@@ -983,6 +1138,7 @@
       <div>
         <h4>Surface</h4>
         <ul>
+          <li><a href="#case">The Case</a></li>
           <li><a href="#manifesto">Manifesto</a></li>
           <li><a href="#for-galleries">For Galleries</a></li>
           <li><a href="#surface">Auction Surface</a></li>
@@ -1042,7 +1198,7 @@
   (function () {
     if (!("IntersectionObserver" in window)) return;
     const els = document.querySelectorAll(
-      ".manifesto li, .ledger .col, .surface .copy, .contrast .card, .section-head"
+      ".why .case, .why .close, .manifesto li, .ledger .col, .surface .copy, .contrast .card, .section-head"
     );
     els.forEach(el => {
       el.style.opacity = "0";
