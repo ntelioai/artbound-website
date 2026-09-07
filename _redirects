@@ -1,0 +1,11 @@
+# Path aliases for links that are already out in the world and cannot be changed.
+#
+# /terms-and-privacy is written into the body of the approved WhatsApp template
+# `artbound_intro_v3` — the introduction every collector receives on first
+# contact. An approved template's text cannot be edited at Meta, so that URL is
+# fixed for the life of the template and every message already delivered still
+# points at it. The page itself lives at /legal.
+#
+# 301 rather than 302: the alias is permanent, and a permanent redirect is what
+# lets a browser and any link checker treat /legal as the canonical page.
+/terms-and-privacy  /legal  301
