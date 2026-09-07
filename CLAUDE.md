@@ -65,9 +65,15 @@ invent copy for it.
     pre-rendered into sprites — slicing per head per frame would be thousands of
     draw calls a frame — and fixed per head; a head that turns while falling stops
     reading as a head.
-  - **Size is the depth cue.** Heads draw smallest-first so near ones overlap far
-    ones, and alpha scales with size, so the small ones wash out toward the
-    wallpaper. Size, speed, stacking and contrast all agree about what is near.
+  - **Size is the depth cue.** `HEAD_TIERS` is the one table: five depth bands,
+    each setting size, contrast, speed, entrance delay, tilt and how many appear.
+    Heads draw smallest-first so near ones overlap far ones. Far bands lose
+    CONTRAST (ink blended toward the chat background via `source-atop`), not
+    opacity — they still occlude what they fall across.
+  - **The parallax is inverted on purpose**: front slowest, back fastest, ~4.5x
+    across the five bands, with the run opening on the front bands and the deeper
+    ones arriving after. Physical parallax is the other way round; slow-front is
+    the look that was asked for. Swap the `speed` pairs top-to-bottom to flip it.
 - **Never let dev-account placeholders reach the page.** The source record for this
   journey carried a person's name as the sale title; a lot must only ever be
   labelled with its own work and sale.

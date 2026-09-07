@@ -227,19 +227,28 @@ const CHAT_BG = '#f6f4f1'
  * CHAT_BG; `roam` lets a band ignore the column grid; `weight` is how many of
  * that band appear relative to the others.
  *
- * The first two bands are deliberately fade-free — the foreground should look
- * like the mark, untouched. The ramp then steepens as the bands recede, rather
- * than sliding evenly from front to back. `flat` holds the frontmost band
+ * Only the frontmost band is fade-free — it is the foreground and should look
+ * like the mark, untouched. Everything behind it gives up some contrast, and the
+ * ramp steepens as the bands recede rather than sliding evenly front to back.
+ * `flat` holds the frontmost band
  * face-on: at that size a turn is large enough on screen to read as a distortion
  * of the logo rather than as depth.
+ *
+ * `speed` runs slowest at the front and roughly 1.5x faster with each band back,
+ * and `delay` opens the run with the two front bands and lets the deeper ones
+ * arrive after. Note this is parallax inverted: in the physical version the near
+ * plane is the fast one. Slow-front is the look asked for here — the foreground
+ * settles while the depths tear past behind it.
  */
 const HEAD_TIERS = [
-  { size: 124, fade: 0.00, speed: [4.4, 6.6], roam: true,  flat: true,  weight: 1 },
-  { size:  96, fade: 0.00, speed: [3.5, 5.2], roam: true,  flat: false, weight: 2 },
-  { size:  74, fade: 0.30, speed: [2.6, 4.0], roam: false, flat: false, weight: 3 },
-  { size:  56, fade: 0.52, speed: [1.9, 3.0], roam: false, flat: false, weight: 4 },
-  { size:  42, fade: 0.70, speed: [1.3, 2.2], roam: false, flat: false, weight: 5 }
+  { size: 124, fade: 0.00, speed: [1.6, 2.3], delay:    0, roam: true,  flat: true,  weight: 1 },
+  { size:  96, fade: 0.16, speed: [2.5, 3.4], delay:    0, roam: true,  flat: false, weight: 2 },
+  { size:  74, fade: 0.30, speed: [3.8, 5.0], delay:  340, roam: false, flat: false, weight: 3 },
+  { size:  56, fade: 0.52, speed: [5.6, 7.2], delay:  760, roam: false, flat: false, weight: 4 },
+  { size:  42, fade: 0.70, speed: [8.0, 10.5], delay: 1220, roam: false, flat: false, weight: 5 }
 ]
+const ENTRY_JITTER_MS = 260   // so a band doesn't arrive as one rank
+const ENTRY_PREROLL = 45      // frames of travel a head may start above the top
 // Flattened weights, so picking a band is one array lookup.
 const TIER_PICK = HEAD_TIERS.reduce(
   (acc, t, i) => acc.concat(new Array(t.weight).fill(i)), []
@@ -342,7 +351,11 @@ function loadPoses() {
   })
 }
 
-function makeHead(w, h, cols, colW, seeded) {
+/**
+ * @param {boolean} opening  true for the run's first fill, which staggers the
+ *   bands in by depth; false for a respawn, which re-enters immediately.
+ */
+function makeHead(w, h, cols, colW, opening) {
   const tier = HEAD_TIERS[TIER_PICK[Math.floor(Math.random() * TIER_PICK.length)]]
   // Scaled up by 1/POSE_BASE: the figure occupies only that fraction of its
   // sprite, and tier.size is the size the figure itself should end up.
@@ -352,12 +365,19 @@ function makeHead(w, h, cols, colW, seeded) {
   const x = tier.roam
     ? Math.random() * Math.max(1, w - size)
     : Math.floor(Math.random() * cols) * colW + (colW - size) / 2
+  const speed = tier.speed[0] + Math.random() * (tier.speed[1] - tier.speed[0])
   return {
     x,
-    y: seeded ? Math.random() * h : -size - Math.random() * h * 0.6,
+    // Always entered from above: nothing is seeded mid-screen, or the staggered
+    // opening would be hidden behind heads that were already there. The head
+    // start is measured in TIME, not pixels — a fixed pixel offset would take
+    // the slow front band several seconds just to reach the top edge, while the
+    // fast back bands cleared it instantly.
+    y: -size - Math.random() * speed * ENTRY_PREROLL,
     size,
-    // Speed is per band, so it agrees with size and stacking about what is near.
-    speed: tier.speed[0] + Math.random() * (tier.speed[1] - tier.speed[0]),
+    // Held until its band's turn, and only on the opening fill.
+    startAt: opening ? tier.delay + Math.random() * ENTRY_JITTER_MS : 0,
+    speed,
     fade: tier.fade,
     pose: (tier.flat || Math.random() < 0.32)
       ? FACE_ON
@@ -398,13 +418,17 @@ async function rainHeads() {
 
   let raf = 0
   let falling = true
-  const frame = () => {
+  let t0 = 0
+  const frame = (now) => {
+    if (!t0) t0 = now
+    const elapsed = now - t0
     // Cleared every frame, so the heads stay discrete and the chat shows through.
     ctx.clearRect(0, 0, w, h)
     // Painter's algorithm: smallest first, so near heads overlap far ones.
     heads.sort((a, b) => a.size - b.size)
     for (let i = 0; i < heads.length; i++) {
       const d = heads[i]
+      if (elapsed < d.startAt) continue      // this band hasn't opened yet
       ctx.drawImage(set[d.fade][d.pose], d.x, d.y, d.size, d.size)
       d.y += d.speed
       // Once the run is over, let the stragglers fall off rather than respawning.
