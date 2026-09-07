@@ -234,21 +234,27 @@ const CHAT_BG = '#f6f4f1'
  * face-on: at that size a turn is large enough on screen to read as a distortion
  * of the logo rather than as depth.
  *
- * `speed` runs slowest at the front and roughly 1.5x faster with each band back,
+ * `speed` runs slowest at the front and roughly 1.4x faster with each band back,
  * and `delay` opens the run with the two front bands and lets the deeper ones
  * arrive after. Note this is parallax inverted: in the physical version the near
  * plane is the fast one. Slow-front is the look asked for here — the foreground
  * settles while the depths tear past behind it.
+ *
+ * Speed is ONE value per band, not a range. Heads in a band therefore fall in
+ * lockstep, so their relative positions never change — which is what lets the
+ * placement below promise that two heads of the same band will not run into each
+ * other. Given per-head speeds they would drift together sooner or later.
  */
 const HEAD_TIERS = [
-  { size: 124, fade: 0.00, speed: [1.6, 2.3], delay:    0, roam: true,  flat: true,  weight: 1 },
-  { size:  96, fade: 0.16, speed: [2.5, 3.4], delay:    0, roam: true,  flat: false, weight: 2 },
-  { size:  74, fade: 0.30, speed: [3.8, 5.0], delay:  340, roam: false, flat: false, weight: 3 },
-  { size:  56, fade: 0.52, speed: [5.6, 7.2], delay:  760, roam: false, flat: false, weight: 4 },
-  { size:  42, fade: 0.70, speed: [8.0, 10.5], delay: 1220, roam: false, flat: false, weight: 5 }
+  { size: 124, fade: 0.00, speed:  2.0, delay:    0, flat: true,  weight: 1 },
+  { size:  96, fade: 0.16, speed:  3.0, delay:    0, flat: false, weight: 2 },
+  { size:  74, fade: 0.30, speed:  4.4, delay:  340, flat: false, weight: 3 },
+  { size:  56, fade: 0.52, speed:  6.4, delay:  760, flat: false, weight: 4 },
+  { size:  42, fade: 0.70, speed:  9.2, delay: 1220, flat: false, weight: 5 }
 ]
 const ENTRY_JITTER_MS = 260   // so a band doesn't arrive as one rank
 const ENTRY_PREROLL = 45      // frames of travel a head may start above the top
+const HEAD_GAP = 10           // clear space demanded between two heads of a band
 // Flattened weights, so picking a band is one array lookup.
 const TIER_PICK = HEAD_TIERS.reduce(
   (acc, t, i) => acc.concat(new Array(t.weight).fill(i)), []
@@ -352,32 +358,83 @@ function loadPoses() {
 }
 
 /**
+ * Lanes for one band: as many as fit the figure's own width plus a gap.
+ *
+ * Measured on tier.size, the FIGURE, not on the sprite box — the sprite carries
+ * POSE_BASE worth of transparent padding, and spacing heads by the padded box
+ * would leave the band looking thin.
+ */
+function laneLayout(w, tier) {
+  const n = Math.max(1, Math.floor(w / (tier.size + HEAD_GAP)))
+  return { n, laneW: w / n }
+}
+
+/**
+ * Place a head so it clears every other head of its own band.
+ *
+ * Two heads of a band collide only if they share a lane, since lanes are a
+ * figure-width apart, and only if they are within a figure-height of each other,
+ * since a band falls in lockstep. So: pick a lane, and if its topmost head is
+ * not yet clear of the entry point, start above that head instead of at the
+ * random offset. Lanes are tried in random order and the emptiest is the
+ * fallback, which spreads the band out instead of favouring one side.
+ *
  * @param {boolean} opening  true for the run's first fill, which staggers the
  *   bands in by depth; false for a respawn, which re-enters immediately.
+ * @param {object[]} heads   the live heads, to place clear of
  */
-function makeHead(w, h, cols, colW, opening) {
-  const tier = HEAD_TIERS[TIER_PICK[Math.floor(Math.random() * TIER_PICK.length)]]
+function makeHead(w, h, opening, heads) {
+  const tierIndex = TIER_PICK[Math.floor(Math.random() * TIER_PICK.length)]
+  const tier = HEAD_TIERS[tierIndex]
   // Scaled up by 1/POSE_BASE: the figure occupies only that fraction of its
   // sprite, and tier.size is the size the figure itself should end up.
   const size = tier.size / POSE_BASE
-  // The far bands snap to a column so the fall reads as rain; the near ones roam
-  // the full width, which keeps them from looking lined up.
-  const x = tier.roam
-    ? Math.random() * Math.max(1, w - size)
-    : Math.floor(Math.random() * cols) * colW + (colW - size) / 2
-  const speed = tier.speed[0] + Math.random() * (tier.speed[1] - tier.speed[0])
+  const { n, laneW } = laneLayout(w, tier)
+
+  // The topmost live head of this band in each lane.
+  const topOf = new Array(n).fill(Infinity)
+  for (let i = 0; i < heads.length; i++) {
+    const o = heads[i]
+    if (o.tier !== tierIndex) continue
+    if (o.y < topOf[o.lane]) topOf[o.lane] = o.y
+  }
+
+  // Always entered from above: nothing is seeded mid-screen, or the staggered
+  // opening would be hidden behind heads that were already there. The head start
+  // is measured in TIME, not pixels — a fixed pixel offset would take the slow
+  // front band several seconds to reach the top edge while the fast back bands
+  // cleared it instantly.
+  const wanted = -size - Math.random() * tier.speed * ENTRY_PREROLL
+  const clear = tier.size + HEAD_GAP     // vertical room one head needs
+
+  let lane = 0, best = -Infinity
+  const order = []
+  for (let i = 0; i < n; i++) order.push(i)
+  for (let i = order.length - 1; i > 0; i--) {          // shuffle
+    const j = Math.floor(Math.random() * (i + 1))
+    const t = order[i]; order[i] = order[j]; order[j] = t
+  }
+  for (let i = 0; i < order.length; i++) {
+    const l = order[i]
+    if (topOf[l] - wanted >= clear) { lane = l; best = Infinity; break }
+    if (topOf[l] > best) { best = topOf[l]; lane = l }   // emptiest so far
+  }
+  // Either the lane was free at the entry point, or we go in above its topmost.
+  const y = best === Infinity ? wanted : Math.min(wanted, topOf[lane] - clear)
+
+  // Whatever the lane has spare after the figure and its gap, spent on jitter so
+  // a band doesn't read as a rigid grid. On the tight bands this is a pixel or
+  // two; the vertical spread carries the variety there.
+  const slack = Math.max(0, laneW - tier.size - HEAD_GAP)
   return {
-    x,
-    // Always entered from above: nothing is seeded mid-screen, or the staggered
-    // opening would be hidden behind heads that were already there. The head
-    // start is measured in TIME, not pixels — a fixed pixel offset would take
-    // the slow front band several seconds just to reach the top edge, while the
-    // fast back bands cleared it instantly.
-    y: -size - Math.random() * speed * ENTRY_PREROLL,
+    x: lane * laneW + (laneW - size) / 2 + (Math.random() - 0.5) * slack,
+    y,
     size,
+    lane,
+    tier: tierIndex,
     // Held until its band's turn, and only on the opening fill.
     startAt: opening ? tier.delay + Math.random() * ENTRY_JITTER_MS : 0,
-    speed,
+    speed: tier.speed,
     fade: tier.fade,
     pose: (tier.flat || Math.random() < 0.32)
       ? FACE_ON
@@ -411,10 +468,12 @@ async function rainHeads() {
   const ctx = canvas.getContext('2d')
   ctx.scale(dpr, dpr)
 
-  const colW = 54
-  const cols = Math.max(1, Math.ceil(w / colW))
+  // Each head is placed clear of its own band, so this is an upper bound rather
+  // than a literal on-screen count: a band with no room left simply starts its
+  // next head higher up, and the fall thins itself out.
   const heads = []
-  for (let i = 0; i < Math.round(cols * 2.4); i++) heads.push(makeHead(w, h, cols, colW, true))
+  const count = Math.round(w / 54 * 2.4)
+  for (let i = 0; i < count; i++) heads.push(makeHead(w, h, true, heads))
 
   let raf = 0
   let falling = true
@@ -426,17 +485,22 @@ async function rainHeads() {
     ctx.clearRect(0, 0, w, h)
     // Painter's algorithm: smallest first, so near heads overlap far ones.
     heads.sort((a, b) => a.size - b.size)
+    let due = 0
     for (let i = 0; i < heads.length; i++) {
       const d = heads[i]
       if (elapsed < d.startAt) continue      // this band hasn't opened yet
       ctx.drawImage(set[d.fade][d.pose], d.x, d.y, d.size, d.size)
       d.y += d.speed
-      // Once the run is over, let the stragglers fall off rather than respawning.
       if (d.y > h + d.size) {
-        if (falling) heads[i] = makeHead(w, h, cols, colW, false)
-        else { heads.splice(i, 1); i-- }
+        heads.splice(i, 1); i--
+        // Once the run is over, let the stragglers fall off rather than respawn.
+        if (falling) due++
       }
     }
+    // Re-placed only after the sweep, and only against the heads that remain:
+    // a head still in the array would otherwise be an obstacle to its own
+    // replacement, pushing every respawn a lane-height further up each cycle.
+    for (let k = 0; k < due; k++) heads.push(makeHead(w, h, false, heads))
     raf = requestAnimationFrame(frame)
   }
   raf = requestAnimationFrame(frame)
