@@ -1,0 +1,1922 @@
+:root {
+    --nui-wa-green: #128C7E;
+    --nui-wa-bubble-out: #DCF8C6;
+    --nui-wa-bubble-in: #FFFFFF;
+    --nui-wa-chat-bg: #E5DDD5;
+}
+
+.nui-wa-container {
+    max-width: 500px;
+    margin: 0 auto;
+    height: 100vh;
+    background-color: var(--nui-wa-chat-bg);
+    display: flex;
+    flex-direction: column;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    /* Anchor for the fullscreen overlay (.nui-wa-overlay) used by MPM/cart modals */
+    position: relative;
+    overflow: hidden;
+}
+
+.nui-wa-header {
+    background: #f0f0f0;
+    color: #111;
+    padding: 10px;
+    padding-top: 30px;
+    padding-bottom: 5px;
+    display: flex;
+    align-items: center;
+}
+
+.nui-wa-header .nui-wa-profile-photo {
+    width: 44px;
+    height: 44px;
+    background: var(--nui-wa-green);
+    color: #fff;
+    border-radius: 50%;
+    margin-right: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 18px;
+    overflow: hidden;
+    /* Pin the circle so a long company name + the action icons can't
+       compress it into an oval. */
+    flex-shrink: 0;
+}
+.nui-wa-header .nui-wa-profile-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.nui-wa-header .nui-wa-user-info {
+    flex: 1 1 auto;
+    /* min-width: 0 lets this flex item shrink below its content's min-content,
+       which is what enables the ellipsis truncation on long company names. */
+    min-width: 0;
+}
+.nui-wa-header .nui-wa-user-info h5 {
+    margin: 0;
+    /* Explicit dark colour: inside the admin dock, a global heading style leaks
+       white into this h5, washing out the business name on the light header. */
+    color: #111;
+    font-size: 16px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.nui-wa-header .nui-wa-user-info p {
+    margin: 0;
+    font-size: 13px;
+    opacity: 0.8;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.nui-wa-status-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #999;
+}
+.nui-wa-status-dot.is-connected { background: #25D366; }
+
+.nui-wa-header-icons {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    /* Pin the icons row so long company names don't shove the icons onto a
+       second line (or onto each other). */
+    flex-shrink: 0;
+    margin-left: 12px;
+}
+.nui-wa-header-icons i { font-size: 18px; color: #555; }
+.nui-wa-header-shop { cursor: pointer; transition: color 0.15s; }
+.nui-wa-header-shop:hover { color: var(--nui-wa-green); }
+
+/* Generic "feature not yet enabled" visual — muted icon + not-allowed
+   cursor. Click handlers are simply not bound on disabled controls; the
+   class is the visual half of the contract. Currently used by the phone
+   icon when `callEnabled: false` (the default), but reusable for any
+   future "coming soon" header action. */
+.nui-wa-header-icons i.is-disabled {
+    opacity: 0.32;
+    cursor: not-allowed;
+}
+
+/* Reset-chat trashcan — coloured distinctly so it reads as a destructive
+   action vs. the muted-grey native icons next to it. --nui-wa-danger
+   defaults to cartaja crimson; consumers can override via the variable.
+   Selector matches `.nui-wa-header-icons i` specificity (the rule above
+   that sets every header icon to #555) so this colour wins. */
+.nui-wa-header-icons .nui-wa-header-reset {
+    color: var(--nui-wa-danger, #441639);
+    cursor: pointer;
+    transition: color 0.15s, transform 0.15s;
+    /* Relative so the ::after tooltip anchors to this icon's box. */
+    position: relative;
+}
+.nui-wa-header-icons .nui-wa-header-reset:hover {
+    color: var(--nui-wa-danger-hover, #5e1d4e);
+    transform: scale(1.08);
+}
+.nui-wa-header-icons .nui-wa-header-reset:active { transform: scale(0.96); }
+.nui-wa-header-icons .nui-wa-header-reset:focus-visible {
+    outline: 2px solid var(--nui-wa-danger, #441639);
+    outline-offset: 3px;
+    border-radius: 4px;
+}
+
+/* Hover tooltip — content comes from the `data-tip` attribute the widget
+   sets in init (defaults to "Reset chat"; hosts pass `resetLabel` to
+   override or localize). The dark bubble appears below the icon with a
+   small upward-pointing tick. Font-family/style explicitly reset because
+   the parent <i> inherits Font Awesome's italic + icon font. */
+.nui-wa-header-icons .nui-wa-header-reset::after {
+    content: attr(data-tip);
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    padding: 5px 10px;
+    background: rgba(0, 0, 0, 0.9);
+    color: #fff;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-style: normal;
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    line-height: 1.2;
+    border-radius: 6px;
+    white-space: nowrap;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-4px);
+    transition: opacity 0.15s ease, transform 0.15s ease;
+    z-index: 10;
+}
+/* NOTE: we intentionally do NOT use ::before for a tooltip arrow — Font
+   Awesome's icon glyph itself is rendered via ::before, and overriding it
+   would erase the trashcan. The bubble alone reads fine without the tick. */
+.nui-wa-header-icons .nui-wa-header-reset:hover::after,
+.nui-wa-header-icons .nui-wa-header-reset:focus-visible::after {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.nui-wa-messages {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 15px;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.90), rgba(255, 255, 255, 0.90)),
+        var(--wa-bg-image);
+    background-size: auto, cover;
+    background-repeat: no-repeat, no-repeat;
+    background-position: center, center;
+    display: flex;
+    flex-direction: column;
+}
+
+.nui-wa-message {
+    max-width: 75%;
+    /* Flex items default to min-width:auto, which lets a nowrap child (the quoted
+       reply context) push the bubble past max-width. Cap it so the quote
+       ellipsizes instead of overflowing the chat. */
+    min-width: 0;
+    margin-bottom: 8px;
+    border-radius: 7.5px;
+    word-wrap: break-word;
+    box-shadow: 0 2px 1px rgba(0,0,0,0.05);
+    /* border: 1px #eaeaea solid; */
+    padding: 3px 0px 0px 0px;
+    /* padding: 8px 12px 6px; */
+    position: relative;
+    /* Pin bubble text color so it doesn't inherit a host page's body color
+       (e.g. cartaja sets body color to ivory, which leaks into the bubble). */
+    color: #111;
+    line-height: 0.95em;
+}
+/* Applies only to plain-text bodies so multi-line replies (like `help`) keep
+   their line breaks — without preserving the template's indentation whitespace
+   inside interactive/media bubbles. */
+.nui-wa-text { white-space: normal; line-height: 1.45; padding: 0px 10px 0px 10px; }
+
+/* Reply context block shown above sent message text */
+.nui-wa-reply-context {
+    background: rgba(0, 0, 0, 0.07);
+    border-left: 3px solid var(--nui-wa-green);
+    border-radius: 4px;
+    padding: 5px 8px;
+    margin: 0px 3px 3px 3px;
+    /* margin-bottom: 5px; */
+    font-size: 0.82em;
+    color: #4a5568;
+    line-height: 1.35;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* The quoted text is a block child, so the wrapper's ellipsis can't apply to it
+   — it has to clip itself. */
+.nui-wa-reply-context-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* WhatsApp markdown rendering */
+.nui-wa-text strong,
+.nui-wa-interactive-body strong,
+.nui-wa-interactive-header strong { font-weight: 700; }
+
+.nui-wa-text em,
+.nui-wa-interactive-body em { font-style: italic; }
+
+.nui-wa-text del,
+.nui-wa-interactive-body del { text-decoration: line-through; color: #718096; }
+
+.nui-wa-code {
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: 0.88em;
+    background: rgba(0, 0, 0, 0.06);
+    border-radius: 3px;
+    padding: 1px 4px;
+}
+.nui-wa-code-block {
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: 0.82em;
+    background: rgba(0, 0, 0, 0.06);
+    border-radius: 4px;
+    padding: 8px 10px;
+    margin: 4px 0;
+    overflow-x: auto;
+    white-space: pre;
+}
+.nui-wa-code-block code { background: none; padding: 0; font-size: inherit; }
+.nui-wa-message.is-sent {
+    background: var(--nui-wa-bubble-out);
+    align-self: flex-end;
+    border-top-right-radius: 0;
+}
+.nui-wa-message.is-received {
+    background: var(--nui-wa-bubble-in);
+    align-self: flex-start;
+    border-top-left-radius: 0;
+}
+.nui-wa-message .nui-wa-time {
+    font-size: 11px;
+    color: #999;
+    float: right;
+    margin-left: 10px;
+    margin-top: 2px;
+    padding-right: 10px;;
+}
+
+.nui-wa-interactive {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    min-width: 220px;
+}
+.nui-wa-interactive-header {
+    padding: 8px 10px 2px;
+    font-weight: 600;
+    color: #1a202c;
+}
+.nui-wa-interactive-body {
+    font-size: 0.9em;
+    padding: 2px 10px 8px;
+    color: #2d3748;
+    line-height: 1.4;
+}
+.nui-wa-interactive-footer {
+    padding: 0 10px 6px;
+    font-size: 0.75em;
+    color: #a0aec0;
+}
+.nui-wa-interactive-time {
+    padding: 0 10px 6px;
+    font-size: 11px;
+    color: #999;
+    text-align: right;
+}
+.nui-wa-interactive-buttons {
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    flex-direction: column;
+}
+.nui-wa-interactive-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 10px;
+    background: white;
+    color: var(--nui-wa-green);
+    border: none;
+    border-top: 1px solid #e2e8f0;
+    font-weight: 200;
+    cursor: pointer;
+    transition: background-color 0.15s;
+    gap: 6px;
+    font-size: 0.9em;
+}
+.nui-wa-btn-icon {
+    font-size: 0.85em;
+    opacity: 0.75;
+}
+.nui-wa-interactive-buttons .nui-wa-interactive-button:first-child { border-top: none; }
+.nui-wa-interactive-button:hover { background: #f7fafc; }
+.nui-wa-interactive-button:active { background: #e2e8f0; }
+.nui-wa-interactive-button.is-disabled {
+    color: #a0aec0;
+    pointer-events: none;
+    font-style: italic;
+}
+
+.nui-wa-list-toggle {
+    border-top: 1px solid #e2e8f0;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    color: var(--nui-wa-green);
+    font-weight: 500;
+    cursor: pointer;
+    user-select: none;
+}
+.nui-wa-list-sections { display: none; border-top: 1px solid #e2e8f0; }
+.nui-wa-list-sections.is-open { display: block; }
+.nui-wa-list-section-title {
+    padding: 8px 10px 4px;
+    font-size: 0.75em;
+    font-weight: 600;
+    color: #a0aec0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    background: #f7fafc;
+}
+.nui-wa-list-row {
+    padding: 10px;
+    cursor: pointer;
+    border-top: 1px solid #edf2f7;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.nui-wa-list-row:hover { background: #f7fafc; }
+.nui-wa-list-row-body { flex: 1 1 auto; min-width: 0; }
+.nui-wa-list-row-title { font-weight: 500; color: #2d3748; }
+.nui-wa-list-row-description { font-size: 0.8em; color: #718096; margin-top: 2px; }
+.nui-wa-list-row-arrow { flex: 0 0 auto; color: #a0aec0; font-size: 0.75em; }
+
+.nui-wa-message-media { padding: 4px 4px 6px; }
+.nui-wa-image-link { display: block; line-height: 0; }
+.nui-wa-image {
+    width: 100%;
+    max-width: 260px;
+    display: block;
+    border-radius: 5px;
+    object-fit: cover;
+    background: #edf2f7;
+}
+/* Video bubble: the frame is the bubble. No max-height and no object-fit — the
+   element takes the clip's own aspect ratio, so there is nothing to letterbox
+   and nothing to crop, whatever ratio ships. Chrome's control strip is an
+   overlay painted inside this box, so it sits ON the video rather than in a
+   reserved band beneath it. The bubble's media padding is dropped below so the
+   frame runs edge to edge like a photo message. */
+.nui-wa-video-wrap {
+    position: relative;
+    display: block;
+    line-height: 0;
+    max-width: 260px;
+    border-radius: 5px;
+    overflow: hidden;
+}
+.nui-wa-video {
+    width: 100%;
+    height: auto;
+    display: block;
+    background: #0b0b0d;
+}
+/* WhatsApp's round play button, centred over the frame. Replaces the browser
+   control strip at rest; retires on first tap, when native controls take over. */
+.nui-wa-video-play {
+    position: absolute;
+    left: 50%; top: 50%;
+    transform: translate(-50%, -50%);
+    width: 46px; height: 46px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, .45);
+    cursor: pointer;
+    transition: background .15s;
+}
+.nui-wa-video-play::before {
+    content: "";
+    position: absolute;
+    left: 52%; top: 50%;
+    transform: translate(-50%, -50%);
+    border-style: solid;
+    border-width: 8px 0 8px 14px;
+    border-color: transparent transparent transparent #fff;
+}
+.nui-wa-video-play:hover { background: rgba(0, 0, 0, .6); }
+.nui-wa-video-wrap.is-playing .nui-wa-video-play { display: none; }
+/* Video runs edge to edge in its bubble; photo bubbles keep their inset. */
+.nui-wa-message-video { padding: 0 0 2px; }
+.nui-wa-message-video .nui-wa-image-caption { padding: 6px 8px 2px; }
+.nui-wa-message-video .nui-wa-time { padding-right: 8px; }
+.nui-wa-image-caption {
+    padding: 6px 8px 2px;
+    font-size: 0.92em;
+    color: #2d3748;
+    line-height: 1.35;
+}
+
+.nui-wa-document {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #f7fafc;
+    border-radius: 6px;
+    padding: 10px;
+    text-decoration: none;
+    color: inherit;
+    min-width: 220px;
+    border: 1px solid #edf2f7;
+}
+.nui-wa-document:hover { background: #edf2f7; }
+.nui-wa-document-icon {
+    flex: 0 0 auto;
+    width: 40px;
+    height: 48px;
+    background: var(--nui-wa-green);
+    color: #fff;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+.nui-wa-document-meta { flex: 1 1 auto; min-width: 0; }
+.nui-wa-document-filename {
+    color: #2d3748;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 0.95em;
+}
+.nui-wa-document-hint {
+    font-size: 0.75em;
+    color: #718096;
+    margin-top: 2px;
+}
+.nui-wa-document-caption {
+    padding: 6px 2px 0;
+    font-size: 0.88em;
+    color: #4a5568;
+}
+
+.nui-wa-location {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    min-width: 260px;
+    border-radius: 6px;
+    overflow: hidden;
+    background: #f7fafc;
+    border: 1px solid #edf2f7;
+}
+.nui-wa-location:hover .nui-wa-location-meta { background: #edf2f7; }
+.nui-wa-location-map {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 2 / 1;
+    background-color: #e2e8f0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+.nui-wa-location-pin {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -100%);
+    color: #e53e3e;
+    font-size: 26px;
+    text-shadow: 0 2px 3px rgba(0, 0, 0, 0.35);
+    pointer-events: none;
+}
+.nui-wa-location-meta {
+    padding: 8px 10px;
+    transition: background-color 0.15s;
+}
+.nui-wa-location-name {
+    font-weight: 500;
+    color: #2d3748;
+    font-size: 0.95em;
+}
+.nui-wa-location-address {
+    font-size: 0.82em;
+    color: #718096;
+    margin-top: 2px;
+}
+.nui-wa-location-hint {
+    font-size: 0.78em;
+    color: var(--nui-wa-green);
+    margin-top: 4px;
+    font-weight: 500;
+}
+
+/* ─── Chats list (stores mode) ─────────────────────────────────
+   Absolute overlay covering the entire container so we don't need to hide
+   the header/messages/input individually. Sits below modals (.nui-wa-overlay
+   uses z-index:100) so an in-modal back-out doesn't expose it prematurely.
+   Visual reference: native WhatsApp iOS chats screen — large left-aligned
+   "Chats" title, search bar, scrollable list, 5-tab bottom bar. */
+.nui-wa-chats-screen {
+    position: absolute;
+    inset: 0;
+    /* Sit *below* the host page's .iphone-status-bar (z-index: 9) so the
+       phone's time + signal/wifi/battery row stays visible. Modals
+       (.nui-wa-overlay = 100) still overlay everything. */
+    z-index: 5;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+}
+
+.nui-wa-chats-header {
+    padding: 52px 16px 6px;
+    background: #fff;
+    flex-shrink: 0;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.nui-wa-chats-title {
+    margin: 0;
+    font-size: 32px;
+    font-weight: 700;
+    color: #111;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+}
+
+/* Chats-header actions — plain <i> icons matching the chat-mode header's
+   look exactly (font-size 18, muted grey baseline). Container gap bumped
+   to 20px to restore the visual spacing the previous button wrappers
+   produced via their 6px/8px padding, and to match the in-chat
+   .nui-wa-header-icons spacing for consistency across screens. */
+.nui-wa-chats-header-actions {
+    gap: 23px;
+}
+.nui-wa-chats-header-actions i {
+    font-size: 18px;
+    color: #555;
+}
+/* Help icon: same size as the trashcan, cartaja crimson, hover slightly
+   brighter — visually identical to .nui-wa-header-reset. */
+.nui-wa-chats-header-actions .nui-wa-help-btn {
+    color: var(--nui-wa-danger, #441639);
+    cursor: pointer;
+    transition: color 0.15s, transform 0.15s;
+}
+.nui-wa-chats-header-actions .nui-wa-help-btn:hover {
+    color: var(--nui-wa-danger-hover, #5e1d4e);
+    transform: scale(1.08);
+}
+.nui-wa-chats-header-actions .nui-wa-help-btn:focus-visible {
+    outline: 2px solid var(--nui-wa-danger, #441639);
+    outline-offset: 3px;
+    border-radius: 4px;
+}
+/* Permanently-disabled placeholders (camera + new-chat) — identical
+   treatment to the in-chat phone icon. */
+.nui-wa-chats-header-actions i.is-disabled {
+    opacity: 0.32;
+    cursor: not-allowed;
+}
+
+.nui-wa-chats-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 4px;
+}
+
+.nui-wa-chats-header-btn {
+    background: transparent;
+    border: none;
+    padding: 6px 8px;
+    color: #128C7E;
+    font-size: 18px;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: background 0.15s;
+}
+.nui-wa-chats-header-btn:hover { background: #f1f3f5; }
+.nui-wa-chats-header-btn:active { background: #e2e8f0; }
+
+.nui-wa-chats-search {
+    flex-shrink: 0;
+    padding: 6px 12px 10px;
+    background: #fff;
+    position: relative;
+}
+
+.nui-wa-chats-search-icon {
+    position: absolute;
+    left: 24px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #999;
+    font-size: 13px;
+    pointer-events: none;
+}
+
+.nui-wa-chats-search-input {
+    width: 100%;
+    height: 36px;
+    padding: 0 14px 0 34px;
+    border: none;
+    background: #ececec;
+    border-radius: 10px;
+    font-size: 15px;
+    color: #111;
+    outline: none;
+    font-family: inherit;
+    box-sizing: border-box;
+}
+.nui-wa-chats-search-input::placeholder { color: #999; }
+.nui-wa-chats-search-input:focus { background: #e2e2e2; }
+
+.nui-wa-chats-list {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    background: #fff;
+    -webkit-overflow-scrolling: touch;
+}
+
+.nui-wa-chat-row {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 10px 16px;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #f1f3f5;
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.15s;
+    font: inherit;
+    color: inherit;
+}
+
+.nui-wa-chat-row:hover { background: #f7fafc; }
+.nui-wa-chat-row:active { background: #edf2f7; }
+
+.nui-wa-chat-row-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--nui-wa-green);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 17px;
+    margin-right: 12px;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+.nui-wa-chat-row-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.nui-wa-chat-row-content {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.nui-wa-chat-row-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 8px;
+}
+
+.nui-wa-chat-row-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: #111;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+}
+
+.nui-wa-chat-row-time {
+    font-size: 12px;
+    color: #999;
+    flex-shrink: 0;
+    font-weight: 400;
+}
+
+.nui-wa-chat-row-preview {
+    font-size: 14px;
+    color: #888;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0;
+    line-height: 1.3;
+}
+
+.nui-wa-chats-empty {
+    padding: 40px 20px;
+    text-align: center;
+    color: #888;
+    font-size: 14px;
+}
+
+/* Bottom tab bar — mimics WhatsApp iOS's 5-tab footer. Only the "Chats"
+   tab is functional; the others tap-flash and reset focus to Chats. */
+.nui-wa-chats-tabs {
+    flex-shrink: 0;
+    display: flex;
+    align-items: stretch;
+    justify-content: space-around;
+    background: #f7f7f7;
+    border-top: 1px solid #d8d8d8;
+    /* Extra bottom padding reserves room for the iPhone home indicator so
+       the tab labels don't bump against the bottom edge of the frame. */
+    padding: 8px 0 28px;
+}
+
+.nui-wa-chats-tab {
+    flex: 1 1 0;
+    min-width: 0;
+    background: transparent;
+    border: none;
+    padding: 4px 2px 2px;
+    cursor: pointer;
+    color: #8e8e93;
+    font: inherit;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    transition: color 0.15s;
+}
+
+.nui-wa-chats-tab-icon {
+    font-size: 18px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 22px;
+}
+
+.nui-wa-chats-tab-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
+.nui-wa-chats-tab.is-active { color: var(--nui-wa-green); }
+.nui-wa-chats-tab:hover:not(.is-active) { color: #6b6b70; }
+
+/* Header back button — only shown when in stores mode after entering a chat. */
+.nui-wa-back-btn {
+    background: transparent;
+    border: none;
+    color: #128C7E;
+    font-size: 18px;
+    padding: 6px 10px 6px 0;
+    margin-right: 4px;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+.nui-wa-back-btn:hover { color: #0d6e63; }
+.nui-wa-back-btn:active { color: #0a564f; }
+
+/* Fullscreen overlay (MPM list, cart) — anchored to .nui-wa-container */
+.nui-wa-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 100;
+    background: white;
+}
+.nui-wa-inline-loader {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    border-radius: 12px;
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    z-index: 50;
+}
+.nui-wa-inline-loader-label {
+    color: #2d3748;
+    font-size: 0.9em;
+    font-weight: 500;
+    white-space: nowrap;
+}
+.nui-wa-spinner {
+    width: 22px;
+    height: 22px;
+    border: 2.5px solid #e2e8f0;
+    border-top-color: var(--nui-wa-green);
+    border-radius: 50%;
+    animation: nui-wa-spin 0.8s linear infinite;
+    flex-shrink: 0;
+}
+@keyframes nui-wa-spin {
+    to { transform: rotate(360deg); }
+}
+.nui-wa-fs-modal {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: #f6f6f6;
+}
+.nui-wa-fs-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 12px;
+    background: white;
+    border-bottom: 1px solid #e2e8f0;
+    color: #1a202c;
+}
+.nui-wa-fs-back {
+    border: none;
+    background: transparent;
+    color: #1a202c;
+    font-size: 18px;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+}
+.nui-wa-fs-title {
+    flex: 1 1 auto;
+    font-weight: 600;
+    font-size: 1em;
+    line-height: 1.2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.nui-wa-fs-subtitle {
+    font-weight: 400;
+    font-size: 0.78em;
+    color: #718096;
+    margin-top: 2px;
+}
+.nui-wa-fs-action-spacer { width: 32px; flex: 0 0 auto; }
+.nui-wa-fs-body {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    background: white;
+}
+
+/* Product-list bubble card (thumbnail + title + count) */
+.nui-wa-interactive--mpm { padding-bottom: 0; }
+.nui-wa-mpm-bubble-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px 10px;
+}
+.nui-wa-mpm-bubble-thumb {
+    width: 56px;
+    height: 56px;
+    object-fit: cover;
+    border-radius: 6px;
+    flex: 0 0 auto;
+    display: block;
+}
+.nui-wa-mpm-bubble-thumb-placeholder {
+    width: 56px;
+    height: 56px;
+    background: #edf2f7;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #a0aec0;
+    font-size: 20px;
+    flex: 0 0 auto;
+}
+.nui-wa-mpm-bubble-meta { flex: 1 1 auto; min-width: 0; }
+.nui-wa-mpm-bubble-title {
+    font-weight: 600;
+    font-size: 0.95em;
+    color: #1a202c;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.nui-wa-mpm-bubble-count {
+    font-size: 0.82em;
+    color: #718096;
+    margin-top: 3px;
+}
+.nui-wa-mpm-bubble-divider {
+    height: 1px;
+    background: #edf2f7;
+    margin: 0;
+}
+
+/* Multi-product list — sectioned vertical list inside the fullscreen modal */
+.nui-wa-mpm-section-title {
+    background: #f7fafc;
+    color: #4a5568;
+    font-size: 0.78em;
+    font-weight: 600;
+    padding: 10px 14px;
+    border-bottom: 1px solid #edf2f7;
+}
+.nui-wa-mpm-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    border-bottom: 1px solid #edf2f7;
+}
+.nui-wa-mpm-row:last-child { border-bottom: none; }
+.nui-wa-mpm-thumb {
+    flex: 0 0 auto;
+    width: 56px;
+    height: 56px;
+    border-radius: 8px;
+    background: #ffffff;
+    border: 1px solid #edf2f7;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #a0aec0;
+    font-size: 22px;
+}
+.nui-wa-mpm-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+}
+
+/* Fallback icon injected when an <img> fails to load (broken/missing media).
+   Inherits the muted look of the thumbnail containers; gets its own presence
+   inside larger image areas via padding. */
+.nui-wa-img-fallback {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #b0bac5;
+    font-size: 22px;
+    padding: 14px;
+}
+.nui-wa-mpm-info { flex: 1 1 auto; min-width: 0; }
+.nui-wa-mpm-name {
+    font-size: 0.95em;
+    color: #1a202c;
+    font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.nui-wa-mpm-price {
+    font-size: 0.85em;
+    color: #4a5568;
+    margin-top: 3px;
+}
+.nui-wa-mpm-stock {
+    font-size: 0.75em;
+    color: #38a169;
+    font-weight: 600;
+    margin-top: 2px;
+}
+.nui-wa-mpm-stock-low { color: #dd6b20; }
+.nui-wa-mpm-stock-out { color: #e53e3e; }
+.nui-wa-mpm-row-out { opacity: 0.6; }
+.nui-wa-mpm-row-out .nui-wa-mpm-add-btn {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+.nui-wa-mpm-qty-pill {
+    flex: 0 0 auto;
+    font-size: 0.75em;
+    color: var(--nui-wa-green);
+    font-weight: 600;
+}
+.nui-wa-mpm-add-btn {
+    flex: 0 0 auto;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1.5px solid #cbd5e0;
+    background: white;
+    color: #4a5568;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.15s, color 0.15s;
+}
+.nui-wa-mpm-add-btn:hover { border-color: var(--nui-wa-green); color: var(--nui-wa-green); }
+.nui-wa-mpm-empty {
+    text-align: center;
+    color: #a0aec0;
+    padding: 30px;
+    font-size: 0.9em;
+}
+
+/* Cart icon button in the MPM modal header */
+.nui-wa-mpm-cart-btn {
+    position: relative;
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    color: #1a202c;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+}
+.nui-wa-mpm-cart-btn:disabled { color: #cbd5e0; cursor: default; }
+.nui-wa-mpm-cart-badge {
+    position: absolute;
+    top: -2px;
+    right: -4px;
+    min-width: 16px;
+    height: 16px;
+    padding: 0 4px;
+    border-radius: 8px;
+    background: var(--nui-wa-green);
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 16px;
+    text-align: center;
+}
+
+/* Make MPM rows feel tappable (entire row opens PDP) */
+.nui-wa-mpm-row { cursor: pointer; }
+.nui-wa-mpm-row:hover { background: #f7fafc; }
+
+/* Product Detail Page — overlays the MPM list inside the same overlay */
+.nui-wa-pdp-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: white;
+}
+.nui-wa-pdp-modal .nui-wa-fs-body {
+    padding-bottom: 80px; /* leave room for the fixed footer */
+}
+.nui-wa-pdp-back {
+    border: none;
+    background: transparent;
+    color: #1a202c;
+    font-size: 18px;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+}
+.nui-wa-pdp-hero {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #a0aec0;
+    font-size: 48px;
+    overflow: hidden;
+}
+.nui-wa-pdp-hero img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+}
+.nui-wa-pdp-meta {
+    padding: 16px 18px;
+    background: white;
+}
+.nui-wa-pdp-name {
+    font-size: 1.15em;
+    font-weight: 600;
+    color: #1a202c;
+    margin-bottom: 6px;
+}
+.nui-wa-pdp-price {
+    font-size: 1em;
+    font-weight: 600;
+    color: var(--nui-wa-green);
+    margin-bottom: 12px;
+}
+.nui-wa-pdp-desc {
+    font-size: 0.92em;
+    color: #4a5568;
+    line-height: 1.5;
+}
+.nui-wa-pdp-footer {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 12px 14px 16px;
+    background: white;
+    border-top: 1px solid #edf2f7;
+}
+.nui-wa-pdp-add-btn {
+    width: 100%;
+    padding: 13px;
+    background: var(--nui-wa-green);
+    color: white;
+    border: none;
+    border-radius: 24px;
+    font-size: 0.95em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.15s;
+}
+.nui-wa-pdp-add-btn:hover { opacity: 0.9; }
+.nui-wa-pdp-stepper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 6px 0;
+}
+.nui-wa-pdp-qty-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1.5px solid var(--nui-wa-green);
+    background: white;
+    color: var(--nui-wa-green);
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    line-height: 1;
+}
+.nui-wa-pdp-qty-btn:hover { background: #f0faf8; }
+.nui-wa-pdp-qty {
+    font-size: 1.15em;
+    font-weight: 600;
+    color: #1a202c;
+    min-width: 30px;
+    text-align: center;
+}
+
+/* Cart modal — line items + summary + place order */
+.nui-wa-cart-list { background: white; }
+.nui-wa-cart-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    border-bottom: 1px solid #edf2f7;
+}
+.nui-wa-cart-row:last-child { border-bottom: none; }
+.nui-wa-cart-thumb {
+    flex: 0 0 auto;
+    width: 48px;
+    height: 48px;
+    border-radius: 6px;
+    background: #edf2f7;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #a0aec0;
+}
+.nui-wa-cart-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+.nui-wa-cart-info { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+.nui-wa-cart-name {
+    font-size: 0.92em;
+    color: #1a202c;
+    font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.nui-wa-cart-stepper {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid #cbd5e0;
+    border-radius: 14px;
+    padding: 1px 4px;
+    width: fit-content;
+}
+.nui-wa-cart-qty-btn {
+    width: 22px;
+    height: 22px;
+    border: none;
+    background: transparent;
+    color: var(--nui-wa-green);
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    border-radius: 50%;
+    line-height: 1;
+}
+.nui-wa-cart-qty-btn:hover { background: #f0faf8; }
+.nui-wa-cart-qty {
+    font-size: 0.82em;
+    font-weight: 600;
+    color: #2d3748;
+    min-width: 20px;
+    text-align: center;
+}
+.nui-wa-cart-qty-readonly {
+    font-size: 0.82em;
+    color: #4a5568;
+}
+.nui-wa-cart-price {
+    flex: 0 0 auto;
+    font-size: 0.9em;
+    font-weight: 600;
+    color: #1a202c;
+    text-align: right;
+}
+.nui-wa-cart-summary {
+    background: white;
+    padding: 14px;
+    margin-top: 8px;
+    border-top: 1px solid #edf2f7;
+}
+.nui-wa-cart-summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    color: #1a202c;
+    font-size: 0.95em;
+    margin-bottom: 8px;
+}
+.nui-wa-cart-summary-row strong { font-size: 1.05em; }
+.nui-wa-cart-disclaimer {
+    color: #a0aec0;
+    font-size: 0.72em;
+    line-height: 1.4;
+    margin-top: 8px;
+}
+.nui-wa-cart-footer {
+    padding: 10px 14px 16px;
+    background: white;
+    border-top: 1px solid #edf2f7;
+}
+.nui-wa-cart-place-order-btn {
+    width: 100%;
+    padding: 13px;
+    background: #007aff;
+    color: white;
+    border: none;
+    border-radius: 24px;
+    font-size: 0.95em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.15s;
+}
+.nui-wa-cart-place-order-btn:hover { opacity: 0.9; }
+
+/* Outgoing cart bubble (cart_sent) */
+.nui-wa-cart-bubble-header {
+    padding: 8px 10px 0;
+    font-size: 0.82em;
+    color: #4a5568;
+}
+.nui-wa-cart-bubble {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 6px 10px;
+}
+.nui-wa-cart-bubble-thumb {
+    flex: 0 0 auto;
+    width: 60px;
+    height: 60px;
+    border-radius: 6px;
+    overflow: hidden;
+    background: rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #128C7E;
+}
+.nui-wa-cart-bubble-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+.nui-wa-cart-bubble-info { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.nui-wa-cart-bubble-count {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.05em;
+    font-weight: 500;
+    color: #1a202c;
+}
+.nui-wa-cart-bubble-icon {
+    font-size: 0.95em;
+    color: #4a5568;
+}
+.nui-wa-cart-bubble-total {
+    font-size: 0.85em;
+    color: #4a5568;
+}
+.nui-wa-time-cart {
+    display: block;
+    text-align: right;
+    padding: 0 10px 6px;
+    font-size: 0.7em;
+    color: #999;
+}
+.nui-wa-status-check {
+    margin-left: 3px;
+    font-size: 0.92em;
+    color: #999;
+}
+.nui-wa-cta-url-button.nui-wa-cart-bubble-link {
+    background: transparent;
+    color: #1a202c;
+    font-weight: 500;
+    border-top-color: rgba(0, 0, 0, 0.08);
+}
+.nui-wa-cta-url-button.nui-wa-cart-bubble-link:hover { background: rgba(0, 0, 0, 0.04); }
+.nui-wa-cta-url-button.nui-wa-cart-bubble-link:active { background: rgba(0, 0, 0, 0.08); }
+
+/* Legacy product_item shell (still used by catalog_message thumbnail) */
+.nui-wa-product-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    border-bottom: 1px solid #edf2f7;
+}
+.nui-wa-product-item:last-child { border-bottom: none; }
+.nui-wa-product-thumb {
+    flex: 0 0 auto;
+    width: 52px;
+    height: 52px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+.nui-wa-product-thumb-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+.nui-wa-product-thumb-placeholder {
+    width: 100%;
+    height: 100%;
+    background: #edf2f7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--nui-wa-green);
+    font-size: 22px;
+}
+.nui-wa-product-info { flex: 1 1 auto; min-width: 0; }
+.nui-wa-product-name {
+    font-size: 0.9em;
+    font-weight: 500;
+    color: #1a202c;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.nui-wa-product-price {
+    font-size: 0.82em;
+    color: var(--nui-wa-green);
+    font-weight: 600;
+    margin-top: 2px;
+}
+.nui-wa-cta-url-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 12px;
+    background: white;
+    color: var(--nui-wa-green);
+    border: 0px;
+    border-top: 2px solid #e2e8f0;
+    text-decoration: none;
+    font-weight: 300;
+    cursor: pointer;
+    transition: background-color 0.15s;
+    /* border-radius: 0.8em; */
+    position: relative;
+    top: 0px;
+    /* margin: 1px; */
+}
+.nui-wa-cta-url-button:hover { background: #f7fafc; }
+.nui-wa-cta-url-button:active { background: #e2e8f0; }
+.nui-wa-cta-url-button[style*="display: none"] { display: none !important; }
+
+/* Flow interactive — inline form modal */
+.nui-wa-flow-modal {
+    border-top: 1px solid #e2e8f0;
+    background: #fafbfd;
+}
+.nui-wa-flow-progress {
+    padding: 8px 12px 4px;
+    font-size: 0.75em;
+    color: #a0aec0;
+    text-align: right;
+    border-bottom: 1px solid #edf2f7;
+}
+.nui-wa-flow-form { display: flex; flex-direction: column; }
+.nui-wa-flow-screen { display: none; }
+.nui-wa-flow-screen.is-active { display: block; }
+.nui-wa-flow-screen-title {
+    padding: 10px 12px 4px;
+    font-size: 0.82em;
+    font-weight: 700;
+    color: #4a5568;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.nui-wa-flow-fields { padding: 10px 10px 0; display: flex; flex-direction: column; gap: 10px; }
+.nui-wa-flow-screen-actions {
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px;
+}
+.nui-wa-flow-field { display: flex; flex-direction: column; gap: 4px; }
+.nui-wa-flow-question {
+    font-size: 0.88em;
+    color: #2d3748;
+    line-height: 1.4;
+    margin-bottom: 2px;
+    white-space: pre-line;
+}
+.nui-wa-flow-label {
+    font-size: 0.78em;
+    font-weight: 600;
+    color: #4a5568;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+.nui-wa-flow-input {
+    border: 1.5px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 8px 10px;
+    /* 16px minimum — see .nui-wa-input textarea above; iOS auto-zooms on
+       sub-16px focusable controls. */
+    font-size: 16px;
+    color: #1a202c;
+    background: white;
+    outline: none;
+    width: 100%;
+    box-sizing: border-box;
+    font-family: inherit;
+    resize: vertical;
+}
+.nui-wa-flow-input:focus { border-color: var(--nui-wa-green); }
+.nui-wa-flow-submit-btn,
+.nui-wa-flow-next-btn {
+    padding: 8px 18px;
+    background: var(--nui-wa-green);
+    color: white;
+    border: none;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.88em;
+    cursor: pointer;
+    transition: opacity 0.15s;
+}
+.nui-wa-flow-submit-btn:hover,
+.nui-wa-flow-next-btn:hover { opacity: 0.85; }
+.nui-wa-flow-select {
+    appearance: auto;
+    cursor: pointer;
+}
+.nui-wa-flow-radio-group { display: flex; flex-direction: column; gap: 6px; }
+.nui-wa-flow-radio-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 10px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9em;
+    color: #2d3748;
+    transition: border-color 0.15s, background 0.15s;
+}
+.nui-wa-flow-radio-option:hover { border-color: var(--nui-wa-green); background: #f0faf8; }
+.nui-wa-flow-radio-option input[type="radio"] { accent-color: var(--nui-wa-green); cursor: pointer; }
+.nui-wa-flow-submitted {
+    padding: 10px;
+    border-top: 1px solid #e2e8f0;
+    text-align: center;
+}
+.nui-wa-flow-submitted-label {
+    color: var(--nui-wa-green);
+    font-size: 0.85em;
+    font-weight: 600;
+}
+
+/* Catalog message — hero image (top of bubble) + browse modal */
+.nui-wa-catalog-msg-hero {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border-radius: 6px;
+    background: #edf2f7;
+    margin-bottom: 6px;
+}
+.nui-wa-catalog-msg-hero img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Icebreaker cards — match WhatsApp's real iOS rendering: wide white cards
+   stacked just above the input, each with the conversation-starter text
+   left-aligned and a green send-arrow icon on the right side. They sit on the
+   same chat-backdrop the messages area uses. */
+.nui-wa-icebreakers {
+    background-size: 95% 95%;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.90), rgba(255, 255, 255, 0.90)),
+        var(--wa-bg-image);
+    padding: 6px 12px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.nui-wa-icebreaker-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    background: #fff;
+    color: #111827;
+    border: 0;
+    border-radius: 8px;
+    padding: 14px 16px;
+    font-size: 0.92em;
+    font-family: inherit;
+    font-weight: 400;
+    line-height: 1.35;
+    text-align: left;
+    cursor: pointer;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+    transition: background-color 0.15s, transform 0.08s;
+}
+.nui-wa-icebreaker-btn:hover { background: #f9fafb; }
+.nui-wa-icebreaker-btn:active { background: #eef2f6; transform: scale(0.995); }
+.nui-wa-icebreaker-label {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+.nui-wa-icebreaker-icon {
+    flex: 0 0 auto;
+    color: var(--nui-wa-green);
+    font-size: 1.05em;
+}
+/* Shared send-icon SVG used inside icebreakers AND the input-send button.
+   `fill: currentColor` lets the parent set the colour (green for
+   icebreakers, white for the green send button). */
+.nui-wa-send-svg {
+    width: 1em;
+    height: 1em;
+    fill: currentColor;
+    display: inline-block;
+    vertical-align: middle;
+}
+svg.nui-wa-icebreaker-icon { width: 18px; height: 18px; }
+
+.nui-wa-input {
+    background: #f0f0f0;
+    padding: 10px;
+    padding-bottom: 20px;
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+}
+.nui-wa-input textarea {
+    flex-grow: 1;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 15px;
+    background: white;
+    outline: none;
+    /* 16px minimum — iOS Safari auto-zooms the viewport when focusing a
+       sub-16px input/textarea and never zooms back, leaving the page wider
+       than the screen. */
+    font-size: 16px;
+    font-family: inherit;
+    line-height: 1.4;
+    resize: none;
+    max-height: calc(1.4em * 4 + 20px);
+    overflow-y: auto;
+    box-sizing: border-box;
+}
+.nui-wa-input i {
+    font-size: 22px;
+    color: #666;
+    cursor: pointer;
+    padding-bottom: 6px;
+}
+/* Disabled icons inside the input row (mic + plus placeholders) — same
+   muted treatment as the disabled icons in the headers. */
+.nui-wa-input i.is-disabled {
+    opacity: 0.32;
+    cursor: not-allowed;
+}
+/* Round green send button — replaces the mic when the textarea has text.
+   Sits in the same slot at the right of the input row. */
+.nui-wa-input-send {
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    margin-bottom: 4px;
+    border: none;
+    border-radius: 50%;
+    background: var(--nui-wa-green);
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    cursor: pointer;
+    transition: transform 0.15s ease, background 0.15s ease;
+}
+.nui-wa-input-send:hover  { transform: scale(1.06); }
+.nui-wa-input-send:active { transform: scale(0.96); }
+.nui-wa-input-send .nui-wa-send-svg { width: 20px; height: 20px; }
+
+.nui-wa-typing {
+    display: none;
+    background: var(--nui-wa-bubble-in);
+    padding: 12px 15px;
+    border-radius: 7.5px;
+    border-top-left-radius: 0;
+    margin-bottom: 10px;
+    width: fit-content;
+    align-self: flex-start;
+    box-shadow: 0 1px 1px rgba(0,0,0,0.05);
+    border: 1px #eaeaea solid;
+}
+.nui-wa-typing.is-visible { display: block; }
+.nui-wa-typing .nui-wa-dots { display: flex; gap: 4px; }
+.nui-wa-typing .nui-wa-dot {
+    width: 8px; height: 8px;
+    background: #90959c;
+    border-radius: 50%;
+    animation: nui-wa-typing 1.4s infinite;
+}
+.nui-wa-typing .nui-wa-dot:nth-child(2) { animation-delay: 0.2s; }
+.nui-wa-typing .nui-wa-dot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes nui-wa-typing {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+}
+
+/* Floating cart pill — circular shopping-cart button with item-count badge,
+   shown above the input bar whenever the shared cart has items. Mirrors
+   WhatsApp's native UI on chats with a live cart. */
+.nui-wa-floating-cart {
+    position: absolute;
+    right: 14px;
+    bottom: 78px;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #ffffff;
+    color: #1a202c;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+    font-size: 18px;
+    z-index: 60;
+    padding: 0;
+}
+.nui-wa-floating-cart:hover { background: #f7f7f7; }
+.nui-wa-floating-cart .nui-wa-floating-cart-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    min-width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    background: #1a202c;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 6px;
+    box-sizing: border-box;
+    border: 2px solid var(--nui-wa-chat-bg);
+}
+
+/* ─── Media Card Carousel Template ───────────────────────────────────
+   Horizontally scrollable strip of cards. Each card has an image header,
+   body text, and up to 2 buttons (quick_reply / url / phone_number).
+*/
+.nui-wa-message[data-kind="carousel"] {
+    max-width: 92%;
+    background: transparent;
+    box-shadow: none;
+    padding: 0;
+}
+.nui-wa-carousel-intro {
+    background: var(--nui-wa-bubble-received, #ffffff);
+    border-radius: 7.5px;
+    padding: 8px 12px;
+    margin-bottom: 6px;
+    line-height: 1.4;
+    font-size: 0.92em;
+    box-shadow: 0 2px 1px rgba(0,0,0,0.05);
+    color: #111;
+    width: fit-content;
+    max-width: 100%;
+}
+.nui-wa-carousel-track {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    padding: 2px 2px 8px;
+    margin: 0 -2px;
+    scrollbar-width: thin;
+}
+.nui-wa-carousel-track::-webkit-scrollbar { height: 6px; }
+.nui-wa-carousel-track::-webkit-scrollbar-thumb {
+    background: rgba(0,0,0,0.15);
+    border-radius: 3px;
+}
+.nui-wa-carousel-card {
+    flex: 0 0 70%;
+    max-width: 240px;
+    min-width: 200px;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 1px rgba(0,0,0,0.05);
+    overflow: hidden;
+    scroll-snap-align: start;
+    display: flex;
+    flex-direction: column;
+}
+.nui-wa-carousel-image {
+    width: 100%;
+    aspect-ratio: 1.6 / 1;
+    object-fit: cover;
+    display: block;
+    background: #f1f3f5;
+}
+.nui-wa-carousel-image-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #cbd5e0;
+    font-size: 32px;
+}
+.nui-wa-carousel-body {
+    padding: 8px 10px 10px;
+    font-size: 0.88em;
+    line-height: 1.4;
+    color: #111;
+    flex: 1 1 auto;
+    white-space: normal;
+    word-wrap: break-word;
+}
+.nui-wa-carousel-buttons {
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    flex-direction: column;
+}
+.nui-wa-carousel-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 9px 8px;
+    background: #ffffff;
+    color: var(--nui-wa-green);
+    border: 0;
+    border-top: 1px solid #e2e8f0;
+    text-decoration: none;
+    font-size: 0.85em;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.15s;
+}
+.nui-wa-carousel-btn:first-child { border-top: 0; }
+.nui-wa-carousel-btn:hover { background: #f7fafc; }
+.nui-wa-carousel-btn:active { background: #e2e8f0; }
+.nui-wa-carousel-btn.is-disabled {
+    pointer-events: none;
+    opacity: 0.55;
+}
+.nui-wa-carousel-btn i { font-size: 0.85em; }
+.nui-wa-carousel-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 4px;
+    margin-top: 2px;
+}
+.nui-wa-carousel-meta .nui-wa-time {
+    position: static;
+    margin-left: auto;
+    color: rgba(0,0,0,0.55);
+}
+
+/* ─── Template message (non-carousel) ────────────────────────────── */
+.nui-wa-template-header-img {
+    border-radius: 6px 6px 0 0;
+    overflow: hidden;
+    margin: -8px -8px 8px;
+}
+.nui-wa-template-header-img img {
+    display: block;
+    width: 100%;
+    max-height: 180px;
+    object-fit: cover;
+}
+.nui-wa-template-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 0 2px;
+}
+.nui-wa-template-meta .nui-wa-time {
+    position: static;
+    margin-left: auto;
+    color: rgba(0,0,0,0.55);
+}

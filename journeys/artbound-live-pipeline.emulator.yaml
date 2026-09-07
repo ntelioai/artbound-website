@@ -1,0 +1,338 @@
+# ============================================================================
+# ArtBound — THE DEPLOYED PIPELINE, full happy path.
+# A scripted scenario for the CommerceGenie / Cartaja WhatsApp emulator.
+#
+# DATA, not code. The player walks `turns` in order:
+#   • from: business  → incoming (left, white) bubble
+#   • from: customer  → outgoing (right, green) bubble
+#
+# ── WHAT MAKES THIS ONE DIFFERENT ──────────────────────────────────────────
+# The other ArtBound journeys are designed paths — what the product could do.
+# This one uses ONLY message templates that exist in the shipped build. The
+# source thread (11 Aug 2026, 00:33–00:55) was a beeline with no bids, so the
+# bidding, mute and win beats below are added from the code that emits them —
+# same strings, exercised properly.
+#
+# Every business message is copied from its emitter, not retyped by eye:
+#   RSVP reply ............ app/scripts/handleButtonReply (first-accept branch)
+#   artwork caption ....... app/lib/auctionNotifications sendArtworkVideos
+#   reminder .............. app/scripts/createReminderTemplate ({{1}}..{{5}})
+#   bidding open .......... auctionNotifications sendAuctionStart
+#   bid confirm prompt .... artboundTools sendBidConfirmationButtons
+#   bid placed ............ artboundTools submitBid  (successMsg)
+#   outbid ................ auctionNotifications sendOutbidNotification
+#   mute .................. handleButtonReply (notifMode === "mute" branch)
+#   5-minute warning ...... auctionNotifications sendCountdownWarning (leader)
+#   win ................... auctionNotifications sendAuctionResults (isWinner)
+#
+# A WhatsApp text export flattens interactive messages to body text, so the
+# original log looked like plain text wherever the code actually sends buttons.
+# Those are restored here: the RSVP invite, "Bidding is now open" (which appends
+# an "Auction rules" button whenever it has an auctionKey), the confirmation
+# prompt, the outbid push, the mute reply and the countdown all carry buttons.
+#
+# NUMBERS. Starting bid USD 1500, from the source thread. The auction's own
+# increment is never stated there, so USD 25 is used throughout — the code's
+# own fallback (`bidIncrement || "25"`). Outbid quick-bid buttons are therefore
+# amount+25 and amount+50, exactly as sendOutbidNotification computes them.
+#
+# THE LOT. sendArtworkVideos pushes the artwork's promo video, so this is a
+# video message. The film used is ArtBound's own lot film (assets/demos/
+# artbound/madi-auction.mp4), which is why the piece here is Hussein Madi's
+# Untitled (Geometric Composition) rather than the demo account's Dalí test
+# record. The sale is named "The August Session": the source record carried a
+# dev-account placeholder as its title, which must never reach a public page —
+# a lot must never be labelled with anything but its own work and sale.
+# ============================================================================
+
+version: 1
+
+scenario:
+  id: artbound-live-pipeline
+  title: "ArtBound — the deployed pipeline"
+  description: >-
+    The live build, end to end: invitation and one-tap RSVP, paddle assignment,
+    the lot film, a reminder, bidding opening, a confirmed bid, an outbid and a
+    one-tap counter, notifications muted on request, the five-minute warning and
+    the win — every message a template the shipped pipeline already sends.
+  locale: en
+  currency: USD
+
+  business:
+    displayName: "ArtBound"
+    displayIcon: "/journeys/icons/ArtBound.png"
+    subtitle: "Private Auctions"
+    verified: true
+    phoneNumberId: EMULATOR
+    phone: "9611612048"
+
+  customer:
+    name: "Collector"
+    phone: "9613000001"
+
+  turns:
+
+    # 1 — opt-in and invitation in one message. What this number is, when it
+    #     speaks, and the sale it's writing about — with RSVP attached.
+    #     Three buttons is WhatsApp's hard ceiling for an interactive_button,
+    #     and 20 characters is the per-title limit, which is why the two
+    #     qualifying questions are trimmed to "Who is Artbound?" (16) and
+    #     "Selling gallery?" (16).
+    - from: business
+      kind: interactive_button
+      header: "You're Invited"
+      body: >-
+        Artbound holds private auctions right here on WhatsApp — by invitation,
+        with nothing to download.
+
+        You're on our collectors' list, so we'll only write when a sale is
+        coming.
+
+        We'd be delighted to invite you to The August Session.
+
+        🗓️ Aug 11, 2026, 00:44 GMT+3 (Beirut)
+
+        Tap RSVP below to reserve your spot — places are limited.
+      buttons:
+        - id: rsvp_yes
+          title: "Yes"
+        - id: ask_artbound
+          title: "Who is Artbound?"
+        - id: ask_gallery
+          title: "Selling gallery?"
+
+    # 2 — the collector qualifies before committing
+    - from: customer
+      kind: button_reply
+      reply:
+        id: ask_artbound
+        title: "Who is Artbound?"
+
+    # 3 — answered, then the remaining options re-offered as FRESH buttons.
+    #     WhatsApp permanently disables a button once it has been tapped, so
+    #     the reply has to carry its own — the same reason handleButtonReply
+    #     re-sends them on the notification branch.
+    - from: business
+      kind: interactive_button
+      body: >-
+        Artbound runs private art auctions on WhatsApp — invitation only,
+        nothing to download.
+
+        We handle the invitations, the bidding and the paperwork. The gallery
+        keeps the artwork, the collectors and the last word on price.
+      buttons:
+        - id: rsvp_yes
+          title: "Yes"
+        - id: ask_gallery
+          title: "Selling gallery?"
+
+    # 4
+    - from: customer
+      kind: button_reply
+      reply:
+        id: ask_gallery
+        title: "Selling gallery?"
+
+    # 5 — answered, and now only the RSVP is left to offer.
+    - from: business
+      kind: interactive_button
+      body: >-
+        This sale is offered by *Galerie Empreinte*, consigned from a private
+        collection.
+
+        They invoice you directly and title passes from them — we only carry
+        the thread.
+      buttons:
+        - id: rsvp_yes
+          title: "Yes"
+
+    # 6 — one tap
+    - from: customer
+      kind: button_reply
+      reply:
+        id: rsvp_yes
+        title: "Yes"
+
+    # 7 — handleButtonReply, first-response accepted branch, paddle appended by
+    #     assignPaddle. Verbatim.
+    - from: business
+      kind: text
+      text: >-
+        Thank you! Your RSVP has been recorded. We look forward to seeing you at
+        the auction! Your paddle number is #1.
+
+    # 8 — sendArtworkVideos fires on accept and pushes the lot's promo film.
+    - from: business
+      kind: video
+      url: "/assets/demos/artbound/madi-auction.mp4"
+      poster: "/assets/demos/artbound/madi-auction-poster.jpg"
+      caption: >-
+        A closer look at the piece you'll be bidding on — Untitled (Geometric
+        Composition) by Hussein Madi.
+
+        Part of The August Session.
+
+    # 9 — the scheduled reminder template, {{1}}..{{5}} filled from the record.
+    - from: business
+      delayMs: 300000
+      kind: text
+      text: >-
+        Reminder: The August Session starts soon!
+
+        Date: Aug 11, 2026
+
+        Time: 00:44 GMT+3 (Beirut)
+
+        Your paddle: #1
+
+        Starting bid: USD 1500
+
+        Get ready to bid!
+
+    # 10 — sendAuctionStart. The "Auction rules" button is appended by the same
+    #     call whenever an auctionKey is present.
+    - from: business
+      delayMs: 300000
+      kind: interactive_button
+      body: >-
+        Bidding is now open for The August Session!
+
+        Current piece: Untitled (Geometric Composition)
+
+        Starting bid: USD 1500
+
+        Your paddle: #1
+
+        Reply with your bid amount to place a bid.
+      buttons:
+        - id: auction_rules
+          title: "Auction rules"
+
+    # 11 — the rules are offered on demand rather than pushed with every
+    #      auction-open message, so this is the tap that fetches them.
+    - from: customer
+      kind: button_reply
+      reply:
+        id: auction_rules
+        title: "Auction rules"
+
+    # 12 — buildBiddingRules(), interpolated from the auction's own fields.
+    #      NOTE: that function emits two further bullets that are conditional on
+    #      auction flags this thread never reveals — a self-outbid line when
+    #      allowSelfOutbid is "false", and an anti-sniping clause appended to
+    #      the closing line when antiSnipingEnabled is "true". Both are omitted
+    #      rather than guessed. Closing time is taken from the source thread,
+    #      where the auction ended at 00:55.
+    - from: business
+      kind: text
+      text: >-
+        How bidding works — The August Session
+
+        • Reply with any amount to place a bid. Plain numbers and short forms
+        both work — e.g. 2050, 2,050, or 2k. Bids are in USD.
+
+        • Starting bid is USD 1500. Each new bid must beat the current highest
+        by at least USD 25.
+
+        • After you send an amount, I'll ask you to confirm. Tap "Yes" to place
+        it, or "No, cancel" to drop it — nothing is placed until you confirm.
+
+        • Once confirmed, your bid is live. If someone outbids you, I'll let you
+        know so you can respond.
+
+        • Bidding closes Aug 11, 2026, 00:55 GMT+3 (Beirut).
+
+    # 13 — a plain typed amount, which is all the pipeline asks for.
+    - from: customer
+      kind: text
+      text: "1500"
+
+    # 14 — a typed amount never places a bid on its own. sendBidConfirmation-
+    #     Buttons intercepts it and asks first; the amount rides in the button
+    #     title so submit_bid can recover it from the tap.
+    - from: business
+      kind: interactive_button
+      body: "You're placing a bid for USD 1500. Confirm?"
+      buttons:
+        - id: bid_confirm_yes_1500
+          title: "Yes, bid USD 1500"
+        - id: bid_confirm_no_1500
+          title: "No, cancel"
+
+    # 15
+    - from: customer
+      kind: button_reply
+      reply:
+        id: bid_confirm_yes_1500
+        title: "Yes, bid USD 1500"
+
+    # 16 — submitBid's successMsg, verbatim.
+    - from: business
+      kind: text
+      text: "Your bid of USD 1500 has been placed! You are now the highest bidder."
+
+    # 17 — a rival lands. sendOutbidNotification quotes the new high and the
+    #      leading paddle, then offers amount+increment and amount+2×increment
+    #      as one-tap counters.
+    - from: business
+      delayMs: 180000
+      kind: interactive_button
+      body: >-
+        You have been outbid on The August Session!
+
+        Current highest bid: USD 1525 (Paddle #3)
+
+        Place a counter-bid, or reply with any amount.
+      buttons:
+        - id: bid_1550
+          title: "USD 1550"
+        - id: bid_1575
+          title: "USD 1575"
+
+    # 18 — one tap. A quick-bid button is already an explicit amount, so it goes
+    #      straight to submit_bid without a second confirmation.
+    - from: customer
+      kind: button_reply
+      reply:
+        id: bid_1550
+        title: "USD 1550"
+
+    # 19
+    - from: business
+      kind: text
+      text: "Your bid of USD 1550 has been placed! You are now the highest bidder."
+
+    # 20 — the room gets loud. manage_notifications takes this in plain text.
+    - from: customer
+      kind: text
+      text: "mute"
+
+    # 21 — handleButtonReply's mute branch replies with fresh, tappable buttons,
+    #      because WhatsApp permanently disables a button once it's been used.
+    - from: business
+      kind: interactive_button
+      body: "Muted for this auction. Tap below to resume updates."
+      buttons:
+        - id: notif_unmute
+          title: "Resume updates"
+
+    # 22 — sendCountdownWarning, leader branch: a plain status with no bid
+    #      buttons, because the leader has nothing to do. Muting stops the
+    #      running bid updates, not the auction's own milestones.
+    - from: business
+      delayMs: 300000
+      kind: text
+      text: >-
+        Auction closing in 5 minutes!
+
+        The August Session
+
+        You're leading at USD 1550 (Paddle #1).
+
+    # 23 — sendAuctionResults, isWinner branch. One line, verbatim.
+    - from: business
+      delayMs: 300000
+      kind: text
+      text: >-
+        Congratulations! You have won The August Session with a bid of USD 1550! We
+        will contact you shortly with details on how to complete your purchase.
