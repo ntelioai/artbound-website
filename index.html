@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>ArtBound — Infrastructure for private, gallery-led auctions</title>
-<meta name="description" content="ArtBound is the AI agent that runs private auctions for primary-market galleries. Invitation-only, conversational. Beirut · Dubai · Paris · New York." />
+<meta name="description" content="ArtBound is the AI agent that runs private auctions for primary-market galleries. Invitation-only, conversational. New York · Paris · Dubai · Beirut." />
 
 <link rel="icon" type="image/png" href="assets/images/favicon.png" />
 <link rel="apple-touch-icon" href="assets/images/favicon.png" />
@@ -810,10 +810,10 @@
       <span style="color: var(--ink-mute)">· private</span>
     </div>
     <div class="right">
-      <span class="clock"><b>BEY</b><span id="c-bey">—</span></span>
-      <span class="clock"><b>DXB</b><span id="c-dxb">—</span></span>
-      <span class="clock"><b>PAR</b><span id="c-par">—</span></span>
       <span class="clock"><b>NYC</b><span id="c-nyc">—</span></span>
+      <span class="clock"><b>PAR</b><span id="c-par">—</span></span>
+      <span class="clock"><b>DXB</b><span id="c-dxb">—</span></span>
+      <span class="clock"><b>BEY</b><span id="c-bey">—</span></span>
     </div>
   </div>
 
@@ -851,7 +851,7 @@
 
       <p class="lede reveal r5">
         ArtBound is the AI agent that runs private auctions for primary-market
-        galleries in Beirut, Dubai, Paris and New York. No storefront. No public
+        galleries in New York, Paris, Dubai and Beirut. No storefront. No public
         catalogue. The gallery keeps the collector, the contract and the
         funds &mdash; we run <b>the room</b>.
       </p>
@@ -923,8 +923,8 @@
         <span class="k">Hours</span>
         <h3>The room opens where your collectors <em>already are</em>.</h3>
         <p>
-          No flights, no saleroom, no hour that suits the auctioneer. Beirut,
-          Dubai, Paris and New York bid into one session from the phone in
+          No flights, no saleroom, no hour that suits the auctioneer. New York,
+          Paris, Dubai and Beirut bid into one session from the phone in
           their pocket, in the language they actually write in.
         </p>
       </div>
@@ -1132,7 +1132,7 @@
         </a>
         <p>
           Auction infrastructure for primary-market galleries.
-          By invitation. Beirut &middot; Dubai &middot; Paris &middot; New York.
+          By invitation. New York &middot; Paris &middot; Dubai &middot; Beirut.
         </p>
       </div>
       <div>
@@ -1164,13 +1164,13 @@
 </div>
 
 <script>
-  // Live regional clocks — BEY · DXB · PAR · NYC
+  // Live regional clocks — NYC · PAR · DXB · BEY
   (function () {
     const zones = [
-      { id: "c-bey", tz: "Asia/Beirut" },
-      { id: "c-dxb", tz: "Asia/Dubai" },
-      { id: "c-par", tz: "Europe/Paris" },
       { id: "c-nyc", tz: "America/New_York" },
+      { id: "c-par", tz: "Europe/Paris" },
+      { id: "c-dxb", tz: "Asia/Dubai" },
+      { id: "c-bey", tz: "Asia/Beirut" },
     ];
     function pad(n) { return String(n).padStart(2, "0"); }
     function render() {
