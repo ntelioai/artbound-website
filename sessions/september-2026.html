@@ -606,9 +606,11 @@
     position: relative;
     padding: 6px 9px 5px;
   }
-  .wa-msg.out { background: var(--wa-out); align-self: flex-end; border-top-right-radius: 0; }
-  .wa-msg.in  { background: var(--wa-in);  align-self: flex-start; border-top-left-radius: 0; }
-  .wa-msg.failed { background: #FFE3E0; }
+  /* The guest's own handset is the vantage point: what they sent is green on the
+     right, what ArtBound sent arrives white on the left. */
+  .wa-msg.guest   { background: var(--wa-out); align-self: flex-end;   border-top-right-radius: 0; }
+  .wa-msg.auction { background: var(--wa-in);  align-self: flex-start; border-top-left-radius: 0; }
+  .wa-msg.failed  { background: #FFE3E0; }
 
   .wa-text { white-space: pre-wrap; }
   .wa-text strong { font-weight: 600; }
@@ -623,7 +625,7 @@
     color: var(--wa-green);
     margin-bottom: 2px;
   }
-  .wa-msg.out .wa-from { color: #7a5c17; }
+  .wa-msg.guest .wa-from { color: #7a5c17; }
 
   .wa-foot {
     display: flex;
@@ -635,9 +637,6 @@
     margin-top: 2px;
     line-height: 1;
   }
-  .wa-foot .tick { letter-spacing: -0.08em; font-size: 12px; }
-  .wa-foot .tick.read { color: var(--wa-blue); }
-  .wa-foot .tick.failed { color: #C0392B; letter-spacing: 0; }
 
   /* Template and interactive messages carry their button rail, as in the app. */
   .wa-buttons {
@@ -939,9 +938,10 @@
       <span class="num">III</span>
       <h2>The ledger</h2>
       <p>
-        Every logged event in sequence. Guests appear by paddle number only.
-        Filter by paddle, lot or direction &mdash; the address bar follows, so a
-        single paddle&rsquo;s view is a link that can be sent on.
+        The thread as it stood on a guest&rsquo;s handset: what they sent on the
+        right, what ArtBound sent arriving on the left. Guests appear by paddle
+        number only. Filter by paddle, lot or direction &mdash; the address bar
+        follows, so a single paddle&rsquo;s view is a link that can be sent on.
       </p>
     </div>
 
@@ -1576,39 +1576,24 @@
       .replace(/(^|\s)~([^~\n]+)~(?=$|[\s.,!?:;)])/g, "$1<del>$2</del>");
   }
 
-  function tickFor(delivery) {
-    if (!delivery) return null;
-    if (delivery.failed) {
-      var x = el("span", "tick failed", "!");
-      x.title = "Failed " + delivery.error_code + " — " + (delivery.error_detail || "");
-      return x;
-    }
-    if (delivery.read) {
-      var r = el("span", "tick read", "✓✓");
-      r.title = "Read " + clock(delivery.read);
-      return r;
-    }
-    if (delivery.delivered) {
-      var d = el("span", "tick", "✓✓");
-      d.title = "Delivered " + clock(delivery.delivered);
-      return d;
-    }
-    if (delivery.sent) {
-      var s = el("span", "tick", "✓");
-      s.title = "Sent " + clock(delivery.sent);
-      return s;
-    }
-    return null;
-  }
-
-  function footer(bubble, time, delivery, approximate) {
+  // A received message shows no ticks — you only ever see receipts on what you
+  // sent. ArtBound's sends are on the receiving side here, so their delivery
+  // evidence moves to the annotation line rather than being faked as a tick.
+  function footer(bubble, time, approximate) {
     var foot = el("div", "wa-foot");
     var t = el("span", null, hhmm(time));
     if (approximate) t.title = "Approximate — the guest's turn is stamped as the reply went out";
     foot.appendChild(t);
-    var tick = tickFor(delivery);
-    if (tick) foot.appendChild(tick);
     bubble.appendChild(foot);
+  }
+
+  function receiptText(delivery) {
+    if (!delivery) return null;
+    if (delivery.failed) return "✕ failed " + delivery.error_code;
+    if (delivery.read) return "✓✓ read " + clock(delivery.read);
+    if (delivery.delivered) return "✓✓ delivered " + clock(delivery.delivered);
+    if (delivery.sent) return "✓ sent " + clock(delivery.sent);
+    return null;
   }
 
   var MEDIA_LABEL = {
@@ -1619,12 +1604,14 @@
   };
 
   function bubbleFor(m) {
-    var bubble = el("div", "wa-msg " + (m.direction === "in" ? "in" : "out") +
+    var fromGuest = m.direction === "in";
+    var bubble = el("div", "wa-msg " + (fromGuest ? "guest" : "auction") +
       (m.delivery && m.delivery.failed ? " failed" : ""));
 
-    // Only a merged view needs to say who is speaking.
+    // Only a merged view needs to say whose thread this line came from.
     if (state.paddle === "all" && m.paddle) {
-      bubble.appendChild(el("div", "wa-from", "Paddle #" + m.paddle));
+      bubble.appendChild(el("div", "wa-from",
+        fromGuest ? "Paddle #" + m.paddle : "to Paddle #" + m.paddle));
     }
 
     var media = m.media || (m.type.indexOf("video") > -1 ? "video"
@@ -1642,7 +1629,7 @@
       bubble.appendChild(el("div", "wa-media", "Not recorded"));
     }
 
-    footer(bubble, m.time, m.delivery, m.time_approximate);
+    footer(bubble, m.time, m.time_approximate);
 
     if (m.buttons && m.buttons.length) {
       var rail = el("div", "wa-buttons");
@@ -1651,8 +1638,9 @@
     }
 
     var notes = [];
+    var receipt = receiptText(m.delivery);
+    if (receipt) notes.push(receipt);
     if (m.template) notes.push("template " + m.template);
-    if (m.delivery && m.delivery.failed) notes.push("failed " + m.delivery.error_code);
     if (m.text_note) notes.push(m.text_note);
     if (notes.length) bubble.appendChild(el("div", "wa-note", notes.join(" · ")));
 
@@ -1671,20 +1659,14 @@
       else if (d.delivered) delivered++;
     });
 
-    var bubble = el("div", "wa-msg out" + (failed === group.length ? " failed" : ""));
+    var bubble = el("div", "wa-msg auction" + (failed === group.length ? " failed" : ""));
 
     var personalised = group.some(function (m) { return m.text !== first.text; });
     var body = el("div", "wa-text");
     body.innerHTML = waFormat(personalised ? (first.text || "").replace(/#\d+/g, "#—") : (first.text || ""));
     bubble.appendChild(body);
 
-    // The tick states the run's own outcome. A fan-out that WhatsApp refused
-    // outright must not show as delivered because the first send has a time.
-    var aggregate = failed === group.length ? { failed: first.time, error_code: (first.delivery || {}).error_code, error_detail: (first.delivery || {}).error_detail }
-      : read ? { read: first.time }
-      : delivered ? { delivered: first.time }
-      : { sent: first.time };
-    footer(bubble, first.time, aggregate);
+    footer(bubble, first.time);
 
     if (first.buttons && first.buttons.length) {
       var rail = el("div", "wa-buttons");

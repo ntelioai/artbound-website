@@ -117,10 +117,15 @@ with the colours and metrics lifted from the vendored widget
 runs through WhatsApp's own `*bold*` / `_italic_` / `~strike~`, because the templates are
 written with it.
 
-**The thread is shown from the auction's side**, not the guest's: what ArtBound sent is green
-on the right carrying the receipts, what a guest sent is white on the left. That is the only
-arrangement the data fits — a guest's handset never reports a read receipt for a message it
-received. Flipping it would put the delivery evidence on the wrong bubbles.
+**The vantage point is the guest's handset**, which is what makes their own messages findable:
+what the guest sent is green on the right, what ArtBound sent arrives white on the left. Built
+the other way round — from ArtBound's WhatsApp Business side — the guest's replies land on the
+left as small white bubbles among full-height green templates, and read as missing.
+
+Because of that, **delivery receipts are annotations, not ticks**. You never see ticks on a
+message you received, and ArtBound's sends are on the receiving side here, so `✓✓ read 20:01:06`
+sits in the grey note line under the bubble with the template name. Nothing in the chat itself
+claims a receipt WhatsApp did not report.
 
 The bid engine's events were never messages, so they render as the centred notices WhatsApp
 uses for dates and its encryption note — tinted green when a bid was accepted, red when one
@@ -128,8 +133,8 @@ was refused.
 
 A run of identical broadcasts (one announcement, seventeen recipients) folds into a single
 bubble naming its paddles — without it the log is unreadable, 553 events of which 340 are
-fan-out. A folded bubble's tick states the *run's* outcome, so a fan-out WhatsApp refused
-outright shows as failed rather than inheriting the first send's timestamp. The fold is
+fan-out; its note carries the per-run tally (delivered / read / failed) and the paddle chips.
+The fold is
 computed over the *filtered* list, so a search or filter can never hide a message inside one
 — and filtering to one paddle collapses every fold to a single copy, which makes that view a
 faithful reproduction of that guest's own thread.
