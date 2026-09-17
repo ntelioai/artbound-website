@@ -110,10 +110,33 @@ hand-keyed.
 **To add the next session:** generate its JSON, copy the HTML beside it, and change the one
 `fetch()` filename at the bottom of the page. The page is otherwise data-driven.
 
-A run of identical broadcasts (one announcement, seventeen recipients) is folded into a
-single ledger line naming its paddles — without it the log is unreadable, 553 rows of which
-340 are fan-out. The fold is computed over the *filtered* list, so a search or filter can
-never hide a message inside one.
+**The ledger renders as the chat it was.** Bubbles, ticks, button rails and centred notices,
+with the colours and metrics lifted from the vendored widget
+(`emulator/widgets/whatsapp-emulator.css`) rather than guessed — `#DCF8C6` out, `#FFFFFF` in,
+`#E5DDD5` ground, 7.5px radius with the corner squared off on the sending side. Message text
+runs through WhatsApp's own `*bold*` / `_italic_` / `~strike~`, because the templates are
+written with it.
+
+**The thread is shown from the auction's side**, not the guest's: what ArtBound sent is green
+on the right carrying the receipts, what a guest sent is white on the left. That is the only
+arrangement the data fits — a guest's handset never reports a read receipt for a message it
+received. Flipping it would put the delivery evidence on the wrong bubbles.
+
+The bid engine's events were never messages, so they render as the centred notices WhatsApp
+uses for dates and its encryption note — tinted green when a bid was accepted, red when one
+was refused.
+
+A run of identical broadcasts (one announcement, seventeen recipients) folds into a single
+bubble naming its paddles — without it the log is unreadable, 553 events of which 340 are
+fan-out. A folded bubble's tick states the *run's* outcome, so a fan-out WhatsApp refused
+outright shows as failed rather than inheriting the first send's timestamp. The fold is
+computed over the *filtered* list, so a search or filter can never hide a message inside one
+— and filtering to one paddle collapses every fold to a single copy, which makes that view a
+faithful reproduction of that guest's own thread.
+
+**Filter state lives in the URL hash** (`#paddle=13`, `#paddle=5&lot=3`), and a hash carrying
+filters scrolls to the ledger on load, so one guest's view is a link that can be sent to them.
+A hash with no `=` is left alone as a plain section anchor.
 
 ## Product Context (Summary)
 

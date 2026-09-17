@@ -570,121 +570,173 @@
   .paddle-note .acts { margin-left: auto; display: flex; gap: 8px; flex-wrap: wrap; }
   @media (max-width: 720px) { .paddle-note .acts { margin-left: 0; } }
 
-  .ledger { font-family: var(--mono); }
-  .row {
-    display: grid;
-    grid-template-columns: 52px 66px 52px 150px 1fr 44px;
-    gap: 14px;
-    padding: 9px 0;
-    border-bottom: 1px solid rgba(177,160,122,0.28);
-    font-size: 12.5px;
-    line-height: 1.5;
-    align-items: start;
-  }
-  .row .seq { color: var(--rule); font-size: 10px; font-variant-numeric: tabular-nums; padding-top: 2px; }
-  .row .time { color: var(--ink-mute); font-size: 10.5px; font-variant-numeric: tabular-nums; padding-top: 2px; white-space: nowrap; }
-  .row .time i { font-style: normal; opacity: 0.45; }
-  .row .paddle { font-size: 10.5px; color: var(--ink-soft); padding-top: 2px; letter-spacing: 0.04em; }
-  .row .kind {
-    font-size: 9.5px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    padding-top: 3px;
-    color: var(--ink-mute);
+  /* ---------- The chat ----------
+     Values lifted from the vendored widget (emulator/widgets/whatsapp-emulator.css)
+     so the record matches what the guests actually saw, not an impression of it. */
+  .chat {
+    --wa-out:  #DCF8C6;
+    --wa-in:   #FFFFFF;
+    --wa-bg:   #E5DDD5;
+    --wa-green:#128C7E;
+    --wa-blue: #53BDEB;
+
+    background: var(--wa-bg);
+    /* A chat is a column. Left full-width the bubbles strand themselves at
+       opposite edges of a 1440px page and stop reading as one conversation. */
+    max-width: 680px;
+    margin: 0 auto;
+    width: 100%;
+    padding: 18px clamp(12px, 3vw, 22px) 24px;
+    border: 1px solid rgba(20,17,13,0.10);
     display: flex;
-    gap: 7px;
-    align-items: baseline;
-  }
-  .row .kind .arrow { font-size: 11px; opacity: 0.8; }
-  .row .body {
+    flex-direction: column;
     font-family: var(--sans);
-    font-size: 14px;
-    line-height: 1.5;
-    letter-spacing: 0;
-    color: var(--ink);
-    white-space: pre-wrap;
-    word-break: break-word;
+    font-size: 14.2px;
+    line-height: 1.45;
+    color: #111;
   }
-  .row .body .lotref {
-    display: block;
+
+  .wa-msg {
+    max-width: min(78%, 480px);
+    margin-bottom: 10px;
+    border-radius: 7.5px;
+    box-shadow: 0 1px 0.5px rgba(0,0,0,0.13);
+    word-wrap: break-word;
+    min-width: 0;
+    position: relative;
+    padding: 6px 9px 5px;
+  }
+  .wa-msg.out { background: var(--wa-out); align-self: flex-end; border-top-right-radius: 0; }
+  .wa-msg.in  { background: var(--wa-in);  align-self: flex-start; border-top-left-radius: 0; }
+  .wa-msg.failed { background: #FFE3E0; }
+
+  .wa-text { white-space: pre-wrap; }
+  .wa-text strong { font-weight: 600; }
+  .wa-text em { font-style: italic; }
+  .wa-text del { text-decoration: line-through; opacity: 0.7; }
+
+  /* The sender label a group thread shows. Dropped once one paddle is filtered,
+     because then the column is a single conversation and nothing needs naming. */
+  .wa-from {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--wa-green);
+    margin-bottom: 2px;
+  }
+  .wa-msg.out .wa-from { color: #7a5c17; }
+
+  .wa-foot {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 4px;
+    font-size: 11px;
+    color: #667781;
+    margin-top: 2px;
+    line-height: 1;
+  }
+  .wa-foot .tick { letter-spacing: -0.08em; font-size: 12px; }
+  .wa-foot .tick.read { color: var(--wa-blue); }
+  .wa-foot .tick.failed { color: #C0392B; letter-spacing: 0; }
+
+  /* Template and interactive messages carry their button rail, as in the app. */
+  .wa-buttons {
+    margin: 7px -9px -5px;
+    border-top: 1px solid rgba(0,0,0,0.08);
+    display: flex;
+    flex-direction: column;
+  }
+  .wa-buttons span {
+    padding: 8px 10px;
+    text-align: center;
+    color: var(--wa-green);
+    font-size: 13.5px;
+    border-top: 1px solid rgba(0,0,0,0.08);
+  }
+  .wa-buttons span:first-child { border-top: none; }
+
+  /* Media the log recorded but did not store. */
+  .wa-media {
+    background: rgba(0,0,0,0.05);
+    border-radius: 5px;
+    padding: 22px 14px;
+    text-align: center;
+    font-size: 12px;
+    color: #667781;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  /* Forensic annotation: the template name, a fan-out tally, an error code.
+     Not part of the chat, so it is set apart rather than styled as content. */
+  .wa-note {
+    margin-top: 5px;
+    padding-top: 4px;
+    border-top: 1px dotted rgba(0,0,0,0.13);
     font-family: var(--mono);
     font-size: 9.5px;
+    letter-spacing: 0.06em;
+    color: #7c8b93;
+    text-transform: uppercase;
+  }
+  .wa-note b { color: #4a5a62; font-weight: 500; }
+  .wa-recipients { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 5px; }
+  .wa-recipients span {
+    font-family: var(--mono);
+    font-size: 9px;
+    padding: 1px 4px;
+    border: 1px solid rgba(0,0,0,0.16);
+    border-radius: 2px;
+    color: #55636b;
+  }
+  .wa-recipients span.read { border-color: var(--wa-green); color: var(--wa-green); }
+  .wa-recipients span.failed { border-color: #C0392B; color: #C0392B; text-decoration: line-through; }
+
+  /* Centred notices, where WhatsApp puts dates and its encryption note. The bid
+     engine's own events go here: they were never messages. */
+  .wa-system {
+    align-self: center;
+    max-width: min(86%, 440px);
+    background: #FFF6D6;
+    color: #5a5340;
+    border-radius: 6px;
+    padding: 5px 12px;
+    margin: 5px 0 11px;
+    text-align: center;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    box-shadow: 0 1px 0.5px rgba(0,0,0,0.1);
+  }
+  .wa-system b { color: #2f2a1d; font-weight: 600; }
+  .wa-system.accepted { background: #D9F2E3; color: #24503a; }
+  .wa-system.accepted b { color: #14301f; }
+  .wa-system.refused { background: #F6DFDC; color: #6e1f1c; }
+  .wa-system.refused b { color: #4d1513; }
+  .wa-system .t { display: block; margin-top: 2px; opacity: 0.6; letter-spacing: 0.08em; }
+
+  .wa-divider {
+    align-self: center;
+    background: rgba(255,255,255,0.85);
+    color: #54656f;
+    border-radius: 7px;
+    padding: 5px 13px;
+    margin: 14px 0 12px;
+    font-family: var(--mono);
+    font-size: 10px;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: var(--brass);
-    margin-bottom: 4px;
-  }
-  .row .body .btns { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
-  .row .body .btns span {
-    font-family: var(--mono);
-    font-size: 10px;
-    letter-spacing: 0.06em;
-    border: 1px solid var(--rule-soft);
-    padding: 3px 9px;
-    color: var(--ink-soft);
-    border-radius: 2px;
-  }
-  .row .body .meta {
-    display: block;
-    font-family: var(--mono);
-    font-size: 10px;
-    letter-spacing: 0.06em;
-    color: var(--ink-mute);
-    margin-top: 6px;
-    font-style: normal;
-  }
-  .row .body .none { color: var(--ink-mute); font-style: italic; }
-  .row .rcpt { text-align: right; font-size: 11px; padding-top: 3px; letter-spacing: -0.06em; }
-  .rcpt.sent { color: var(--ink-mute); opacity: 0.7; }
-  .rcpt.delivered { color: var(--ink-mute); }
-  .rcpt.read { color: var(--session); }
-  .rcpt.failed { color: var(--oxblood); letter-spacing: 0; font-size: 12px; }
-
-  .row.dir-in { background: rgba(154,123,53,0.05); }
-  .row.dir-in .kind .arrow { color: var(--brass); }
-  .row.dir-out .kind .arrow { color: var(--ink-mute); }
-  .row.dir-system { background: rgba(20,17,13,0.035); }
-  .row.dir-system .body { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-soft); }
-  .row.dir-system .kind { color: var(--ink); }
-  .row.ev-committed .body { color: var(--oxblood); }
-  .row.ev-lot_opened .body, .row.ev-lot_closed .body { color: var(--ink); font-weight: 600; }
-  .row.failed-msg { background: rgba(110,31,28,0.045); }
-
-  .row.fold .body .recipients {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
-    margin-top: 10px;
-    align-items: center;
-  }
-  .row.fold .recipients .rp {
-    font-family: var(--mono);
-    font-size: 9.5px;
-    letter-spacing: 0.04em;
-    padding: 2px 6px;
-    border: 1px solid var(--rule-soft);
-    color: var(--ink-soft);
-    font-variant-numeric: tabular-nums;
-  }
-  .row.fold .recipients .rp.read { border-color: var(--session); color: var(--session); }
-  .row.fold .recipients .rp.failed { border-color: var(--oxblood); color: var(--oxblood); text-decoration: line-through; }
-  .row.fold .fanout {
-    display: block;
-    font-family: var(--mono);
-    font-size: 9.5px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--brass);
-    margin-top: 9px;
-  }
-  .row.fold .fanout b { color: var(--ink); font-weight: 500; }
-  .row.fold .kind .n {
-    color: var(--brass);
-    font-size: 9.5px;
-    letter-spacing: 0.06em;
+    box-shadow: 0 1px 0.5px rgba(0,0,0,0.1);
   }
 
+  @media (max-width: 720px) {
+    .chat { font-size: 14px; }
+    .wa-msg { max-width: 88%; }
+  }
   .ledger-empty {
+    align-self: center;
     padding: 40px 0;
     font-family: var(--sans);
     font-size: 14px;
@@ -783,23 +835,18 @@
   @media (max-width: 1080px) {
     .lot { grid-template-columns: 1fr; }
     .ladder { border-left: 0; border-top: 1px solid var(--rule-soft); padding-left: 0; padding-top: 20px; }
-    .row { grid-template-columns: 44px 62px 46px 1fr 40px; }
-    .row .kind { display: none; }
   }
   @media (max-width: 720px) {
     .result-band { grid-template-columns: 1fr 1fr; }
     .figure { border-right: 0; padding: 20px 0; border-bottom: 1px solid var(--rule-soft); }
     .figure:nth-child(odd) { border-right: 1px solid var(--rule-soft); padding-right: 20px; }
-    .row { grid-template-columns: 56px 44px 1fr 34px; gap: 10px; font-size: 12px; }
-    .row .seq { display: none; }
-    .row .body { font-size: 14px; }
     footer.site .row-f { grid-template-columns: 1fr; gap: 28px; }
     .controls { position: static; }
   }
 
   @media print {
     body::before, .controls { display: none; }
-    .row { break-inside: avoid; }
+    .wa-msg, .wa-system { break-inside: avoid; }
     .more { display: none; }
   }
 </style>
@@ -914,7 +961,7 @@
     </div>
 
     <div class="paddle-note" id="paddle-note" hidden></div>
-    <div class="ledger" id="ledger-rows"></div>
+    <div class="chat" id="ledger-rows"></div>
     <button class="more" id="more" hidden>Show more</button>
   </section>
 
@@ -1510,92 +1557,190 @@
     return m.detail;
   }
 
-  function receipt(m) {
-    var d = m.delivery;
-    if (!d) return null;
-    if (d.failed) {
-      var x = el("div", "rcpt failed", "✕");
-      x.title = "Failed " + d.error_code + " — " + (d.error_detail || "");
+  /* ---------- Rendering the chat ----------
+     The record shows the thread from the auction's own WhatsApp Business side:
+     what ArtBound sent is the green column on the right, carrying the receipts
+     the platform returned, and what a guest sent is white on the left. That is
+     the only arrangement the delivery data fits — a guest's handset never
+     reports a read receipt for a message it received. */
+
+  var ESCAPES = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" };
+
+  // WhatsApp's own formatting. The templates are written with it — without this
+  // the record prints *The September Session* with the asterisks showing.
+  function waFormat(text) {
+    var safe = String(text).replace(/[&<>"']/g, function (c) { return ESCAPES[c]; });
+    return safe
+      .replace(/(^|\s)\*([^*\n]+)\*(?=$|[\s.,!?:;)])/g, "$1<strong>$2</strong>")
+      .replace(/(^|\s)_([^_\n]+)_(?=$|[\s.,!?:;)])/g, "$1<em>$2</em>")
+      .replace(/(^|\s)~([^~\n]+)~(?=$|[\s.,!?:;)])/g, "$1<del>$2</del>");
+  }
+
+  function tickFor(delivery) {
+    if (!delivery) return null;
+    if (delivery.failed) {
+      var x = el("span", "tick failed", "!");
+      x.title = "Failed " + delivery.error_code + " — " + (delivery.error_detail || "");
       return x;
     }
-    if (d.read) {
-      var r = el("div", "rcpt read", "✓✓");
-      r.title = "Read " + clock(d.read);
+    if (delivery.read) {
+      var r = el("span", "tick read", "✓✓");
+      r.title = "Read " + clock(delivery.read);
       return r;
     }
-    if (d.delivered) {
-      var v = el("div", "rcpt delivered", "✓✓");
-      v.title = "Delivered " + clock(d.delivered);
-      return v;
+    if (delivery.delivered) {
+      var d = el("span", "tick", "✓✓");
+      d.title = "Delivered " + clock(delivery.delivered);
+      return d;
     }
-    if (d.sent) {
-      var s = el("div", "rcpt sent", "✓");
-      s.title = "Sent " + clock(d.sent);
+    if (delivery.sent) {
+      var s = el("span", "tick", "✓");
+      s.title = "Sent " + clock(delivery.sent);
       return s;
     }
     return null;
   }
 
-  function rowFor(m) {
-    var cls = "row dir-" + m.direction;
-    if (m.event) cls += " ev-" + m.event;
-    if (m.delivery && m.delivery.failed) cls += " failed-msg";
-    var row = el("div", cls);
-
-    row.appendChild(el("div", "seq", String(m.seq)));
-
-    var time = el("div", "time");
-    time.appendChild(document.createTextNode(clock(m.time)));
-    if (m.time_approximate) {
-      var approx = el("i", null, "≈");
-      approx.title = "Approximate — the guest turn is stamped as the reply went out";
-      time.appendChild(document.createTextNode(" "));
-      time.appendChild(approx);
-    }
-    row.appendChild(time);
-
-    row.appendChild(el("div", "paddle", m.paddle ? "#" + m.paddle : "—"));
-
-    var kind = el("div", "kind");
-    kind.appendChild(el("span", "arrow",
-      m.direction === "in" ? "←" : m.direction === "out" ? "→" : "•"));
-    kind.appendChild(el("span", null,
-      m.direction === "system" ? (EVENT_LABEL[m.event] || m.event) : (KIND_LABEL[m.type] || m.type)));
-    row.appendChild(kind);
-
-    var body = el("div", "body");
-    if (m.lot_label && m.direction === "system") {
-      body.appendChild(el("span", "lotref", m.lot_label));
-      body.appendChild(document.createTextNode(systemLine(m)));
-      if (m.detail) body.appendChild(el("span", "meta", detailOf(m)));
-    } else {
-      if (m.lot_label) body.appendChild(el("span", "lotref", m.lot_label));
-      if (m.text) {
-        body.appendChild(document.createTextNode(m.text));
-      } else {
-        body.appendChild(el("span", "none", m.media ? "[" + m.media + "]" : "[no text recorded]"));
-      }
-      if (m.buttons && m.buttons.length) {
-        var btns = el("div", "btns");
-        m.buttons.forEach(function (b) { btns.appendChild(el("span", null, b)); });
-        body.appendChild(btns);
-      }
-      var notes = [];
-      if (m.template) notes.push("template " + m.template);
-      if (m.text_note) notes.push(m.text_note);
-      if (notes.length) body.appendChild(el("span", "meta", notes.join(" · ")));
-    }
-    row.appendChild(body);
-
-    var rcpt = receipt(m);
-    row.appendChild(rcpt || el("div", "rcpt"));
-
-    return row;
+  function footer(bubble, time, delivery, approximate) {
+    var foot = el("div", "wa-foot");
+    var t = el("span", null, hhmm(time));
+    if (approximate) t.title = "Approximate — the guest's turn is stamped as the reply went out";
+    foot.appendChild(t);
+    var tick = tickFor(delivery);
+    if (tick) foot.appendChild(tick);
+    bubble.appendChild(foot);
   }
 
-  // One announcement sent to the whole room is one line, not seventeen. A run is
-  // folded only while its members sit next to each other in what is on screen,
-  // so a filter or a search never hides a message inside a fold.
+  var MEDIA_LABEL = {
+    video: "Video",
+    image: "Photo",
+    interactive_carousel: "Carousel — the lots",
+    interactive_list: "List"
+  };
+
+  function bubbleFor(m) {
+    var bubble = el("div", "wa-msg " + (m.direction === "in" ? "in" : "out") +
+      (m.delivery && m.delivery.failed ? " failed" : ""));
+
+    // Only a merged view needs to say who is speaking.
+    if (state.paddle === "all" && m.paddle) {
+      bubble.appendChild(el("div", "wa-from", "Paddle #" + m.paddle));
+    }
+
+    var media = m.media || (m.type.indexOf("video") > -1 ? "video"
+      : m.type.indexOf("image") > -1 ? "image"
+      : m.type.indexOf("carousel") > -1 ? "interactive_carousel" : null);
+    if (media) {
+      bubble.appendChild(el("div", "wa-media", MEDIA_LABEL[media] || media));
+    }
+
+    if (m.text) {
+      var body = el("div", "wa-text");
+      body.innerHTML = waFormat(m.text);
+      bubble.appendChild(body);
+    } else if (!media) {
+      bubble.appendChild(el("div", "wa-media", "Not recorded"));
+    }
+
+    footer(bubble, m.time, m.delivery, m.time_approximate);
+
+    if (m.buttons && m.buttons.length) {
+      var rail = el("div", "wa-buttons");
+      m.buttons.forEach(function (b) { rail.appendChild(el("span", null, b)); });
+      bubble.appendChild(rail);
+    }
+
+    var notes = [];
+    if (m.template) notes.push("template " + m.template);
+    if (m.delivery && m.delivery.failed) notes.push("failed " + m.delivery.error_code);
+    if (m.text_note) notes.push(m.text_note);
+    if (notes.length) bubble.appendChild(el("div", "wa-note", notes.join(" · ")));
+
+    return bubble;
+  }
+
+  function foldedBubble(group) {
+    var first = group[0];
+    var last = group[group.length - 1];
+
+    var read = 0, delivered = 0, failed = 0;
+    group.forEach(function (m) {
+      var d = m.delivery || {};
+      if (d.failed) failed++;
+      else if (d.read) { read++; delivered++; }
+      else if (d.delivered) delivered++;
+    });
+
+    var bubble = el("div", "wa-msg out" + (failed === group.length ? " failed" : ""));
+
+    var personalised = group.some(function (m) { return m.text !== first.text; });
+    var body = el("div", "wa-text");
+    body.innerHTML = waFormat(personalised ? (first.text || "").replace(/#\d+/g, "#—") : (first.text || ""));
+    bubble.appendChild(body);
+
+    // The tick states the run's own outcome. A fan-out that WhatsApp refused
+    // outright must not show as delivered because the first send has a time.
+    var aggregate = failed === group.length ? { failed: first.time, error_code: (first.delivery || {}).error_code, error_detail: (first.delivery || {}).error_detail }
+      : read ? { read: first.time }
+      : delivered ? { delivered: first.time }
+      : { sent: first.time };
+    footer(bubble, first.time, aggregate);
+
+    if (first.buttons && first.buttons.length) {
+      var rail = el("div", "wa-buttons");
+      first.buttons.forEach(function (b) { rail.appendChild(el("span", null, b)); });
+      bubble.appendChild(rail);
+    }
+
+    var note = el("div", "wa-note");
+    note.appendChild(document.createTextNode("Sent to "));
+    note.appendChild(el("b", null, String(group.length)));
+    note.appendChild(document.createTextNode(
+      " paddles, " + hhmm(first.time) + "–" + hhmm(last.time) +
+      " · " + delivered + " delivered · " + read + " read" +
+      (failed ? " · " + failed + " failed" : "") +
+      (first.template ? " · template " + first.template : "")));
+    bubble.appendChild(note);
+
+    var chips = el("div", "wa-recipients");
+    group.forEach(function (m) {
+      var d = m.delivery || {};
+      var chip = el("span", d.failed ? "failed" : d.read ? "read" : null, "#" + m.paddle);
+      chip.title = d.failed ? "Failed " + d.error_code + " — " + (d.error_detail || "")
+        : d.read ? "Read " + clock(d.read)
+        : d.delivered ? "Delivered " + clock(d.delivered)
+        : d.sent ? "Sent " + clock(d.sent) : "No receipt recorded";
+      chips.appendChild(chip);
+    });
+    bubble.appendChild(chips);
+
+    return bubble;
+  }
+
+  // The bid engine never sent a message. Its events belong where WhatsApp puts
+  // a date or its encryption notice: centred, between the bubbles.
+  function systemChip(m) {
+    var tone = m.event === "committed" ? " accepted"
+      : m.event === "precheck_rejected" ? " refused" : "";
+    var chip = el("div", "wa-system" + tone);
+
+    chip.appendChild(el("b", null, EVENT_LABEL[m.event] || m.event));
+    var tail = [];
+    if (m.amount != null) tail.push("USD " + usd(m.amount));
+    if (m.paddle) tail.push("paddle #" + m.paddle);
+    if (tail.length) chip.appendChild(document.createTextNode("  " + tail.join("  ·  ")));
+
+    var sub = [hhmm(m.time)];
+    if (m.lot_label) sub.unshift(m.lot_label);
+    if (m.detail) sub.push(detailOf(m));
+    chip.appendChild(el("span", "t", sub.join("  ·  ")));
+    return chip;
+  }
+
+  function divider(text) {
+    return el("div", "wa-divider", text);
+  }
+
   function fold(list) {
     var groups = [];
     var run = null;
@@ -1608,82 +1753,6 @@
       }
     });
     return groups;
-  }
-
-  function foldedRow(group) {
-    var first = group[0];
-    var last = group[group.length - 1];
-    var row = el("div", "row fold dir-out");
-
-    row.appendChild(el("div", "seq", first.seq + "–" + last.seq));
-
-    var time = el("div", "time");
-    time.textContent = clock(first.time);
-    row.appendChild(time);
-
-    row.appendChild(el("div", "paddle", "×" + group.length));
-
-    var kind = el("div", "kind");
-    kind.appendChild(el("span", "arrow", "→"));
-    kind.appendChild(el("span", null, KIND_LABEL[first.type] || first.type));
-    kind.appendChild(el("span", "n", "broadcast"));
-    row.appendChild(kind);
-
-    var body = el("div", "body");
-    if (first.lot_label) body.appendChild(el("span", "lotref", first.lot_label));
-
-    // Each guest's copy names their own paddle. Printing the first recipient's
-    // copy under "sent to 17 paddles" would read as if all seventeen were #14.
-    var personalised = group.some(function (m) { return m.text !== first.text; });
-    body.appendChild(document.createTextNode(
-      personalised ? (first.text || "").replace(/#\d+/g, "#—") : (first.text || "")));
-
-    if (first.buttons && first.buttons.length) {
-      var btns = el("div", "btns");
-      first.buttons.forEach(function (b) { btns.appendChild(el("span", null, b)); });
-      body.appendChild(btns);
-    }
-
-    var read = 0, delivered = 0, failed = 0;
-    group.forEach(function (m) {
-      var d = m.delivery || {};
-      if (d.failed) failed++;
-      else if (d.read) { read++; delivered++; }
-      else if (d.delivered) delivered++;
-    });
-
-    var tally = el("span", "fanout");
-    tally.appendChild(document.createTextNode("Sent to "));
-    tally.appendChild(el("b", null, String(group.length)));
-    tally.appendChild(document.createTextNode(
-      " paddles between " + clock(first.time) + " and " + clock(last.time) +
-      " · " + delivered + " delivered · " + read + " read" +
-      (failed ? " · " + failed + " failed" : "")));
-    if (first.template) {
-      tally.appendChild(document.createTextNode(" · template " + first.template));
-    }
-    body.appendChild(tally);
-
-    var recipients = el("div", "recipients");
-    group.forEach(function (m) {
-      var d = m.delivery || {};
-      var cls = d.failed ? "rp failed" : d.read ? "rp read" : "rp";
-      var chip = el("span", cls, "#" + m.paddle);
-      chip.title = d.failed
-        ? "Failed " + d.error_code + " — " + (d.error_detail || "")
-        : d.read ? "Read " + clock(d.read)
-        : d.delivered ? "Delivered " + clock(d.delivered)
-        : d.sent ? "Sent " + clock(d.sent) : "No receipt recorded";
-      recipients.appendChild(chip);
-    });
-    body.appendChild(recipients);
-    row.appendChild(body);
-
-    var rcpt = el("div", "rcpt " + (failed === group.length ? "failed" : read ? "read" : "delivered"),
-      failed === group.length ? "✕" : read ? "✓✓" : "✓✓");
-    row.appendChild(rcpt);
-
-    return row;
   }
 
   function draw() {
@@ -1701,9 +1770,26 @@
     var slice = groups.slice(0, state.shown);
     var frag = document.createDocumentFragment();
     var events = 0;
+    var lastLot;
+
+    frag.appendChild(divider(new Date(slice[0][0].time).toLocaleDateString("en-GB", {
+      timeZone: "Asia/Dubai", day: "numeric", month: "long", year: "numeric"
+    })));
+
     slice.forEach(function (g) {
       events += g.length;
-      frag.appendChild(g.length > 1 ? foldedRow(g) : rowFor(g[0]));
+      var m = g[0];
+
+      // A lot rule, where WhatsApp would put a date: the room moved on.
+      if (m.lot_label && m.lot_label !== lastLot) {
+        lastLot = m.lot_label;
+        frag.appendChild(divider(m.lot_label));
+      }
+
+      frag.appendChild(
+        m.direction === "system" ? systemChip(m)
+          : g.length > 1 ? foldedBubble(g)
+          : bubbleFor(m));
     });
     host.appendChild(frag);
 
