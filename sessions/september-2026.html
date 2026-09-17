@@ -83,10 +83,34 @@
     position: relative;
     z-index: 2;
     background: #fff;
-    border-top: 1px solid var(--rule-soft);
-    margin-top: clamp(46px, 7vw, 92px);
   }
-  .sheet section:first-of-type { padding-top: clamp(38px, 5vw, 66px); }
+  /* A panel opens directly under its tab, so it does not need a section's full
+     standing-alone top rule. */
+  .panel > .wrap > section:first-of-type { padding-top: clamp(30px, 4vw, 54px); }
+
+  [hidden] { display: none !important; }
+
+  .tabs {
+    display: flex;
+    gap: clamp(18px, 3vw, 34px);
+    border-bottom: 1px solid var(--rule-soft);
+    margin: clamp(22px, 3.5vw, 40px) 0 0;
+  }
+  .tab {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    background: none;
+    border: 0;
+    border-bottom: 2px solid transparent;
+    padding: 14px 2px 12px;
+    margin-bottom: -1px;
+    cursor: pointer;
+  }
+  .tab:hover { color: var(--ink); }
+  .tab[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--oxblood); }
 
   .rule { height: 1px; background: var(--rule); }
   .rule.brass { background: var(--brass); opacity: 0.65; }
@@ -573,6 +597,11 @@
   /* ---------- The chat ----------
      Values lifted from the vendored widget (emulator/widgets/whatsapp-emulator.css)
      so the record matches what the guests actually saw, not an impression of it. */
+  /* The ledger is not one continuous chat: the bid engine's own events break it.
+     Bubbles gather into beige chat segments; everything we say about them sits
+     between the segments, on the page's white, in the page's own type. */
+  .chat-stream { display: flex; flex-direction: column; }
+
   .chat {
     --wa-out:  #DCF8C6;
     --wa-in:   #FFFFFF;
@@ -586,7 +615,7 @@
     max-width: 680px;
     margin: 0 auto;
     width: 100%;
-    padding: 18px clamp(12px, 3vw, 22px) 24px;
+    padding: 18px clamp(12px, 3vw, 22px) 18px;
     border: 1px solid rgba(20,17,13,0.10);
     display: flex;
     flex-direction: column;
@@ -692,29 +721,33 @@
   .wa-recipients span.read { border-color: var(--wa-green); color: var(--wa-green); }
   .wa-recipients span.failed { border-color: #C0392B; color: #C0392B; text-decoration: line-through; }
 
-  /* Centred notices, where WhatsApp puts dates and its encryption note. The bid
-     engine's own events go here: they were never messages. */
-  .wa-system {
-    align-self: center;
-    max-width: min(86%, 440px);
-    background: #FFF6D6;
-    color: #5a5340;
-    border-radius: 6px;
-    padding: 5px 12px;
-    margin: 5px 0 11px;
-    text-align: center;
+  /* Ours, not WhatsApp's. The bid engine never sent a message, so its events are
+     set outside the chat in the record's own type — no guest ever saw these. */
+  .annot {
+    max-width: 680px;
+    width: 100%;
+    margin: 0 auto;
+    background: #fff;
+    border-left: 2px solid var(--brass);
+    padding: 11px 16px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px 14px;
     font-family: var(--mono);
-    font-size: 10px;
+    font-size: 10.5px;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    box-shadow: 0 1px 0.5px rgba(0,0,0,0.1);
+    color: var(--ink-mute);
   }
-  .wa-system b { color: #2f2a1d; font-weight: 600; }
-  .wa-system.accepted { background: #D9F2E3; color: #24503a; }
-  .wa-system.accepted b { color: #14301f; }
-  .wa-system.refused { background: #F6DFDC; color: #6e1f1c; }
-  .wa-system.refused b { color: #4d1513; }
-  .wa-system .t { display: block; margin-top: 2px; opacity: 0.6; letter-spacing: 0.08em; }
+  .annot .label { color: var(--ink); font-weight: 500; letter-spacing: 0.12em; }
+  .annot .val { color: var(--ink-soft); }
+  .annot .t { margin-left: auto; opacity: 0.75; white-space: nowrap; }
+  .annot.accepted { border-left-color: var(--session); }
+  .annot.accepted .label { color: var(--session); }
+  .annot.refused { border-left-color: var(--oxblood); }
+  .annot.refused .label { color: var(--oxblood); }
+  @media (max-width: 720px) { .annot .t { margin-left: 0; width: 100%; } }
 
   .wa-divider {
     align-self: center;
@@ -735,8 +768,8 @@
     .wa-msg { max-width: 88%; }
   }
   .ledger-empty {
-    align-self: center;
     padding: 40px 0;
+    text-align: center;
     font-family: var(--sans);
     font-size: 14px;
     color: var(--ink-mute);
@@ -759,35 +792,6 @@
   .more:hover { border-color: var(--brass); color: var(--ink); }
 
   /* ---------- Provenance ---------- */
-
-  .prov {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: clamp(24px, 4vw, 54px);
-    border-top: 1px solid var(--brass);
-    padding-top: 30px;
-  }
-  .prov h4 {
-    font-family: var(--mono);
-    font-size: 10px;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--brass);
-    margin: 0 0 16px;
-    font-weight: 400;
-  }
-  .prov dl { margin: 0; font-size: 14.5px; }
-  .prov dt {
-    font-family: var(--mono);
-    font-size: 10.5px;
-    color: var(--ink);
-    letter-spacing: 0.04em;
-    margin-top: 14px;
-  }
-  .prov dt:first-child { margin-top: 0; }
-  .prov dd { margin: 3px 0 0; color: var(--ink-mute); line-height: 1.45; }
-  .prov ul { margin: 0; padding-left: 18px; font-size: 14.5px; color: var(--ink-mute); }
-  .prov li { margin-bottom: 11px; line-height: 1.45; }
 
   /* ---------- Footer ---------- */
 
@@ -873,10 +877,9 @@
     </a>
     <nav>
       <a href="/">Home</a>
-      <a href="#lots">Lots</a>
-      <a href="#operations">Operations</a>
-      <a href="#ledger">Ledger</a>
-      <a href="#provenance">Provenance</a>
+      <a href="#summary">Summary</a>
+      <a href="#ledger">The ledger</a>
+      <a href="mailto:galleries@artbound.art">Enquire</a>
     </nav>
   </header>
 
@@ -898,10 +901,23 @@
     <div class="result-band" id="result-band"></div>
   </div>
 
+  <!-- TABS -->
+  <div class="tabs" role="tablist" aria-label="Session record">
+    <button class="tab" type="button" role="tab" id="tab-summary"
+            aria-controls="panel-summary" aria-selected="true">Summary</button>
+    <button class="tab" type="button" role="tab" id="tab-ledger"
+            aria-controls="panel-ledger" aria-selected="false">The ledger</button>
+  </div>
+
+</div><!-- /wrap -->
+
+<!-- SUMMARY PANEL -->
+<div class="panel" id="panel-summary" role="tabpanel" aria-labelledby="tab-summary">
+<div class="wrap">
+
   <!-- LOTS -->
   <section id="lots">
     <div class="sec-head">
-      <span class="num">I</span>
       <h2>The lots</h2>
       <p>
         Each lot opened and closed on its own clock. The ladder beside it is the
@@ -915,7 +931,6 @@
   <!-- OPERATIONS -->
   <section id="operations">
     <div class="sec-head">
-      <span class="num">II</span>
       <h2>Operations</h2>
       <p>
         The session ran on WhatsApp. These are the delivery figures the platform
@@ -925,17 +940,16 @@
     <div class="ops" id="ops"></div>
   </section>
 
-</div><!-- /wrap : the editorial half ends here -->
+</div>
+</div><!-- /panel-summary -->
 
-<!-- The record proper. Machine output on plain white, off the paper ground and
-     out from under the grain overlay — it is evidence, not copy. -->
-<div class="sheet">
+<!-- LEDGER PANEL. Machine output on plain white, off the paper ground and out
+     from under the grain overlay — it is evidence, not copy. -->
+<div class="panel sheet" id="panel-ledger" role="tabpanel" aria-labelledby="tab-ledger" hidden>
 <div class="wrap">
 
-  <!-- LEDGER -->
   <section id="ledger">
     <div class="sec-head">
-      <span class="num">III</span>
       <h2>The ledger</h2>
       <p>
         The thread as it stood on a guest&rsquo;s handset: what they sent on the
@@ -961,35 +975,14 @@
     </div>
 
     <div class="paddle-note" id="paddle-note" hidden></div>
-    <div class="chat" id="ledger-rows"></div>
+    <div class="chat-stream" id="ledger-rows"></div>
     <button class="more" id="more" hidden>Show more</button>
   </section>
 
-  <!-- PROVENANCE -->
-  <section id="provenance">
-    <div class="sec-head">
-      <span class="num">IV</span>
-      <h2>Provenance</h2>
-      <p>
-        Where each line came from, what it is not, and what was withheld before
-        publication.
-      </p>
-    </div>
-    <div class="prov">
-      <div>
-        <h4>Sources</h4>
-        <dl id="sources"></dl>
-      </div>
-      <div>
-        <h4>Read this as</h4>
-        <ul id="caveats"></ul>
-      </div>
-      <div>
-        <h4>Withheld</h4>
-        <ul id="redactions"></ul>
-      </div>
-    </div>
-  </section>
+</div>
+</div><!-- /panel-ledger -->
+
+<div class="wrap">
 
   <!-- FOOTER -->
   <footer class="site">
@@ -1006,10 +999,8 @@
       <div>
         <h4>Record</h4>
         <ul>
-          <li><a href="#lots">The lots</a></li>
-          <li><a href="#operations">Operations</a></li>
+          <li><a href="#summary">Summary</a></li>
           <li><a href="#ledger">The ledger</a></li>
-          <li><a href="#provenance">Provenance</a></li>
         </ul>
       </div>
       <div>
@@ -1028,14 +1019,13 @@
   </footer>
 
 </div>
-</div><!-- /sheet -->
 
 <script>
 (function () {
   "use strict";
 
   var PAGE = 80;                  // ledger rows revealed at a time (a fold is one row)
-  var state = { direction: "all", lot: "all", paddle: "all", q: "", shown: PAGE };
+  var state = { tab: "summary", direction: "all", lot: "all", paddle: "all", q: "", shown: PAGE };
   var data = null;
   var filtered = [];
 
@@ -1076,6 +1066,26 @@
     if (cls) node.className = cls;
     if (text != null) node.textContent = text;
     return node;
+  }
+
+  /* ---------- Tabs ---------- */
+
+  function showTab(name) {
+    var ledger = name === "ledger";
+    state.tab = ledger ? "ledger" : "summary";
+    $("panel-summary").hidden = ledger;
+    $("panel-ledger").hidden = !ledger;
+    $("tab-summary").setAttribute("aria-selected", String(!ledger));
+    $("tab-ledger").setAttribute("aria-selected", String(ledger));
+  }
+
+  function buildTabs() {
+    [["tab-summary", "summary"], ["tab-ledger", "ledger"]].forEach(function (pair) {
+      $(pair[0]).addEventListener("click", function () {
+        showTab(pair[1]);
+        writeHash();
+      });
+    });
   }
 
   /* ---------- Masthead ---------- */
@@ -1394,15 +1404,27 @@
     if (state.direction !== "all") parts.push("show=" + state.direction);
     if (state.q) parts.push("q=" + encodeURIComponent(state.q));
 
-    var hash = parts.length ? "#" + parts.join("&") : "";
-    if (hash !== location.hash && !(hash === "" && location.hash.indexOf("=") === -1)) {
+    // Filters imply the ledger, so they stand alone. With none set, the bare tab
+    // name is still worth carrying: it is how the ledger tab gets linked to.
+    var hash = parts.length ? "#" + parts.join("&")
+      : state.tab === "ledger" ? "#ledger" : "";
+
+    if (hash !== location.hash) {
       history.replaceState(null, "", location.pathname + location.search + hash);
     }
   }
 
   function readHash() {
     var raw = location.hash.replace(/^#/, "");
-    if (!raw || raw.indexOf("=") === -1) return false;
+
+    if (raw.indexOf("=") === -1) {
+      // A plain anchor. Only the tab names mean anything here.
+      if (raw === "ledger") { showTab("ledger"); return true; }
+      if (raw === "summary") { showTab("summary"); return false; }
+      return false;
+    }
+
+    showTab("ledger");
 
     var params = {};
     raw.split("&").forEach(function (pair) {
@@ -1699,24 +1721,24 @@
     return bubble;
   }
 
-  // The bid engine never sent a message. Its events belong where WhatsApp puts
-  // a date or its encryption notice: centred, between the bubbles.
-  function systemChip(m) {
+  // The bid engine never sent a message, so this is the record talking, not the
+  // thread. It is set outside the chat segments, in the page's own type.
+  function annotation(m) {
     var tone = m.event === "committed" ? " accepted"
       : m.event === "precheck_rejected" ? " refused" : "";
-    var chip = el("div", "wa-system" + tone);
+    var node = el("div", "annot" + tone);
 
-    chip.appendChild(el("b", null, EVENT_LABEL[m.event] || m.event));
-    var tail = [];
-    if (m.amount != null) tail.push("USD " + usd(m.amount));
-    if (m.paddle) tail.push("paddle #" + m.paddle);
-    if (tail.length) chip.appendChild(document.createTextNode("  " + tail.join("  ·  ")));
+    node.appendChild(el("span", "label", EVENT_LABEL[m.event] || m.event));
 
-    var sub = [hhmm(m.time)];
-    if (m.lot_label) sub.unshift(m.lot_label);
-    if (m.detail) sub.push(detailOf(m));
-    chip.appendChild(el("span", "t", sub.join("  ·  ")));
-    return chip;
+    var bits = [];
+    if (m.amount != null) bits.push("USD " + usd(m.amount));
+    if (m.paddle) bits.push("paddle #" + m.paddle);
+    if (m.lot_label) bits.push(m.lot_label);
+    if (m.detail) bits.push(detailOf(m));
+    if (bits.length) node.appendChild(el("span", "val", bits.join("  ·  ")));
+
+    node.appendChild(el("span", "t", clock(m.time)));
+    return node;
   }
 
   function divider(text) {
@@ -1753,8 +1775,16 @@
     var frag = document.createDocumentFragment();
     var events = 0;
     var lastLot;
+    var segment = null;
 
-    frag.appendChild(divider(new Date(slice[0][0].time).toLocaleDateString("en-GB", {
+    // Bubbles accumulate into a chat pane; an annotation closes it, so the next
+    // run of messages opens a fresh one and nothing of ours sits inside a chat.
+    function chat() {
+      if (!segment) { segment = el("div", "chat"); frag.appendChild(segment); }
+      return segment;
+    }
+
+    chat().appendChild(divider(new Date(slice[0][0].time).toLocaleDateString("en-GB", {
       timeZone: "Asia/Dubai", day: "numeric", month: "long", year: "numeric"
     })));
 
@@ -1762,16 +1792,19 @@
       events += g.length;
       var m = g[0];
 
+      if (m.direction === "system") {
+        segment = null;
+        frag.appendChild(annotation(m));
+        return;
+      }
+
       // A lot rule, where WhatsApp would put a date: the room moved on.
       if (m.lot_label && m.lot_label !== lastLot) {
         lastLot = m.lot_label;
-        frag.appendChild(divider(m.lot_label));
+        chat().appendChild(divider(m.lot_label));
       }
 
-      frag.appendChild(
-        m.direction === "system" ? systemChip(m)
-          : g.length > 1 ? foldedBubble(g)
-          : bubbleFor(m));
+      chat().appendChild(g.length > 1 ? foldedBubble(g) : bubbleFor(m));
     });
     host.appendChild(frag);
 
@@ -1786,16 +1819,6 @@
   }
 
   /* ---------- Provenance ---------- */
-
-  function renderProvenance() {
-    var dl = $("sources");
-    Object.keys(data.sources).forEach(function (k) {
-      dl.appendChild(el("dt", null, k));
-      dl.appendChild(el("dd", null, data.sources[k]));
-    });
-    data.caveats.forEach(function (c) { $("caveats").appendChild(el("li", null, c)); });
-    data.redactions.forEach(function (r) { $("redactions").appendChild(el("li", null, r)); });
-  }
 
   function scrollToLedger() {
     var target = $("ledger");
@@ -1819,7 +1842,7 @@
       renderLots();
       renderOps();
       buildControls();
-      renderProvenance();
+      buildTabs();
 
       // A link that arrives carrying filters lands on the ledger, not the
       // masthead — whoever was sent it came to see one thing.

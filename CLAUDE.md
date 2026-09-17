@@ -127,9 +127,15 @@ message you received, and ArtBound's sends are on the receiving side here, so `�
 sits in the grey note line under the bubble with the template name. Nothing in the chat itself
 claims a receipt WhatsApp did not report.
 
-The bid engine's events were never messages, so they render as the centred notices WhatsApp
-uses for dates and its encryption note — tinted green when a bid was accepted, red when one
-was refused.
+**The bid engine's events sit outside the chat.** They were never WhatsApp messages, so
+rendering them as in-thread notices misrepresented them. Bubbles gather into beige chat
+segments; an engine event closes the segment and is set on the page's white in the record's
+own mono type, with a brass rule at its left — green for an accepted bid, oxblood for a
+refused one. Nothing of ours appears inside a chat pane.
+
+**The page is two tabs**, Summary (the lots and the operations figures) and The ledger, under
+a masthead that stays put. The tab lives in the hash too: `#ledger`, or any filter hash, opens
+the ledger; `#summary` or an empty hash opens the summary.
 
 A run of identical broadcasts (one announcement, seventeen recipients) folds into a single
 bubble naming its paddles — without it the log is unreadable, 553 events of which 340 are
