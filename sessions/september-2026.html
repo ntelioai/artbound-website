@@ -623,7 +623,29 @@
   /* The ledger is not one continuous chat: the bid engine's own events break it.
      Bubbles gather into beige chat segments; everything we say about them sits
      between the segments, on the page's white, in the page's own type. */
-  .chat-stream { display: flex; flex-direction: column; }
+  .chat-stream { display: block; }
+
+  /* One row per run of messages, with whatever the bid engine did just before
+     that run set in the margin beside it. Consecutive chat panes butt together,
+     so the thread still reads as one continuous column. */
+  .stream-row {
+    display: grid;
+    grid-template-columns: minmax(0, 680px) minmax(0, 300px);
+    gap: 0 22px;
+    justify-content: center;
+    /* Stretch, not start: the chat pane fills whatever height the margin forces,
+       so consecutive panes butt together and the thread stays one unbroken
+       column however tall the notes beside it get. */
+    align-items: stretch;
+  }
+  /* Both are pinned to row 1. Without it, sparse auto-placement puts .notes in
+     column 2 and then drops .chat onto a second row, which is what tore the
+     beige column into pieces. */
+  .stream-row .chat  { grid-column: 1; grid-row: 1; }
+  .stream-row .notes { grid-column: 2; grid-row: 1; align-self: start; }
+  .notes { display: flex; flex-direction: column; gap: 9px; padding-top: 6px; }
+  .stream-row:first-child .chat { padding-top: 18px; border-top: 1px solid rgba(20,17,13,0.10); }
+  .stream-row:last-child  .chat { padding-bottom: 18px; border-bottom: 1px solid rgba(20,17,13,0.10); }
 
   .chat {
     --wa-out:  #DCF8C6;
@@ -638,8 +660,11 @@
     max-width: 680px;
     margin: 0 auto;
     width: 100%;
-    padding: 18px clamp(12px, 3vw, 22px) 18px;
-    border: 1px solid rgba(20,17,13,0.10);
+    padding: 0 clamp(12px, 3vw, 22px);
+    /* Side rules only: stacked panes would otherwise draw a border each and show
+       a seam at every row join. The ends are closed by the first/last row. */
+    border-left: 1px solid rgba(20,17,13,0.10);
+    border-right: 1px solid rgba(20,17,13,0.10);
     display: flex;
     flex-direction: column;
     font-family: var(--sans);
@@ -744,33 +769,50 @@
   .wa-recipients span.read { border-color: var(--wa-green); color: var(--wa-green); }
   .wa-recipients span.failed { border-color: #C0392B; color: #C0392B; text-decoration: line-through; }
 
-  /* Ours, not WhatsApp's. The bid engine never sent a message, so its events are
-     set outside the chat in the record's own type — no guest ever saw these. */
+  /* Ours, not WhatsApp's. The bid engine never sent a message, so its events sit
+     outside the chat entirely, in the margin, in the record's own type. */
   .annot {
-    max-width: 680px;
-    width: 100%;
-    margin: 0 auto;
     background: #fff;
-    border-left: 2px solid var(--brass);
-    padding: 11px 16px;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: 4px 14px;
+    border: 1px solid var(--rule-soft);
+    border-left: 3px solid var(--brass);
+    border-radius: 6px;
+    padding: 9px 12px 10px;
+    box-shadow: 0 1px 2px rgba(20,17,13,0.05);
     font-family: var(--mono);
-    font-size: 10.5px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--ink-mute);
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
   }
-  .annot .label { color: var(--ink); font-weight: 500; letter-spacing: 0.12em; }
-  .annot .val { color: var(--ink-soft); }
-  .annot .t { margin-left: auto; opacity: 0.75; white-space: nowrap; }
+  .annot .label {
+    font-size: 9.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .annot .val { font-size: 11px; letter-spacing: 0.02em; color: var(--ink-soft); line-height: 1.4; }
+  .annot .t { font-size: 9.5px; letter-spacing: 0.1em; color: var(--rule); }
   .annot.accepted { border-left-color: var(--session); }
   .annot.accepted .label { color: var(--session); }
   .annot.refused { border-left-color: var(--oxblood); }
   .annot.refused .label { color: var(--oxblood); }
-  @media (max-width: 720px) { .annot .t { margin-left: 0; width: 100%; } }
+
+  /* No room for a margin: the notes fall back into the flow, above the run of
+     messages they precede. */
+  @media (max-width: 1080px) {
+    .stream-row { grid-template-columns: minmax(0, 680px); }
+    /* Stacked, a note interrupts the column on purpose, so each pane closes
+       itself rather than relying on the first and last row for its ends. */
+    .stream-row .chat {
+      grid-row: auto;
+      border-top: 1px solid rgba(20,17,13,0.10);
+      border-bottom: 1px solid rgba(20,17,13,0.10);
+      padding-top: 14px;
+      padding-bottom: 14px;
+    }
+    .stream-row .notes { grid-column: 1; grid-row: auto; }
+    .notes { padding: 12px 0; max-width: 680px; margin: 0 auto; width: 100%; }
+  }
 
   .wa-divider {
     align-self: center;
@@ -915,10 +957,8 @@
     <div class="dateline" id="dateline"></div>
 
     <p class="lede">
-      Four lots, offered by invitation and settled in conversation on
-      <b>16 September 2026</b>. What follows is the session's own record: every
-      bid the auction accepted, every bid it refused, and every message it sent
-      or received &mdash; <b>as logged</b>, not as retold.
+      Four lots by invitation. Bidding made in conversation on
+      <b>16 September 2026</b>. This page contains the session's record in full <b>as per server logs</b>.
     </p>
 
   </div>
@@ -1760,9 +1800,9 @@
     var bits = [];
     if (m.amount != null) bits.push("USD " + usd(m.amount));
     if (m.paddle) bits.push("paddle #" + m.paddle);
-    if (m.lot_label) bits.push(m.lot_label);
-    if (m.detail) bits.push(detailOf(m));
-    if (bits.length) node.appendChild(el("span", "val", bits.join("  ·  ")));
+    if (bits.length) node.appendChild(el("span", "val", bits.join(" · ")));
+    if (m.lot_label) node.appendChild(el("span", "val", m.lot_label));
+    if (m.detail) node.appendChild(el("span", "val", detailOf(m)));
 
     node.appendChild(el("span", "t", clock(m.time)));
     return node;
@@ -1803,13 +1843,25 @@
     var events = 0;
     var lastLot;
     var segment = null;
+    var pending = [];
 
-    // Bubbles accumulate into a chat pane; an annotation closes it, so the next
-    // run of messages opens a fresh one and nothing of ours sits inside a chat.
-    function chat() {
-      if (!segment) { segment = el("div", "chat"); frag.appendChild(segment); }
-      return segment;
+    // An engine event closes the current pane and waits. The next run of messages
+    // opens a row that carries those notes in its margin, so a note lands level
+    // with the first message that followed it and scrolls with the thread.
+    function openRow() {
+      var row = el("div", "stream-row");
+      var notes = el("div", "notes");
+      var pane = el("div", "chat");
+      pending.forEach(function (n) { notes.appendChild(n); });
+      pending = [];
+      row.appendChild(notes);
+      row.appendChild(pane);
+      frag.appendChild(row);
+      segment = pane;
+      return pane;
     }
+
+    function chat() { return segment || openRow(); }
 
     chat().appendChild(divider(new Date(slice[0][0].time).toLocaleDateString("en-GB", {
       timeZone: "Asia/Dubai", day: "numeric", month: "long", year: "numeric"
@@ -1821,7 +1873,7 @@
 
       if (m.direction === "system") {
         segment = null;
-        frag.appendChild(annotation(m));
+        pending.push(annotation(m));
         return;
       }
 
@@ -1833,6 +1885,10 @@
 
       chat().appendChild(g.length > 1 ? foldedBubble(g) : bubbleFor(m));
     });
+
+    // Whatever the engine did after the last message still needs its margin.
+    if (pending.length) openRow();
+
     host.appendChild(frag);
 
     $("count").textContent = events + " of " + filtered.length +

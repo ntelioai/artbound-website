@@ -127,11 +127,23 @@ message you received, and ArtBound's sends are on the receiving side here, so `â
 sits in the grey note line under the bubble with the template name. Nothing in the chat itself
 claims a receipt WhatsApp did not report.
 
-**The bid engine's events sit outside the chat.** They were never WhatsApp messages, so
-rendering them as in-thread notices misrepresented them. Bubbles gather into beige chat
-segments; an engine event closes the segment and is set on the page's white in the record's
-own mono type, with a brass rule at its left â€” green for an accepted bid, oxblood for a
-refused one. Nothing of ours appears inside a chat pane.
+**The bid engine's events sit outside the chat, in the margin.** They were never WhatsApp
+messages, so they are not in the thread at all: the ledger is a stack of `.stream-row`s, each
+one a run of messages in column 1 with, in column 2 beside it, whatever the engine did just
+before that run. The notes therefore scroll with the thread and land level with the first
+message that followed them.
+
+Two things hold that together and both are easy to break:
+
+- Both `.chat` and `.notes` are pinned to `grid-row: 1`. Without it, sparse auto-placement
+  puts `.notes` in column 2 and then drops `.chat` onto a second row, tearing the beige
+  column into pieces separated by the height of each note.
+- `.chat` carries **side borders only**, with the top and bottom supplied by
+  `.stream-row:first-child` / `:last-child`. Give every pane a full border and each row join
+  draws a doubled 2px seam.
+
+Below 1080px there is no room for a margin, so the notes fall back into the flow above the
+run they precede, and each pane closes itself with a full border.
 
 **The page is two tabs**, Summary (the headline figures, the lots, the operations panel) and
 The ledger, under a masthead that stays put. The tab lives in the hash too: `#ledger`, or any
