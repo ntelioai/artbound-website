@@ -29,6 +29,9 @@
 
     --serif: "Fraunces", "Times New Roman", serif;
     --mono:  "JetBrains Mono", ui-monospace, monospace;
+    /* The ledger is machine output, not copy. It gets a plain screen sans —
+       Fraunces is for the editorial half of the page and unreadable in bulk. */
+    --sans:  -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 
     --gutter: clamp(20px, 4vw, 56px);
     --max:    1440px;
@@ -73,6 +76,17 @@
     position: relative;
     z-index: 2;
   }
+
+  /* z-index 2 lifts the sheet clear of the fixed paper-grain overlay (z-index 1),
+     so the log sits on clean white rather than tinted stock. */
+  .sheet {
+    position: relative;
+    z-index: 2;
+    background: #fff;
+    border-top: 1px solid var(--rule-soft);
+    margin-top: clamp(46px, 7vw, 92px);
+  }
+  .sheet section:first-of-type { padding-top: clamp(38px, 5vw, 66px); }
 
   .rule { height: 1px; background: var(--rule); }
   .rule.brass { background: var(--brass); opacity: 0.65; }
@@ -454,7 +468,7 @@
     border-bottom: 1px solid var(--rule-soft);
     position: sticky;
     top: 0;
-    background: var(--paper);
+    background: #fff;
     z-index: 5;
   }
   .controls .group { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
@@ -481,6 +495,26 @@
   }
   .chip:hover { border-color: var(--brass); color: var(--ink); }
   .chip[aria-pressed="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .controls select {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    background: transparent;
+    border: 1px solid var(--rule-soft);
+    padding: 5px 9px;
+    cursor: pointer;
+    -webkit-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='9' height='6'><path d='M0 0l4.5 6L9 0z' fill='%236a5f51'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 9px center;
+    padding-right: 26px;
+  }
+  .controls select:focus { outline: none; border-color: var(--brass); }
+  .controls select.on { background-color: var(--ink); color: var(--paper); border-color: var(--ink); }
+
   .controls input[type="search"] {
     font-family: var(--mono);
     font-size: 12px;
@@ -502,6 +536,39 @@
     margin-left: auto;
     white-space: nowrap;
   }
+
+  /* The banner a shared /#paddle=N link lands on. */
+  .paddle-note {
+    border-bottom: 1px solid var(--rule-soft);
+    padding: 20px 0 18px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px 30px;
+    align-items: baseline;
+  }
+  .paddle-note .who {
+    font-family: var(--serif);
+    font-size: clamp(22px, 2.4vw, 30px);
+    font-variation-settings: "opsz" 72, "SOFT" 20, "WONK" 1;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    margin: 0;
+  }
+  .paddle-note .who em { font-style: italic; color: var(--oxblood); }
+  .paddle-note .facts {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 18px;
+  }
+  .paddle-note .facts b { color: var(--ink); font-weight: 500; }
+  .paddle-note .facts .won { color: var(--oxblood); }
+  .paddle-note .acts { margin-left: auto; display: flex; gap: 8px; flex-wrap: wrap; }
+  @media (max-width: 720px) { .paddle-note .acts { margin-left: 0; } }
 
   .ledger { font-family: var(--mono); }
   .row {
@@ -529,7 +596,15 @@
     align-items: baseline;
   }
   .row .kind .arrow { font-size: 11px; opacity: 0.8; }
-  .row .body { font-family: var(--serif); font-size: 15px; line-height: 1.45; color: var(--ink); white-space: pre-wrap; word-break: break-word; }
+  .row .body {
+    font-family: var(--sans);
+    font-size: 14px;
+    line-height: 1.5;
+    letter-spacing: 0;
+    color: var(--ink);
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
   .row .body .lotref {
     display: block;
     font-family: var(--mono);
@@ -611,8 +686,8 @@
 
   .ledger-empty {
     padding: 40px 0;
-    font-family: var(--serif);
-    font-style: italic;
+    font-family: var(--sans);
+    font-size: 14px;
     color: var(--ink-mute);
     text-align: center;
   }
@@ -804,6 +879,13 @@
     <div class="ops" id="ops"></div>
   </section>
 
+</div><!-- /wrap : the editorial half ends here -->
+
+<!-- The record proper. Machine output on plain white, off the paper ground and
+     out from under the grain overlay — it is evidence, not copy. -->
+<div class="sheet">
+<div class="wrap">
+
   <!-- LEDGER -->
   <section id="ledger">
     <div class="sec-head">
@@ -811,7 +893,8 @@
       <h2>The ledger</h2>
       <p>
         Every logged event in sequence. Guests appear by paddle number only.
-        Filter by lot, by direction, or search the text.
+        Filter by paddle, lot or direction &mdash; the address bar follows, so a
+        single paddle&rsquo;s view is a link that can be sent on.
       </p>
     </div>
 
@@ -822,10 +905,15 @@
       <div class="group" id="f-lot">
         <span class="glabel">Lot</span>
       </div>
+      <div class="group">
+        <span class="glabel">Paddle</span>
+        <select id="f-paddle" aria-label="Filter the log by paddle"></select>
+      </div>
       <input type="search" id="q" placeholder="Search the log…" aria-label="Search the log" />
       <span class="count" id="count"></span>
     </div>
 
+    <div class="paddle-note" id="paddle-note" hidden></div>
     <div class="ledger" id="ledger-rows"></div>
     <button class="more" id="more" hidden>Show more</button>
   </section>
@@ -893,13 +981,14 @@
   </footer>
 
 </div>
+</div><!-- /sheet -->
 
 <script>
 (function () {
   "use strict";
 
   var PAGE = 80;                  // ledger rows revealed at a time (a fold is one row)
-  var state = { direction: "all", lot: "all", q: "", shown: PAGE };
+  var state = { direction: "all", lot: "all", paddle: "all", q: "", shown: PAGE };
   var data = null;
   var filtered = [];
 
@@ -1190,6 +1279,17 @@
       lotHost.appendChild(b);
     });
 
+    var paddleSel = $("f-paddle");
+    paddleSel.appendChild(new Option("All", "all"));
+    data.stats.paddles.forEach(function (n) {
+      paddleSel.appendChild(new Option("#" + n, n));
+    });
+    paddleSel.addEventListener("change", function () {
+      state.paddle = paddleSel.value;
+      paddleSel.classList.toggle("on", state.paddle !== "all");
+      apply();
+    });
+
     var timer;
     $("q").addEventListener("input", function (e) {
       clearTimeout(timer);
@@ -1205,6 +1305,10 @@
 
   function matches(m) {
     if (state.lot !== "all" && m.lot !== state.lot) return false;
+
+    // A bid-engine row carries the bidder's paddle, so filtering by paddle picks
+    // up a guest's accepted and refused bids as well as their messages.
+    if (state.paddle !== "all" && String(m.paddle) !== state.paddle) return false;
 
     if (state.direction === "failed") {
       if (!(m.delivery && m.delivery.failed)) return false;
@@ -1224,6 +1328,144 @@
     filtered = data.messages.filter(matches);
     state.shown = PAGE;
     draw();
+    renderPaddleNote();
+    writeHash();
+  }
+
+  /* ---------- Shareable state ----------
+     The whole filter set lives in the URL hash, so "here is what you did"
+     is a link: /sessions/september-2026#paddle=13. A hash without an "="
+     is a plain section anchor (#ledger) and is left to the browser. */
+
+  function writeHash() {
+    var parts = [];
+    if (state.paddle !== "all") parts.push("paddle=" + state.paddle);
+    if (state.lot !== "all") {
+      var lot = data.lots.filter(function (l) { return l.key === state.lot; })[0];
+      if (lot) parts.push("lot=" + lot.n);
+    }
+    if (state.direction !== "all") parts.push("show=" + state.direction);
+    if (state.q) parts.push("q=" + encodeURIComponent(state.q));
+
+    var hash = parts.length ? "#" + parts.join("&") : "";
+    if (hash !== location.hash && !(hash === "" && location.hash.indexOf("=") === -1)) {
+      history.replaceState(null, "", location.pathname + location.search + hash);
+    }
+  }
+
+  function readHash() {
+    var raw = location.hash.replace(/^#/, "");
+    if (!raw || raw.indexOf("=") === -1) return false;
+
+    var params = {};
+    raw.split("&").forEach(function (pair) {
+      var eq = pair.indexOf("=");
+      if (eq > 0) params[pair.slice(0, eq)] = decodeURIComponent(pair.slice(eq + 1));
+    });
+
+    var known = data.stats.paddles;
+    state.paddle = known.indexOf(params.paddle) > -1 ? params.paddle : "all";
+
+    var lot = data.lots.filter(function (l) { return String(l.n) === params.lot; })[0];
+    state.lot = lot ? lot.key : "all";
+
+    var shows = DIRECTIONS.map(function (d) { return d.id; });
+    state.direction = shows.indexOf(params.show) > -1 ? params.show : "all";
+
+    state.q = (params.q || "").trim().toLowerCase();
+    return true;
+  }
+
+  // Push state back onto the controls, so a shared link arrives with its
+  // filters visibly set rather than silently applied.
+  function syncControls() {
+    function press(hostId, test) {
+      var chips = $(hostId).querySelectorAll(".chip");
+      Array.prototype.forEach.call(chips, function (c, i) {
+        c.setAttribute("aria-pressed", String(test(i)));
+      });
+    }
+    press("f-direction", function (i) { return DIRECTIONS[i].id === state.direction; });
+    press("f-lot", function (i) {
+      return i === 0 ? state.lot === "all" : data.lots[i - 1].key === state.lot;
+    });
+    var sel = $("f-paddle");
+    sel.value = state.paddle;
+    sel.classList.toggle("on", state.paddle !== "all");
+    $("q").value = state.q;
+  }
+
+  /* ---------- What this paddle did ---------- */
+
+  function renderPaddleNote() {
+    var host = $("paddle-note");
+    host.textContent = "";
+    if (state.paddle === "all") { host.hidden = true; return; }
+    host.hidden = false;
+
+    var placed = 0, refused = 0, won = [];
+    data.lots.forEach(function (lot) {
+      lot.ladder.forEach(function (step) {
+        if (step.paddle !== state.paddle) return;
+        if (step.kind === "bid") placed++; else refused++;
+      });
+      if (lot.winner === state.paddle) won.push(lot);
+    });
+
+    var who = el("p", "who");
+    who.appendChild(document.createTextNode("Paddle "));
+    who.appendChild(el("em", null, "#" + state.paddle));
+    host.appendChild(who);
+
+    var facts = el("div", "facts");
+    function fact(n, label, cls) {
+      var span = el("span", cls || null);
+      span.appendChild(el("b", null, String(n)));
+      span.appendChild(document.createTextNode(" " + label));
+      facts.appendChild(span);
+    }
+    fact(filtered.length, filtered.length === 1 ? "event" : "events");
+    fact(placed, placed === 1 ? "bid placed" : "bids placed");
+    if (refused) fact(refused, refused === 1 ? "bid refused" : "bids refused");
+
+    if (won.length) {
+      won.forEach(function (lot) {
+        var span = el("span", "won");
+        span.appendChild(el("b", null, "Won " + ROMAN[lot.n]));
+        span.appendChild(document.createTextNode(" " + lot.name + " — USD " + usd(lot.result)));
+        facts.appendChild(span);
+      });
+    } else if (placed) {
+      facts.appendChild(el("span", null, "No lot won"));
+    }
+    host.appendChild(facts);
+
+    var acts = el("div", "acts");
+    var clear = el("button", "chip", "Show everyone");
+    clear.type = "button";
+    clear.addEventListener("click", function () {
+      state.paddle = "all";
+      syncControls();
+      apply();
+    });
+    acts.appendChild(clear);
+
+    var copy = el("button", "chip", "Copy link");
+    copy.type = "button";
+    copy.addEventListener("click", function () {
+      var url = location.href;
+      var done = function () {
+        copy.textContent = "Link copied";
+        setTimeout(function () { copy.textContent = "Copy link"; }, 1800);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(url).then(done, function () { prompt("Copy this link:", url); });
+      } else {
+        prompt("Copy this link:", url);
+      }
+    });
+    acts.appendChild(copy);
+    host.appendChild(acts);
   }
 
   var KIND_LABEL = {
@@ -1487,6 +1729,15 @@
     data.redactions.forEach(function (r) { $("redactions").appendChild(el("li", null, r)); });
   }
 
+  function scrollToLedger() {
+    var target = $("ledger");
+    if (!target) return;
+    // After draw(), so the rows are laid out and the offset is the real one.
+    requestAnimationFrame(function () {
+      target.scrollIntoView({ block: "start" });
+    });
+  }
+
   /* ---------- Boot ---------- */
 
   fetch("september-2026.json")
@@ -1501,7 +1752,20 @@
       renderOps();
       buildControls();
       renderProvenance();
+
+      // A link that arrives carrying filters lands on the ledger, not the
+      // masthead — whoever was sent it came to see one thing.
+      var deepLinked = readHash();
+      syncControls();
       apply();
+      if (deepLinked) scrollToLedger();
+
+      window.addEventListener("hashchange", function () {
+        if (!readHash()) return;
+        syncControls();
+        apply();
+        scrollToLedger();
+      });
     })
     .catch(function (err) {
       $("ledger-rows").appendChild(el("div", "ledger-empty", "The record could not be loaded: " + err.message));
