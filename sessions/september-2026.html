@@ -86,31 +86,54 @@
   }
   /* A panel opens directly under its tab, so it does not need a section's full
      standing-alone top rule. */
-  .panel > .wrap > section:first-of-type { padding-top: clamp(30px, 4vw, 54px); }
+  .panel > .wrap > section:first-of-type { padding-top: clamp(20px, 2.5vw, 34px); }
+  .panel > .wrap > .result-band + section { padding-top: clamp(26px, 3.5vw, 46px); }
+  .panel > .wrap > .result-band { margin-top: clamp(24px, 3vw, 36px); }
 
   [hidden] { display: none !important; }
 
+  /* A segmented control, not a hint. The filled state is the whole point: the
+     record has two halves and which one you are looking at must be obvious. */
   .tabs {
     display: flex;
-    gap: clamp(18px, 3vw, 34px);
-    border-bottom: 1px solid var(--rule-soft);
-    margin: clamp(22px, 3.5vw, 40px) 0 0;
+    margin: clamp(16px, 2.5vw, 26px) 0 0;
+    border: 1.5px solid var(--ink);
+    width: fit-content;
+    max-width: 100%;
   }
   .tab {
     font-family: var(--mono);
-    font-size: 11px;
-    letter-spacing: 0.16em;
+    font-size: 12.5px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--ink-mute);
-    background: none;
+    color: var(--ink);
+    background: transparent;
     border: 0;
-    border-bottom: 2px solid transparent;
-    padding: 14px 2px 12px;
-    margin-bottom: -1px;
+    border-right: 1.5px solid var(--ink);
+    padding: 13px clamp(18px, 3vw, 34px);
     cursor: pointer;
+    transition: background-color .12s, color .12s;
+    display: flex;
+    align-items: baseline;
+    gap: 9px;
+    white-space: nowrap;
   }
-  .tab:hover { color: var(--ink); }
-  .tab[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--oxblood); }
+  .tab:last-child { border-right: 0; }
+  .tab:hover { background: var(--paper-2); }
+  .tab[aria-selected="true"] { background: var(--ink); color: var(--paper); }
+  .tab[aria-selected="true"]:hover { background: var(--ink); }
+  .tab .n {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--ink-mute);
+  }
+  .tab[aria-selected="true"] .n { color: var(--rule); }
+
+  @media (max-width: 560px) {
+    .tabs { width: 100%; }
+    .tab { flex: 1 1 50%; justify-content: center; padding: 13px 8px; font-size: 11px; letter-spacing: 0.1em; }
+  }
 
   .rule { height: 1px; background: var(--rule); }
   .rule.brass { background: var(--brass); opacity: 0.65; }
@@ -153,7 +176,7 @@
     justify-content: space-between;
     align-items: center;
     gap: 24px;
-    padding: 22px 0 26px;
+    padding: 14px 0 14px;
     flex-wrap: wrap;
   }
   header.site .logo img { width: min(265px, 100%); height: auto; display: block; }
@@ -172,7 +195,7 @@
 
   /* ---------- Masthead ---------- */
 
-  .masthead { padding: clamp(28px, 6vw, 64px) 0 clamp(24px, 4vw, 44px); }
+  .masthead { padding: clamp(16px, 2.5vw, 26px) 0 clamp(12px, 2vw, 18px); }
   .eyebrow {
     font-family: var(--mono);
     font-size: 11px;
@@ -182,17 +205,17 @@
     display: flex;
     gap: 14px;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
   }
   .eyebrow::after { content: ""; flex: 1; height: 1px; background: var(--rule-soft); max-width: 220px; }
 
   h1 {
-    font-size: clamp(38px, 7vw, 86px);
-    line-height: 0.98;
+    font-size: clamp(26px, 3.2vw, 40px);
+    line-height: 1.04;
     font-weight: 400;
-    font-variation-settings: "opsz" 120, "SOFT" 20, "WONK" 1;
-    letter-spacing: -0.02em;
-    margin: 0 0 22px;
+    font-variation-settings: "opsz" 72, "SOFT" 20, "WONK" 1;
+    letter-spacing: -0.015em;
+    margin: 0 0 12px;
   }
   h1 em { font-style: italic; color: var(--oxblood); }
 
@@ -203,16 +226,16 @@
     color: var(--ink-mute);
     display: flex;
     flex-wrap: wrap;
-    gap: 8px 22px;
-    margin-bottom: 26px;
+    gap: 6px 20px;
+    margin-bottom: 14px;
   }
   .dateline b { font-weight: 500; color: var(--ink-soft); }
 
   .lede {
-    font-size: clamp(18px, 2vw, 22px);
+    font-size: 15.5px;
     line-height: 1.5;
     color: var(--ink-soft);
-    max-width: 62ch;
+    max-width: 78ch;
     margin: 0;
   }
   .lede b { font-weight: 600; color: var(--ink); }
@@ -224,19 +247,19 @@
     grid-template-columns: repeat(4, 1fr);
     border-top: 1px solid var(--brass);
     border-bottom: 1px solid var(--rule-soft);
-    margin: clamp(30px, 5vw, 56px) 0 0;
+    margin: clamp(22px, 3vw, 34px) 0 0;
   }
-  .figure { padding: 26px 26px 26px 0; border-right: 1px solid var(--rule-soft); }
+  .figure { padding: 16px 22px 16px 0; border-right: 1px solid var(--rule-soft); }
   .figure:last-child { border-right: 0; }
   .figure .n {
-    font-size: clamp(30px, 4.2vw, 52px);
+    font-size: clamp(22px, 2.5vw, 32px);
     line-height: 1;
     font-variation-settings: "opsz" 90, "SOFT" 20, "WONK" 1;
     font-weight: 400;
     letter-spacing: -0.02em;
     font-variant-numeric: tabular-nums;
     display: block;
-    margin-bottom: 10px;
+    margin-bottom: 6px;
   }
   .figure .n .cur { font-size: 0.42em; color: var(--brass); letter-spacing: 0.08em; vertical-align: 0.5em; margin-right: 4px; }
   .figure .k {
@@ -246,7 +269,7 @@
     text-transform: uppercase;
     color: var(--ink-mute);
   }
-  .figure .sub { font-size: 14px; color: var(--ink-mute); margin-top: 6px; }
+  .figure .sub { font-size: 13px; color: var(--ink-mute); margin-top: 4px; }
 
   /* ---------- Sections ---------- */
 
@@ -255,7 +278,7 @@
     display: flex;
     align-items: baseline;
     gap: 18px;
-    margin-bottom: 30px;
+    margin-bottom: 22px;
     flex-wrap: wrap;
   }
   .sec-head h2 {
@@ -840,6 +863,8 @@
     .ladder { border-left: 0; border-top: 1px solid var(--rule-soft); padding-left: 0; padding-top: 20px; }
   }
   @media (max-width: 720px) {
+    .lede { font-size: 14.5px; }
+    .dateline { font-size: 11px; gap: 4px 14px; margin-bottom: 12px; }
     .result-band { grid-template-columns: 1fr 1fr; }
     .figure { border-right: 0; padding: 20px 0; border-bottom: 1px solid var(--rule-soft); }
     .figure:nth-child(odd) { border-right: 1px solid var(--rule-soft); padding-right: 20px; }
@@ -876,9 +901,7 @@
       <img src="../assets/images/artbound-logo-red.svg" alt="ArtBound" />
     </a>
     <nav>
-      <a href="/">Home</a>
-      <a href="#summary">Summary</a>
-      <a href="#ledger">The ledger</a>
+      <a href="/">ArtBound</a>
       <a href="mailto:galleries@artbound.art">Enquire</a>
     </nav>
   </header>
@@ -898,15 +921,14 @@
       or received &mdash; <b>as logged</b>, not as retold.
     </p>
 
-    <div class="result-band" id="result-band"></div>
   </div>
 
   <!-- TABS -->
   <div class="tabs" role="tablist" aria-label="Session record">
     <button class="tab" type="button" role="tab" id="tab-summary"
-            aria-controls="panel-summary" aria-selected="true">Summary</button>
+            aria-controls="panel-summary" aria-selected="true">Summary<span class="n" id="tab-n-summary"></span></button>
     <button class="tab" type="button" role="tab" id="tab-ledger"
-            aria-controls="panel-ledger" aria-selected="false">The ledger</button>
+            aria-controls="panel-ledger" aria-selected="false">The ledger<span class="n" id="tab-n-ledger"></span></button>
   </div>
 
 </div><!-- /wrap -->
@@ -914,6 +936,8 @@
 <!-- SUMMARY PANEL -->
 <div class="panel" id="panel-summary" role="tabpanel" aria-labelledby="tab-summary">
 <div class="wrap">
+
+  <div class="result-band" id="result-band"></div>
 
   <!-- LOTS -->
   <section id="lots">
@@ -1080,6 +1104,9 @@
   }
 
   function buildTabs() {
+    $("tab-n-summary").textContent = data.stats.lotsOffered + " lots";
+    $("tab-n-ledger").textContent = data.stats.events + " events";
+
     [["tab-summary", "summary"], ["tab-ledger", "ledger"]].forEach(function (pair) {
       $(pair[0]).addEventListener("click", function () {
         showTab(pair[1]);

@@ -133,9 +133,15 @@ segments; an engine event closes the segment and is set on the page's white in t
 own mono type, with a brass rule at its left — green for an accepted bid, oxblood for a
 refused one. Nothing of ours appears inside a chat pane.
 
-**The page is two tabs**, Summary (the lots and the operations figures) and The ledger, under
-a masthead that stays put. The tab lives in the hash too: `#ledger`, or any filter hash, opens
-the ledger; `#summary` or an empty hash opens the summary.
+**The page is two tabs**, Summary (the headline figures, the lots, the operations panel) and
+The ledger, under a masthead that stays put. The tab lives in the hash too: `#ledger`, or any
+filter hash, opens the ledger; `#summary` or an empty hash opens the summary.
+
+The tabs are a filled segmented control, not an underline, and they carry their own counts
+("4 lots", "555 events"). They are the page's only navigation, so they have to be found
+without looking — the masthead is deliberately short (no oversized title, figures moved down
+into Summary) to put them around 445px on a desktop and 525px on a phone, above the fold on
+both.
 
 A run of identical broadcasts (one announcement, seventeen recipients) folds into a single
 bubble naming its paddles — without it the log is unreadable, 553 events of which 340 are
