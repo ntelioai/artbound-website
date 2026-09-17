@@ -82,6 +82,39 @@ invent copy for it.
   `demoAutoplay` through the constructor instead — see the note in
   [js/artbound-emulator.js](js/artbound-emulator.js).
 
+## Session records (`sessions/`)
+
+A published sale record is proof that the machinery ran: `sessions/september-2026.html`
+reads `sessions/september-2026.json` and renders the sale's own log — the lots, the bid
+audit trail, the WhatsApp delivery figures, and all 553 published events.
+
+**The raw log never enters the repository.** It carries every guest's phone number, and a
+WhatsApp message id has the recipient's number base64-encoded inside it
+(`wamid.HBgK<msisdn>…`). Since `wrangler.jsonc` points `assets.directory` at the repository
+root, anything committed here is a candidate for public serving. So:
+
+- raw logs live in `tmp/`, which is in **both** `.gitignore` and `.assetsignore`
+- `tools/` is in `.assetsignore` (the generator is not a web asset)
+- the only file that may be served is the redacted record written by the generator:
+
+```
+python3 tools/build-session-record.py tmp/<raw>.json sessions/<slug>.json
+```
+
+The generator drops phone numbers (a guest is only ever a paddle number), replaces message
+ids with a 16-hex SHA-256 fingerprint, withholds operator-only traffic, and precomputes
+every figure the page states — so the page never does arithmetic on the log and the two
+cannot disagree. Re-run it and the page picks the new numbers up; nothing in the HTML is
+hand-keyed.
+
+**To add the next session:** generate its JSON, copy the HTML beside it, and change the one
+`fetch()` filename at the bottom of the page. The page is otherwise data-driven.
+
+A run of identical broadcasts (one announcement, seventeen recipients) is folded into a
+single ledger line naming its paddles — without it the log is unreadable, 553 rows of which
+340 are fan-out. The fold is computed over the *filtered* list, so a search or filter can
+never hide a message inside one.
+
 ## Product Context (Summary)
 
 Artbound operates as an auction infrastructure partner for art galleries. The public-facing web presence should communicate:

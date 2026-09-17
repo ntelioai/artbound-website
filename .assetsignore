@@ -32,3 +32,13 @@ assets/images/source/**
 # OS junk
 .DS_Store
 **/.DS_Store
+
+# Raw session logs — these carry guests' phone numbers, and a WhatsApp message id
+# has the recipient's number encoded inside it. Only the redacted record written
+# by tools/build-session-record.py into sessions/ may ever be served.
+tmp
+tmp/**
+
+# Build tooling
+tools
+tools/**

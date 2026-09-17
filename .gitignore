@@ -13,3 +13,6 @@ clientOnly/
 .dev.vars*
 !.dev.vars.example
 !.env.example
+
+# Raw session logs (unredacted — contain guest phone numbers)
+tmp/

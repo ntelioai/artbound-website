@@ -1,0 +1,1513 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>The September Session — Session Record · ArtBound</title>
+<meta name="description" content="The complete operational record of The September Session, held 16 September 2026: four lots, seventeen paddles, and every message the auction sent or received." />
+<meta name="robots" content="noindex, nofollow" />
+
+<link rel="icon" type="image/png" href="../assets/images/favicon.png" />
+<link rel="apple-touch-icon" href="../assets/images/favicon.png" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..900,0..100,0..1;1,9..144,300..900,0..100,0..1&family=JetBrains+Mono:ital,wght@0,300..700;1,300..700&display=swap" rel="stylesheet" />
+
+<style>
+  :root {
+    --paper:     #faf9f8;
+    --paper-2:   #f2f0ec;
+    --ink:       #14110d;
+    --ink-soft:  #3a332a;
+    --ink-mute:  #6a5f51;
+    --rule:      #b1a07a;
+    --rule-soft: #c8b994;
+    --brass:     #9a7b35;
+    --oxblood:   #6e1f1c;
+    --session:   #1f6b3a;
+
+    --serif: "Fraunces", "Times New Roman", serif;
+    --mono:  "JetBrains Mono", ui-monospace, monospace;
+
+    --gutter: clamp(20px, 4vw, 56px);
+    --max:    1440px;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+
+  html { background: var(--paper); color: var(--ink); }
+  body {
+    font-family: var(--serif);
+    font-variation-settings: "opsz" 14, "SOFT" 30, "WONK" 0;
+    font-weight: 380;
+    font-size: 17px;
+    line-height: 1.55;
+    letter-spacing: 0.005em;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    background:
+      radial-gradient(1200px 600px at 85% -10%, rgba(154,123,53,0.10), transparent 60%),
+      radial-gradient(900px 500px at 0% 110%, rgba(110,31,28,0.06), transparent 60%),
+      var(--paper);
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: "";
+    position: fixed; inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.5;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.08  0 0 0 0 0.07  0 0 0 0 0.05  0 0 0 0.055 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  }
+
+  ::selection { background: var(--oxblood); color: var(--paper); }
+
+  .wrap {
+    max-width: var(--max);
+    margin: 0 auto;
+    padding: 0 var(--gutter);
+    position: relative;
+    z-index: 2;
+  }
+
+  .rule { height: 1px; background: var(--rule); }
+  .rule.brass { background: var(--brass); opacity: 0.65; }
+  .rule.soft  { background: var(--rule-soft); }
+
+  .mono {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  /* ---------- Top metadata bar ---------- */
+
+  .meta-bar {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    padding: 18px 0 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .meta-bar .mid { display: flex; align-items: center; gap: 10px; }
+  .meta-bar .closed-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--ink-mute);
+    display: inline-block;
+  }
+  .meta-bar .ref { color: var(--ink-mute); letter-spacing: 0.10em; text-transform: none; }
+
+  /* ---------- Header ---------- */
+
+  header.site {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+    padding: 22px 0 26px;
+    flex-wrap: wrap;
+  }
+  header.site .logo img { width: min(265px, 100%); height: auto; display: block; }
+  header.site nav { display: flex; gap: 12px 26px; align-items: center; flex-wrap: wrap; }
+  header.site nav a {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    padding-bottom: 2px;
+  }
+  header.site nav a:hover { border-bottom-color: var(--oxblood); color: var(--ink); }
+
+  /* ---------- Masthead ---------- */
+
+  .masthead { padding: clamp(28px, 6vw, 64px) 0 clamp(24px, 4vw, 44px); }
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--brass);
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  .eyebrow::after { content: ""; flex: 1; height: 1px; background: var(--rule-soft); max-width: 220px; }
+
+  h1 {
+    font-size: clamp(38px, 7vw, 86px);
+    line-height: 0.98;
+    font-weight: 400;
+    font-variation-settings: "opsz" 120, "SOFT" 20, "WONK" 1;
+    letter-spacing: -0.02em;
+    margin: 0 0 22px;
+  }
+  h1 em { font-style: italic; color: var(--oxblood); }
+
+  .dateline {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.10em;
+    color: var(--ink-mute);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 22px;
+    margin-bottom: 26px;
+  }
+  .dateline b { font-weight: 500; color: var(--ink-soft); }
+
+  .lede {
+    font-size: clamp(18px, 2vw, 22px);
+    line-height: 1.5;
+    color: var(--ink-soft);
+    max-width: 62ch;
+    margin: 0;
+  }
+  .lede b { font-weight: 600; color: var(--ink); }
+
+  /* ---------- The result band ---------- */
+
+  .result-band {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-top: 1px solid var(--brass);
+    border-bottom: 1px solid var(--rule-soft);
+    margin: clamp(30px, 5vw, 56px) 0 0;
+  }
+  .figure { padding: 26px 26px 26px 0; border-right: 1px solid var(--rule-soft); }
+  .figure:last-child { border-right: 0; }
+  .figure .n {
+    font-size: clamp(30px, 4.2vw, 52px);
+    line-height: 1;
+    font-variation-settings: "opsz" 90, "SOFT" 20, "WONK" 1;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+    display: block;
+    margin-bottom: 10px;
+  }
+  .figure .n .cur { font-size: 0.42em; color: var(--brass); letter-spacing: 0.08em; vertical-align: 0.5em; margin-right: 4px; }
+  .figure .k {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .figure .sub { font-size: 14px; color: var(--ink-mute); margin-top: 6px; }
+
+  /* ---------- Sections ---------- */
+
+  section { padding: clamp(46px, 7vw, 92px) 0 0; }
+  .sec-head {
+    display: flex;
+    align-items: baseline;
+    gap: 18px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+  }
+  .sec-head h2 {
+    font-size: clamp(24px, 3vw, 34px);
+    font-weight: 400;
+    font-variation-settings: "opsz" 72, "SOFT" 20, "WONK" 1;
+    letter-spacing: -0.01em;
+    margin: 0;
+  }
+  .sec-head .num {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--brass);
+  }
+  .sec-head p {
+    font-size: 15px;
+    color: var(--ink-mute);
+    margin: 0;
+    flex: 1 1 320px;
+    max-width: 52ch;
+  }
+
+  /* ---------- Lots ---------- */
+
+  .lot {
+    border-top: 1px solid var(--rule-soft);
+    padding: 30px 0;
+    display: grid;
+    grid-template-columns: 1fr minmax(320px, 1.05fr);
+    gap: clamp(24px, 4vw, 64px);
+    align-items: start;
+  }
+  .lot:last-of-type { border-bottom: 1px solid var(--rule-soft); }
+
+  .lot-id {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--brass);
+    margin-bottom: 12px;
+    display: flex;
+    gap: 14px;
+    align-items: center;
+  }
+  .lot-id .state {
+    padding: 2px 9px;
+    border: 1px solid currentColor;
+    border-radius: 999px;
+    font-size: 9px;
+    letter-spacing: 0.14em;
+  }
+  .state.sold { color: var(--session); }
+  .state.passed { color: var(--ink-mute); }
+
+  .lot h3 {
+    font-size: clamp(22px, 2.6vw, 30px);
+    font-weight: 400;
+    font-variation-settings: "opsz" 72, "SOFT" 20, "WONK" 1;
+    margin: 0 0 4px;
+    letter-spacing: -0.01em;
+  }
+  .lot h3 em { font-style: italic; }
+  .lot .artist { font-size: 16px; color: var(--ink-soft); margin: 0 0 20px; }
+
+  .lot-meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(118px, 1fr));
+    gap: 16px 20px;
+    font-family: var(--mono);
+    font-size: 12px;
+    border-top: 1px solid var(--rule-soft);
+    padding-top: 16px;
+  }
+  .lot-meta dt {
+    font-size: 9.5px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 5px;
+  }
+  .lot-meta dd { margin: 0; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .lot-meta dd.hammer { color: var(--oxblood); font-weight: 600; }
+
+  /* ---------- Bid ladder ---------- */
+
+  .ladder { border-left: 1px solid var(--rule-soft); padding-left: clamp(16px, 2vw, 26px); }
+  .ladder-head {
+    font-family: var(--mono);
+    font-size: 9.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 16px;
+  }
+  .step {
+    display: grid;
+    grid-template-columns: 62px 1fr auto;
+    gap: 14px;
+    align-items: baseline;
+    font-family: var(--mono);
+    font-size: 13px;
+    padding: 7px 0;
+    position: relative;
+  }
+  .step .t { font-size: 10.5px; color: var(--ink-mute); font-variant-numeric: tabular-nums; }
+  .step .bar { position: relative; height: 100%; }
+  .step .bar i {
+    position: absolute;
+    left: 0; top: 50%;
+    transform: translateY(-50%);
+    height: 3px;
+    background: var(--brass);
+    opacity: 0.45;
+    display: block;
+    min-width: 2px;
+  }
+  .step .amt { font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .step .amt .p {
+    color: var(--ink-mute);
+    font-size: 11px;
+    margin-left: 10px;
+    letter-spacing: 0.06em;
+  }
+  .step.bid .amt { color: var(--ink); font-weight: 500; }
+  .step.bid.win .amt { color: var(--oxblood); font-weight: 700; }
+  .step.bid.win .bar i { background: var(--oxblood); opacity: 0.55; height: 4px; }
+  .step.rejected { color: var(--ink-mute); }
+  .step.rejected .amt { text-decoration: line-through; opacity: 0.75; }
+  .step.rejected .bar i { background: var(--ink-mute); opacity: 0.18; height: 1px; }
+  .step .why {
+    grid-column: 2 / -1;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--oxblood);
+    opacity: 0.7;
+    margin-top: 2px;
+  }
+  .ladder .empty {
+    font-family: var(--serif);
+    font-size: 15px;
+    color: var(--ink-mute);
+    font-style: italic;
+    padding: 6px 0 2px;
+  }
+  .ladder-foot {
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid var(--rule-soft);
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--ink-mute);
+    text-transform: uppercase;
+  }
+
+  /* ---------- Operations ---------- */
+
+  .ops {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1px;
+    background: var(--rule-soft);
+    border: 1px solid var(--rule-soft);
+  }
+  .ops > div { background: var(--paper); padding: 24px 22px; }
+  .ops h4 {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin: 0 0 16px;
+    font-weight: 400;
+  }
+  .ops .big {
+    font-size: 38px;
+    line-height: 1;
+    font-variation-settings: "opsz" 90, "SOFT" 20, "WONK" 1;
+    font-weight: 400;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em;
+  }
+  .ops .big small { font-size: 14px; color: var(--ink-mute); letter-spacing: 0; margin-left: 6px; }
+  .ops p { font-size: 14px; color: var(--ink-mute); margin: 12px 0 0; line-height: 1.45; }
+
+  .funnel { margin-top: 4px; }
+  .funnel-row {
+    display: grid;
+    grid-template-columns: 74px 1fr 56px;
+    align-items: center;
+    gap: 12px;
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 5px 0;
+  }
+  .funnel-row .lbl { letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-mute); font-size: 9.5px; }
+  .funnel-row .track { height: 8px; background: var(--paper-2); position: relative; }
+  .funnel-row .track i { position: absolute; inset: 0 auto 0 0; background: var(--brass); opacity: 0.55; }
+  .funnel-row.read .track i { background: var(--session); opacity: 0.5; }
+  .funnel-row.failed .track i { background: var(--oxblood); opacity: 0.45; }
+  .funnel-row .v { text-align: right; font-variant-numeric: tabular-nums; }
+
+  .fail-note {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 10px 14px;
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    margin-top: 14px;
+    line-height: 1.4;
+  }
+  .fail-note code {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--oxblood);
+    background: rgba(110,31,28,0.06);
+    padding: 2px 7px;
+    white-space: nowrap;
+    align-self: start;
+  }
+
+  /* ---------- Ledger ---------- */
+
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 8px;
+    align-items: center;
+    padding: 16px 0 14px;
+    border-top: 1px solid var(--brass);
+    border-bottom: 1px solid var(--rule-soft);
+    position: sticky;
+    top: 0;
+    background: var(--paper);
+    z-index: 5;
+  }
+  .controls .group { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+  .controls .glabel {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-right: 4px;
+  }
+  .chip {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    background: transparent;
+    border: 1px solid var(--rule-soft);
+    padding: 5px 11px;
+    cursor: pointer;
+    transition: background .15s, color .15s, border-color .15s;
+    white-space: nowrap;
+  }
+  .chip:hover { border-color: var(--brass); color: var(--ink); }
+  .chip[aria-pressed="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .controls input[type="search"] {
+    font-family: var(--mono);
+    font-size: 12px;
+    padding: 6px 11px;
+    border: 1px solid var(--rule-soft);
+    background: var(--paper);
+    color: var(--ink);
+    min-width: 190px;
+    flex: 1 1 190px;
+    max-width: 320px;
+  }
+  .controls input[type="search"]:focus { outline: none; border-color: var(--brass); }
+  .controls .count {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-left: auto;
+    white-space: nowrap;
+  }
+
+  .ledger { font-family: var(--mono); }
+  .row {
+    display: grid;
+    grid-template-columns: 52px 66px 52px 150px 1fr 44px;
+    gap: 14px;
+    padding: 9px 0;
+    border-bottom: 1px solid rgba(177,160,122,0.28);
+    font-size: 12.5px;
+    line-height: 1.5;
+    align-items: start;
+  }
+  .row .seq { color: var(--rule); font-size: 10px; font-variant-numeric: tabular-nums; padding-top: 2px; }
+  .row .time { color: var(--ink-mute); font-size: 10.5px; font-variant-numeric: tabular-nums; padding-top: 2px; white-space: nowrap; }
+  .row .time i { font-style: normal; opacity: 0.45; }
+  .row .paddle { font-size: 10.5px; color: var(--ink-soft); padding-top: 2px; letter-spacing: 0.04em; }
+  .row .kind {
+    font-size: 9.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding-top: 3px;
+    color: var(--ink-mute);
+    display: flex;
+    gap: 7px;
+    align-items: baseline;
+  }
+  .row .kind .arrow { font-size: 11px; opacity: 0.8; }
+  .row .body { font-family: var(--serif); font-size: 15px; line-height: 1.45; color: var(--ink); white-space: pre-wrap; word-break: break-word; }
+  .row .body .lotref {
+    display: block;
+    font-family: var(--mono);
+    font-size: 9.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--brass);
+    margin-bottom: 4px;
+  }
+  .row .body .btns { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .row .body .btns span {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    border: 1px solid var(--rule-soft);
+    padding: 3px 9px;
+    color: var(--ink-soft);
+    border-radius: 2px;
+  }
+  .row .body .meta {
+    display: block;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    color: var(--ink-mute);
+    margin-top: 6px;
+    font-style: normal;
+  }
+  .row .body .none { color: var(--ink-mute); font-style: italic; }
+  .row .rcpt { text-align: right; font-size: 11px; padding-top: 3px; letter-spacing: -0.06em; }
+  .rcpt.sent { color: var(--ink-mute); opacity: 0.7; }
+  .rcpt.delivered { color: var(--ink-mute); }
+  .rcpt.read { color: var(--session); }
+  .rcpt.failed { color: var(--oxblood); letter-spacing: 0; font-size: 12px; }
+
+  .row.dir-in { background: rgba(154,123,53,0.05); }
+  .row.dir-in .kind .arrow { color: var(--brass); }
+  .row.dir-out .kind .arrow { color: var(--ink-mute); }
+  .row.dir-system { background: rgba(20,17,13,0.035); }
+  .row.dir-system .body { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-soft); }
+  .row.dir-system .kind { color: var(--ink); }
+  .row.ev-committed .body { color: var(--oxblood); }
+  .row.ev-lot_opened .body, .row.ev-lot_closed .body { color: var(--ink); font-weight: 600; }
+  .row.failed-msg { background: rgba(110,31,28,0.045); }
+
+  .row.fold .body .recipients {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 10px;
+    align-items: center;
+  }
+  .row.fold .recipients .rp {
+    font-family: var(--mono);
+    font-size: 9.5px;
+    letter-spacing: 0.04em;
+    padding: 2px 6px;
+    border: 1px solid var(--rule-soft);
+    color: var(--ink-soft);
+    font-variant-numeric: tabular-nums;
+  }
+  .row.fold .recipients .rp.read { border-color: var(--session); color: var(--session); }
+  .row.fold .recipients .rp.failed { border-color: var(--oxblood); color: var(--oxblood); text-decoration: line-through; }
+  .row.fold .fanout {
+    display: block;
+    font-family: var(--mono);
+    font-size: 9.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--brass);
+    margin-top: 9px;
+  }
+  .row.fold .fanout b { color: var(--ink); font-weight: 500; }
+  .row.fold .kind .n {
+    color: var(--brass);
+    font-size: 9.5px;
+    letter-spacing: 0.06em;
+  }
+
+  .ledger-empty {
+    padding: 40px 0;
+    font-family: var(--serif);
+    font-style: italic;
+    color: var(--ink-mute);
+    text-align: center;
+  }
+  .more {
+    display: block;
+    width: 100%;
+    margin: 22px 0 0;
+    padding: 13px;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    background: transparent;
+    border: 1px solid var(--rule-soft);
+    color: var(--ink-soft);
+    cursor: pointer;
+  }
+  .more:hover { border-color: var(--brass); color: var(--ink); }
+
+  /* ---------- Provenance ---------- */
+
+  .prov {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: clamp(24px, 4vw, 54px);
+    border-top: 1px solid var(--brass);
+    padding-top: 30px;
+  }
+  .prov h4 {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--brass);
+    margin: 0 0 16px;
+    font-weight: 400;
+  }
+  .prov dl { margin: 0; font-size: 14.5px; }
+  .prov dt {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    color: var(--ink);
+    letter-spacing: 0.04em;
+    margin-top: 14px;
+  }
+  .prov dt:first-child { margin-top: 0; }
+  .prov dd { margin: 3px 0 0; color: var(--ink-mute); line-height: 1.45; }
+  .prov ul { margin: 0; padding-left: 18px; font-size: 14.5px; color: var(--ink-mute); }
+  .prov li { margin-bottom: 11px; line-height: 1.45; }
+
+  /* ---------- Footer ---------- */
+
+  footer.site { padding: clamp(56px, 8vw, 100px) 0 40px; }
+  footer.site .row-f {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr 1fr;
+    gap: 40px;
+    border-top: 1px solid var(--brass);
+    padding-top: 34px;
+  }
+  footer.site .brand p { font-size: 15px; color: var(--ink-mute); max-width: 40ch; margin: 14px 0 0; }
+  footer.site .brand .logo img { width: min(311px, 100%); height: auto; display: block; }
+  footer.site h4 {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin: 0 0 14px;
+    font-weight: 400;
+  }
+  footer.site ul { list-style: none; padding: 0; margin: 0; }
+  footer.site li { padding: 4px 0; font-size: 15px; }
+  footer.site a { color: var(--ink); text-decoration: none; border-bottom: 1px solid transparent; }
+  footer.site a:hover { border-bottom-color: var(--oxblood); }
+  footer.site .colophon {
+    margin-top: 44px;
+    padding-top: 18px;
+    border-top: 1px solid var(--rule-soft);
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+
+  /* ---------- Responsive ---------- */
+
+  @media (max-width: 1080px) {
+    .lot { grid-template-columns: 1fr; }
+    .ladder { border-left: 0; border-top: 1px solid var(--rule-soft); padding-left: 0; padding-top: 20px; }
+    .row { grid-template-columns: 44px 62px 46px 1fr 40px; }
+    .row .kind { display: none; }
+  }
+  @media (max-width: 720px) {
+    .result-band { grid-template-columns: 1fr 1fr; }
+    .figure { border-right: 0; padding: 20px 0; border-bottom: 1px solid var(--rule-soft); }
+    .figure:nth-child(odd) { border-right: 1px solid var(--rule-soft); padding-right: 20px; }
+    .row { grid-template-columns: 56px 44px 1fr 34px; gap: 10px; font-size: 12px; }
+    .row .seq { display: none; }
+    .row .body { font-size: 14px; }
+    footer.site .row-f { grid-template-columns: 1fr; gap: 28px; }
+    .controls { position: static; }
+  }
+
+  @media print {
+    body::before, .controls { display: none; }
+    .row { break-inside: avoid; }
+    .more { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- META BAR -->
+  <div class="meta-bar">
+    <div class="mid">
+      <span class="closed-dot" aria-hidden="true"></span>
+      <span style="color: var(--ink)">Session closed</span>
+      <span style="color: var(--ink-mute)">· record published</span>
+    </div>
+    <div class="ref">Ref. <span id="ref">—</span></div>
+  </div>
+
+  <div class="rule brass" aria-hidden="true"></div>
+
+  <!-- HEADER -->
+  <header class="site">
+    <a class="logo" href="/" aria-label="ArtBound">
+      <img src="../assets/images/artbound-logo-red.svg" alt="ArtBound" />
+    </a>
+    <nav>
+      <a href="/">Home</a>
+      <a href="#lots">Lots</a>
+      <a href="#operations">Operations</a>
+      <a href="#ledger">Ledger</a>
+      <a href="#provenance">Provenance</a>
+    </nav>
+  </header>
+
+  <!-- MASTHEAD -->
+  <div class="masthead">
+    <div class="eyebrow"><span>Session Record</span></div>
+
+    <h1>The <em>September</em><br />Session</h1>
+
+    <div class="dateline" id="dateline"></div>
+
+    <p class="lede">
+      Four lots, offered by invitation and settled in conversation on
+      <b>16 September 2026</b>. What follows is the session's own record: every
+      bid the auction accepted, every bid it refused, and every message it sent
+      or received &mdash; <b>as logged</b>, not as retold.
+    </p>
+
+    <div class="result-band" id="result-band"></div>
+  </div>
+
+  <!-- LOTS -->
+  <section id="lots">
+    <div class="sec-head">
+      <span class="num">I</span>
+      <h2>The lots</h2>
+      <p>
+        Each lot opened and closed on its own clock. The ladder beside it is the
+        bid audit trail: accepted bids in full, refused ones struck through with
+        the reason the auction gave at the time.
+      </p>
+    </div>
+    <div id="lots-list"></div>
+  </section>
+
+  <!-- OPERATIONS -->
+  <section id="operations">
+    <div class="sec-head">
+      <span class="num">II</span>
+      <h2>Operations</h2>
+      <p>
+        The session ran on WhatsApp. These are the delivery figures the platform
+        reported back, unedited &mdash; including what did not arrive.
+      </p>
+    </div>
+    <div class="ops" id="ops"></div>
+  </section>
+
+  <!-- LEDGER -->
+  <section id="ledger">
+    <div class="sec-head">
+      <span class="num">III</span>
+      <h2>The ledger</h2>
+      <p>
+        Every logged event in sequence. Guests appear by paddle number only.
+        Filter by lot, by direction, or search the text.
+      </p>
+    </div>
+
+    <div class="controls" id="controls">
+      <div class="group" id="f-direction">
+        <span class="glabel">Show</span>
+      </div>
+      <div class="group" id="f-lot">
+        <span class="glabel">Lot</span>
+      </div>
+      <input type="search" id="q" placeholder="Search the log…" aria-label="Search the log" />
+      <span class="count" id="count"></span>
+    </div>
+
+    <div class="ledger" id="ledger-rows"></div>
+    <button class="more" id="more" hidden>Show more</button>
+  </section>
+
+  <!-- PROVENANCE -->
+  <section id="provenance">
+    <div class="sec-head">
+      <span class="num">IV</span>
+      <h2>Provenance</h2>
+      <p>
+        Where each line came from, what it is not, and what was withheld before
+        publication.
+      </p>
+    </div>
+    <div class="prov">
+      <div>
+        <h4>Sources</h4>
+        <dl id="sources"></dl>
+      </div>
+      <div>
+        <h4>Read this as</h4>
+        <ul id="caveats"></ul>
+      </div>
+      <div>
+        <h4>Withheld</h4>
+        <ul id="redactions"></ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="site">
+    <div class="row-f">
+      <div class="brand">
+        <a class="logo" href="/" aria-label="ArtBound">
+          <img src="../assets/images/artbound-logo-red.svg" alt="ArtBound" />
+        </a>
+        <p>
+          Auction infrastructure for primary-market galleries.
+          By invitation. New York &middot; Paris &middot; Dubai &middot; Beirut.
+        </p>
+      </div>
+      <div>
+        <h4>Record</h4>
+        <ul>
+          <li><a href="#lots">The lots</a></li>
+          <li><a href="#operations">Operations</a></li>
+          <li><a href="#ledger">The ledger</a></li>
+          <li><a href="#provenance">Provenance</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Enquiries</h4>
+        <ul>
+          <li><a href="mailto:galleries@artbound.art">galleries@artbound.art</a></li>
+          <li><a href="mailto:press@artbound.art">press@artbound.art</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="colophon">
+      <div>© 2026 &nbsp;ArtBound &mdash; a product of ntelio L.L.C.</div>
+      <div id="generated"></div>
+      <div><a href="/legal">Terms &amp; Privacy</a></div>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var PAGE = 80;                  // ledger rows revealed at a time (a fold is one row)
+  var state = { direction: "all", lot: "all", q: "", shown: PAGE };
+  var data = null;
+  var filtered = [];
+
+  var $ = function (id) { return document.getElementById(id); };
+
+  function usd(n, withCents) {
+    return n.toLocaleString("en-US", {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: withCents ? 2 : 0
+    });
+  }
+
+  // The session ran on Dubai time and is read back on Dubai time, whoever opens
+  // the page. Times in the log are UTC.
+  function clock(iso) {
+    return new Date(iso).toLocaleTimeString("en-GB", {
+      timeZone: "Asia/Dubai", hour: "2-digit", minute: "2-digit", second: "2-digit"
+    });
+  }
+  function hhmm(iso) {
+    return new Date(iso).toLocaleTimeString("en-GB", {
+      timeZone: "Asia/Dubai", hour: "2-digit", minute: "2-digit"
+    });
+  }
+
+  // "Houmam Al Sayed" is Al Sayed, not Sayed.
+  function surname(name) {
+    var parts = name.split(" ");
+    var last = parts[parts.length - 1];
+    var before = (parts[parts.length - 2] || "").toLowerCase();
+    return ["al", "el", "abu", "abd", "bin", "ibn", "van", "de", "di"].indexOf(before) > -1
+      ? parts[parts.length - 2] + " " + last
+      : last;
+  }
+
+  function el(tag, cls, text) {
+    var node = document.createElement(tag);
+    if (cls) node.className = cls;
+    if (text != null) node.textContent = text;
+    return node;
+  }
+
+  /* ---------- Masthead ---------- */
+
+  function renderHead() {
+    var s = data.stats;
+    $("ref").textContent = data.sale.reference;
+    $("generated").textContent = "Record generated " + data.generated.replace("T", " ").replace("Z", " UTC");
+
+    var dl = $("dateline");
+    [
+      ["Session", data.sale.displayName],
+      ["Held", hhmm(s.firstEvent) + "–" + hhmm(s.lastEvent) + " " + data.sale.timezone],
+      ["Runtime", s.runtimeMinutes + " minutes"],
+      ["Logged", s.events + " events"]
+    ].forEach(function (pair) {
+      var span = el("span");
+      span.appendChild(el("b", null, pair[0] + " "));
+      span.appendChild(document.createTextNode(pair[1]));
+      dl.appendChild(span);
+    });
+
+    var band = $("result-band");
+    [
+      { n: s.lotsSold + "/" + s.lotsOffered, k: "Lots sold", sub: s.lotsOffered - s.lotsSold + " passed" },
+      { n: usd(s.hammerTotal), cur: "USD", k: "Total hammer", sub: "reserve-free, gallery-set" },
+      { n: String(s.accepted), k: "Paddles issued", sub: s.invited + " invited · " + s.declined + " declined" },
+      { n: s.replyMedian + "s", k: "Median reply", sub: "across " + s.replyCount + " guest turns" }
+    ].forEach(function (f) {
+      var box = el("div", "figure");
+      var n = el("span", "n");
+      if (f.cur) n.appendChild(el("span", "cur", f.cur));
+      n.appendChild(document.createTextNode(f.n));
+      box.appendChild(n);
+      box.appendChild(el("div", "k", f.k));
+      if (f.sub) box.appendChild(el("div", "sub", f.sub));
+      band.appendChild(box);
+    });
+  }
+
+  /* ---------- Lots ---------- */
+
+  var ROMAN = ["", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"];
+
+  function renderLots() {
+    var host = $("lots-list");
+
+    data.lots.forEach(function (lot) {
+      // The bars read the contest, not the absolute figure: a scale that started
+      // at zero would make USD 6,200 and USD 7,700 the same length. The floor sits
+      // one increment under the lowest number in play.
+      var amounts = lot.ladder.map(function (s) { return s.amount; }).concat([lot.openingBid]);
+      var top = Math.max.apply(null, amounts);
+      var floor = Math.min.apply(null, amounts) - lot.increment;
+      var span = Math.max(top - floor, 1);
+
+      var wrap = el("div", "lot");
+
+      /* --- left: the work --- */
+      var left = el("div");
+
+      var id = el("div", "lot-id");
+      id.appendChild(el("span", null, "Lot " + ROMAN[lot.n]));
+      id.appendChild(el("span", "state " + (lot.sold ? "sold" : "passed"), lot.sold ? "Sold" : "Passed"));
+      left.appendChild(id);
+
+      var h3 = el("h3");
+      h3.appendChild(el("em", null, lot.name));
+      left.appendChild(h3);
+      left.appendChild(el("p", "artist", lot.artist));
+
+      var dl = el("dl", "lot-meta");
+      var fields = [
+        ["Opened", hhmm(lot.opensAt)],
+        ["Closed", hhmm(lot.closesAt)],
+        ["Opening", "USD " + usd(lot.openingBid)],
+        ["Increment", "USD " + usd(lot.increment)],
+        ["Bids", String(lot.bids)],
+        ["Refused", String(lot.rejected)],
+        [lot.sold ? "Hammer" : "Result", lot.sold ? "USD " + usd(lot.result) : "No bid"]
+      ];
+      fields.forEach(function (f, i) {
+        var cell = el("div");
+        cell.appendChild(el("dt", null, f[0]));
+        cell.appendChild(el("dd", i === fields.length - 1 && lot.sold ? "hammer" : null, f[1]));
+        dl.appendChild(cell);
+      });
+      left.appendChild(dl);
+      wrap.appendChild(left);
+
+      /* --- right: the ladder --- */
+      var ladder = el("div", "ladder");
+      ladder.appendChild(el("div", "ladder-head", "Bid audit trail"));
+
+      if (!lot.ladder.length) {
+        ladder.appendChild(el("p", "empty",
+          "No bid was placed and none was refused. The lot opened on time, ran its full window and closed unsold."));
+      } else {
+        lot.ladder.forEach(function (step) {
+          var isWin = step.kind === "bid" && lot.sold && step.amount === lot.result;
+          var row = el("div", "step " + step.kind + (isWin ? " win" : ""));
+          row.appendChild(el("div", "t", clock(step.time)));
+
+          var bar = el("div", "bar");
+          var fill = el("i");
+          fill.style.width = (10 + Math.round(((step.amount - floor) / span) * 90)) + "%";
+          bar.appendChild(fill);
+          row.appendChild(bar);
+
+          var amt = el("div", "amt");
+          amt.appendChild(document.createTextNode("USD " + usd(step.amount)));
+          amt.appendChild(el("span", "p", "#" + step.paddle));
+          row.appendChild(amt);
+
+          if (step.kind === "rejected") {
+            row.appendChild(el("div", "why",
+              "Refused — below USD " + usd(step.previous + lot.increment)));
+          }
+          ladder.appendChild(row);
+        });
+      }
+
+      var foot = [];
+      if (lot.bids) foot.push(lot.bids + " accepted");
+      if (lot.rejected) foot.push(lot.rejected + " refused");
+      if (lot.unconfirmed) foot.push(lot.unconfirmed + " unconfirmed");
+      if (lot.bidders.length) foot.push(lot.bidders.length + " bidder" + (lot.bidders.length > 1 ? "s" : ""));
+      if (lot.sold) foot.push("won by paddle #" + lot.winner);
+      ladder.appendChild(el("div", "ladder-foot", foot.join("  ·  ")));
+
+      wrap.appendChild(ladder);
+      host.appendChild(wrap);
+    });
+  }
+
+  /* ---------- Operations ---------- */
+
+  function renderOps() {
+    var s = data.stats;
+    var host = $("ops");
+
+    function panel(title, build) {
+      var box = el("div");
+      box.appendChild(el("h4", null, title));
+      build(box);
+      host.appendChild(box);
+    }
+
+    panel("Traffic", function (box) {
+      var big = el("div", "big");
+      big.appendChild(document.createTextNode(String(s.events)));
+      big.appendChild(el("small", null, "events"));
+      box.appendChild(big);
+      box.appendChild(el("p", null,
+        s.outbound + " sent by the auction · " + s.inbound + " from guests · " +
+        s.system + " state changes recorded by the bid engine."));
+    });
+
+    panel("Delivery", function (box) {
+      var funnel = el("div", "funnel");
+      var base = Math.max(s.sent, 1);
+      [
+        ["Sent", s.sent, ""],
+        ["Delivered", s.delivered, ""],
+        ["Read", s.read, "read"],
+        ["Failed", s.failed, "failed"]
+      ].forEach(function (r) {
+        var row = el("div", "funnel-row " + r[2]);
+        row.appendChild(el("div", "lbl", r[0]));
+        var track = el("div", "track");
+        var fill = el("i");
+        fill.style.width = Math.round((r[1] / base) * 100) + "%";
+        track.appendChild(fill);
+        row.appendChild(track);
+        row.appendChild(el("div", "v", String(r[1])));
+        funnel.appendChild(row);
+      });
+      box.appendChild(funnel);
+      box.appendChild(el("p", null,
+        Math.round((s.read / s.delivered) * 100) + "% of delivered messages were opened."));
+    });
+
+    panel("What did not arrive", function (box) {
+      var big = el("div", "big");
+      big.appendChild(document.createTextNode(String(s.failed)));
+      big.appendChild(el("small", null, "rejected by WhatsApp"));
+      box.appendChild(big);
+      var notes = el("div", "fail-note");
+      s.failures.forEach(function (f) {
+        notes.appendChild(el("code", null, f.code + " × " + f.count));
+        notes.appendChild(el("div", null, f.detail));
+      });
+      box.appendChild(notes);
+      box.appendChild(el("p", null,
+        "Both are WhatsApp policy, not pipeline error: a guest who has not opened a session in 24 hours can only be reached by an approved template. It is the reason the session opens with one."));
+    });
+
+    panel("Answer time", function (box) {
+      var big = el("div", "big");
+      big.appendChild(document.createTextNode(s.replyMedian + "s"));
+      big.appendChild(el("small", null, "median"));
+      box.appendChild(big);
+      box.appendChild(el("p", null,
+        "Across " + s.replyCount + " guest turns; slowest " + s.replyMax +
+        "s. Every bid was confirmed back to the bidder before it was committed."));
+    });
+  }
+
+  /* ---------- Ledger ---------- */
+
+  var DIRECTIONS = [
+    { id: "all", label: "Everything" },
+    { id: "in", label: "From guests" },
+    { id: "out", label: "From the auction" },
+    { id: "system", label: "Bid engine" },
+    { id: "failed", label: "Failed" }
+  ];
+
+  function buildControls() {
+    var dirHost = $("f-direction");
+    DIRECTIONS.forEach(function (d) {
+      var b = el("button", "chip", d.label);
+      b.type = "button";
+      b.setAttribute("aria-pressed", String(state.direction === d.id));
+      b.addEventListener("click", function () {
+        state.direction = d.id;
+        dirHost.querySelectorAll(".chip").forEach(function (c) { c.setAttribute("aria-pressed", "false"); });
+        b.setAttribute("aria-pressed", "true");
+        apply();
+      });
+      dirHost.appendChild(b);
+    });
+
+    var lotHost = $("f-lot");
+    var lots = [{ key: "all", label: "All" }].concat(data.lots.map(function (l) {
+      return { key: l.key, label: ROMAN[l.n] + " · " + surname(l.artist) };
+    }));
+    lots.forEach(function (l) {
+      var b = el("button", "chip", l.label);
+      b.type = "button";
+      b.setAttribute("aria-pressed", String(state.lot === l.key));
+      b.addEventListener("click", function () {
+        state.lot = l.key;
+        lotHost.querySelectorAll(".chip").forEach(function (c) { c.setAttribute("aria-pressed", "false"); });
+        b.setAttribute("aria-pressed", "true");
+        apply();
+      });
+      lotHost.appendChild(b);
+    });
+
+    var timer;
+    $("q").addEventListener("input", function (e) {
+      clearTimeout(timer);
+      var v = e.target.value;
+      timer = setTimeout(function () { state.q = v.trim().toLowerCase(); apply(); }, 140);
+    });
+
+    $("more").addEventListener("click", function () {
+      state.shown += PAGE;
+      draw();
+    });
+  }
+
+  function matches(m) {
+    if (state.lot !== "all" && m.lot !== state.lot) return false;
+
+    if (state.direction === "failed") {
+      if (!(m.delivery && m.delivery.failed)) return false;
+    } else if (state.direction !== "all" && m.direction !== state.direction) {
+      return false;
+    }
+
+    if (state.q) {
+      var hay = [m.text, m.lot_label, m.type, m.event, m.template, m.paddle && "#" + m.paddle,
+                 m.detail, m.amount, (m.buttons || []).join(" ")].join(" ").toLowerCase();
+      if (hay.indexOf(state.q) === -1) return false;
+    }
+    return true;
+  }
+
+  function apply() {
+    filtered = data.messages.filter(matches);
+    state.shown = PAGE;
+    draw();
+  }
+
+  var KIND_LABEL = {
+    template: "Template",
+    bot_reply: "Reply",
+    bot_reply_interactive_button: "Confirm",
+    bot_reply_interactive_carousel: "Carousel",
+    bot_reply_video: "Video",
+    bot_reply_image: "Image",
+    bid_alert: "Bid alert",
+    outbid_alert: "Outbid",
+    button_tap: "Tap",
+    text: "Message",
+    bid_event: "Bid engine"
+  };
+
+  var EVENT_LABEL = {
+    lot_opened: "Lot opened",
+    lot_closed: "Lot closed",
+    confirm_sent: "Confirmation requested",
+    attempted: "Bid submitted",
+    committed: "Bid accepted",
+    precheck_rejected: "Bid refused",
+    outbid_marked: "Bidder outbid"
+  };
+
+  function systemLine(m) {
+    var label = EVENT_LABEL[m.event] || m.event;
+    var parts = [label];
+    if (m.amount != null) parts.push("USD " + usd(m.amount));
+    if (m.paddle) parts.push("paddle #" + m.paddle);
+    return parts.join(" — ");
+  }
+
+  // The bid engine stamps every lot_opened with the session's own closing time,
+  // not the lot's. Printed raw it reads as a contradiction of the lot above it.
+  function detailOf(m) {
+    var iso = /closes (\d{4}-\d{2}-\d{2}T[\d:]+)/.exec(m.detail || "");
+    if (m.event === "lot_opened" && iso) {
+      return "session closes " + hhmm(iso[1] + "Z");
+    }
+    return m.detail;
+  }
+
+  function receipt(m) {
+    var d = m.delivery;
+    if (!d) return null;
+    if (d.failed) {
+      var x = el("div", "rcpt failed", "✕");
+      x.title = "Failed " + d.error_code + " — " + (d.error_detail || "");
+      return x;
+    }
+    if (d.read) {
+      var r = el("div", "rcpt read", "✓✓");
+      r.title = "Read " + clock(d.read);
+      return r;
+    }
+    if (d.delivered) {
+      var v = el("div", "rcpt delivered", "✓✓");
+      v.title = "Delivered " + clock(d.delivered);
+      return v;
+    }
+    if (d.sent) {
+      var s = el("div", "rcpt sent", "✓");
+      s.title = "Sent " + clock(d.sent);
+      return s;
+    }
+    return null;
+  }
+
+  function rowFor(m) {
+    var cls = "row dir-" + m.direction;
+    if (m.event) cls += " ev-" + m.event;
+    if (m.delivery && m.delivery.failed) cls += " failed-msg";
+    var row = el("div", cls);
+
+    row.appendChild(el("div", "seq", String(m.seq)));
+
+    var time = el("div", "time");
+    time.appendChild(document.createTextNode(clock(m.time)));
+    if (m.time_approximate) {
+      var approx = el("i", null, "≈");
+      approx.title = "Approximate — the guest turn is stamped as the reply went out";
+      time.appendChild(document.createTextNode(" "));
+      time.appendChild(approx);
+    }
+    row.appendChild(time);
+
+    row.appendChild(el("div", "paddle", m.paddle ? "#" + m.paddle : "—"));
+
+    var kind = el("div", "kind");
+    kind.appendChild(el("span", "arrow",
+      m.direction === "in" ? "←" : m.direction === "out" ? "→" : "•"));
+    kind.appendChild(el("span", null,
+      m.direction === "system" ? (EVENT_LABEL[m.event] || m.event) : (KIND_LABEL[m.type] || m.type)));
+    row.appendChild(kind);
+
+    var body = el("div", "body");
+    if (m.lot_label && m.direction === "system") {
+      body.appendChild(el("span", "lotref", m.lot_label));
+      body.appendChild(document.createTextNode(systemLine(m)));
+      if (m.detail) body.appendChild(el("span", "meta", detailOf(m)));
+    } else {
+      if (m.lot_label) body.appendChild(el("span", "lotref", m.lot_label));
+      if (m.text) {
+        body.appendChild(document.createTextNode(m.text));
+      } else {
+        body.appendChild(el("span", "none", m.media ? "[" + m.media + "]" : "[no text recorded]"));
+      }
+      if (m.buttons && m.buttons.length) {
+        var btns = el("div", "btns");
+        m.buttons.forEach(function (b) { btns.appendChild(el("span", null, b)); });
+        body.appendChild(btns);
+      }
+      var notes = [];
+      if (m.template) notes.push("template " + m.template);
+      if (m.text_note) notes.push(m.text_note);
+      if (notes.length) body.appendChild(el("span", "meta", notes.join(" · ")));
+    }
+    row.appendChild(body);
+
+    var rcpt = receipt(m);
+    row.appendChild(rcpt || el("div", "rcpt"));
+
+    return row;
+  }
+
+  // One announcement sent to the whole room is one line, not seventeen. A run is
+  // folded only while its members sit next to each other in what is on screen,
+  // so a filter or a search never hides a message inside a fold.
+  function fold(list) {
+    var groups = [];
+    var run = null;
+    list.forEach(function (m) {
+      if (run && m.bkey && m.bkey === run[0].bkey) {
+        run.push(m);
+      } else {
+        run = [m];
+        groups.push(run);
+      }
+    });
+    return groups;
+  }
+
+  function foldedRow(group) {
+    var first = group[0];
+    var last = group[group.length - 1];
+    var row = el("div", "row fold dir-out");
+
+    row.appendChild(el("div", "seq", first.seq + "–" + last.seq));
+
+    var time = el("div", "time");
+    time.textContent = clock(first.time);
+    row.appendChild(time);
+
+    row.appendChild(el("div", "paddle", "×" + group.length));
+
+    var kind = el("div", "kind");
+    kind.appendChild(el("span", "arrow", "→"));
+    kind.appendChild(el("span", null, KIND_LABEL[first.type] || first.type));
+    kind.appendChild(el("span", "n", "broadcast"));
+    row.appendChild(kind);
+
+    var body = el("div", "body");
+    if (first.lot_label) body.appendChild(el("span", "lotref", first.lot_label));
+
+    // Each guest's copy names their own paddle. Printing the first recipient's
+    // copy under "sent to 17 paddles" would read as if all seventeen were #14.
+    var personalised = group.some(function (m) { return m.text !== first.text; });
+    body.appendChild(document.createTextNode(
+      personalised ? (first.text || "").replace(/#\d+/g, "#—") : (first.text || "")));
+
+    if (first.buttons && first.buttons.length) {
+      var btns = el("div", "btns");
+      first.buttons.forEach(function (b) { btns.appendChild(el("span", null, b)); });
+      body.appendChild(btns);
+    }
+
+    var read = 0, delivered = 0, failed = 0;
+    group.forEach(function (m) {
+      var d = m.delivery || {};
+      if (d.failed) failed++;
+      else if (d.read) { read++; delivered++; }
+      else if (d.delivered) delivered++;
+    });
+
+    var tally = el("span", "fanout");
+    tally.appendChild(document.createTextNode("Sent to "));
+    tally.appendChild(el("b", null, String(group.length)));
+    tally.appendChild(document.createTextNode(
+      " paddles between " + clock(first.time) + " and " + clock(last.time) +
+      " · " + delivered + " delivered · " + read + " read" +
+      (failed ? " · " + failed + " failed" : "")));
+    if (first.template) {
+      tally.appendChild(document.createTextNode(" · template " + first.template));
+    }
+    body.appendChild(tally);
+
+    var recipients = el("div", "recipients");
+    group.forEach(function (m) {
+      var d = m.delivery || {};
+      var cls = d.failed ? "rp failed" : d.read ? "rp read" : "rp";
+      var chip = el("span", cls, "#" + m.paddle);
+      chip.title = d.failed
+        ? "Failed " + d.error_code + " — " + (d.error_detail || "")
+        : d.read ? "Read " + clock(d.read)
+        : d.delivered ? "Delivered " + clock(d.delivered)
+        : d.sent ? "Sent " + clock(d.sent) : "No receipt recorded";
+      recipients.appendChild(chip);
+    });
+    body.appendChild(recipients);
+    row.appendChild(body);
+
+    var rcpt = el("div", "rcpt " + (failed === group.length ? "failed" : read ? "read" : "delivered"),
+      failed === group.length ? "✕" : read ? "✓✓" : "✓✓");
+    row.appendChild(rcpt);
+
+    return row;
+  }
+
+  function draw() {
+    var host = $("ledger-rows");
+    host.textContent = "";
+
+    if (!filtered.length) {
+      host.appendChild(el("div", "ledger-empty", "Nothing in the log matches that."));
+      $("more").hidden = true;
+      $("count").textContent = "0 of " + data.messages.length;
+      return;
+    }
+
+    var groups = fold(filtered);
+    var slice = groups.slice(0, state.shown);
+    var frag = document.createDocumentFragment();
+    var events = 0;
+    slice.forEach(function (g) {
+      events += g.length;
+      frag.appendChild(g.length > 1 ? foldedRow(g) : rowFor(g[0]));
+    });
+    host.appendChild(frag);
+
+    $("count").textContent = events + " of " + filtered.length +
+      (filtered.length === data.messages.length ? " events" : " matching");
+
+    var remaining = groups.length - slice.length;
+    $("more").hidden = remaining <= 0;
+    if (remaining > 0) {
+      $("more").textContent = "Show " + Math.min(PAGE, remaining) + " more — " + remaining + " remaining";
+    }
+  }
+
+  /* ---------- Provenance ---------- */
+
+  function renderProvenance() {
+    var dl = $("sources");
+    Object.keys(data.sources).forEach(function (k) {
+      dl.appendChild(el("dt", null, k));
+      dl.appendChild(el("dd", null, data.sources[k]));
+    });
+    data.caveats.forEach(function (c) { $("caveats").appendChild(el("li", null, c)); });
+    data.redactions.forEach(function (r) { $("redactions").appendChild(el("li", null, r)); });
+  }
+
+  /* ---------- Boot ---------- */
+
+  fetch("september-2026.json")
+    .then(function (r) {
+      if (!r.ok) throw new Error("record unavailable (" + r.status + ")");
+      return r.json();
+    })
+    .then(function (json) {
+      data = json;
+      renderHead();
+      renderLots();
+      renderOps();
+      buildControls();
+      renderProvenance();
+      apply();
+    })
+    .catch(function (err) {
+      $("ledger-rows").appendChild(el("div", "ledger-empty", "The record could not be loaded: " + err.message));
+    });
+})();
+</script>
+
+</body>
+</html>
